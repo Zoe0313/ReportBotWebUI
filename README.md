@@ -2,13 +2,31 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.17.
 
+## Node.js version demand
+
+Node.js version v16.20.2
+Recommend to use `nvm` to exchange your local node.js version
+```
+export https_proxy=proxy.vmware.com:3128
+
+brew install nvm
+source $(brew --prefix nvm)/nvm.sh
+export NVM_DIR=~/.nvm
+
+nvm install 16.20.2 
+nvm use 16.20.2
+```
+
 ## Development server
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Run `ng build` to build dev server.
+Run `ng serve` for a dev server. Navigate to `http://localhost:4200/webpack-dev-server/`. The app will automatically reload if you change any of the source files.
 
 ## Code scaffolding
 
 Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+
+Or run `ng g c component-name`.
 
 ## Build
 
