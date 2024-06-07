@@ -1,0 +1,23 @@
+:host {
+   display: flex;
+   flex-direction: column;
+   flex: 1 0 0rem;
+}
+
+.container {
+   display: flex;
+   flex-direction: row;
+   flex: 1 0 auto;
+   width: 1200px;
+   height: 600px;
+   margin: 12px 12px;
+}
+
+.container-tall {
+   height: 1000px;
+}
+
+::ng-deep chart {
+   width: 100%;
+   display: block;
+}

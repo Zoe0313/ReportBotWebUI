@@ -1,0 +1,69 @@
+<clr-datagrid (clrDgRefresh)="refresh($event)" [clrDgLoading]="loading" class="datagrid">
+   <clr-dg-column>CLN</clr-dg-column>
+   <clr-dg-column>User</clr-dg-column>
+   <clr-dg-column>Type</clr-dg-column>
+   <clr-dg-column>SVS</clr-dg-column>
+   <clr-dg-column>Team</clr-dg-column>
+   <clr-dg-column>Branch</clr-dg-column>
+   <clr-dg-column>Time</clr-dg-column>
+   <clr-dg-column>Command</clr-dg-column>
+   <clr-dg-column>
+      <ng-container *clrDgHideableColumn="{hidden: true}">
+         FastSVS Launched
+      </ng-container>
+   </clr-dg-column>
+   <clr-dg-row *ngFor="let record of records">
+      <clr-dg-cell>
+            <a *ngIf="isClnValid(record.cln)"
+               href="https://p4web.eng.vmware.com/{{record.cln}}?ac=10"
+               target="_blank">{{record.cln}}</a>
+            <ng-container *ngIf="!isClnValid(record.cln)">{{record.cln}}</ng-container>
+      </clr-dg-cell>
+      <clr-dg-cell>{{record.user}}</clr-dg-cell>
+      <clr-dg-cell>{{record.type}}</clr-dg-cell>
+      <clr-dg-cell>
+         <span *ngIf="record.originSvs">New SVS: </span>
+         <a *ngIf="isClnValid(record.svsid)"
+            href="https://svs.esp.eng.vmware.com/#/svs/patches/{{record.svsid}}/overview"
+            target="_blank">{{record.svsid}}</a>
+         <ng-container *ngIf="!isClnValid(record.svsid)">{{record.svsid}}</ng-container>
+         <div *ngIf="record.originSvs">
+            Origin SVS: <a *ngIf="isClnValid(record.originSvs)"
+            href="https://devhub.eng.vmware.com/#/svs/patches/{{record.originSvs}}"
+            target="_blank">{{record.originSvs}}</a>
+         </div>
+      </clr-dg-cell>
+
+      <clr-dg-cell>{{record.team}}</clr-dg-cell>
+      <clr-dg-cell>{{record.branch}}</clr-dg-cell>
+      <clr-dg-cell>{{record.timestamp | date: 'medium'}}</clr-dg-cell>
+      <clr-dg-cell>
+         <clr-signpost *ngIf="record.runCmd">
+            <button class="btn btn-link btn-sm" clrSignpostTrigger>
+               Show Command
+            </button>
+            <clr-signpost-content [clrPosition]="'left-bottom'" *clrIfOpen>
+                {{getCommandText(record.runCmd)}}
+            </clr-signpost-content>
+         </clr-signpost>
+      </clr-dg-cell>
+      <clr-dg-cell [style.backgroundColor]="getColorIndicator(record.errorCode)" class="status-cell">
+          <div *ngIf="isErrorRecord(record.errorCode); else success">
+             failed
+             <div>error code: {{record.errorCode}}</div>
+             <div *ngIf="record.subErrCode">subError Code: {{record.subErrCode}}</div>
+          </div>
+      </clr-dg-cell>
+   </clr-dg-row>
+   <clr-dg-footer>
+       {{pagination.firstItem + 1}} - {{pagination.lastItem + 1}}
+       of {{total}} records
+       <clr-dg-pagination #pagination
+                          [clrDgPageSize]="100"
+                          [clrDgTotalItems]="total"
+                          [(clrDgPage)]="currentPageIndex"></clr-dg-pagination>
+   </clr-dg-footer>
+</clr-datagrid>
+<ng-template #success>
+   <div>succeeded</div>
+</ng-template>

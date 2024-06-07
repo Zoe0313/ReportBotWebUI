@@ -1,0 +1,10 @@
+.links-container {
+   display: flex;
+   max-width: 20rem;
+   flex-wrap: wrap;
+   margin-top: 6px;
+
+   a {
+      margin-right: 12px;
+   }
+}

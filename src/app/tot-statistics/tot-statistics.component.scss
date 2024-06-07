@@ -1,0 +1,8 @@
+.container {
+   display: flex;
+}
+
+::ng-deep chart {
+   width: 100%;
+   display: block;
+}

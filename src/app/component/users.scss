@@ -1,0 +1,15 @@
+:host {
+   margin: 12px;
+}
+label {
+   white-space: nowrap;
+}
+.title-section {
+   display: flex;
+}
+.active-user {
+   display: flex;
+   justify-content: space-between;
+   min-width: 160px;
+   margin-bottom: 8px;
+}

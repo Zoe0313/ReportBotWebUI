@@ -1,0 +1,16 @@
+<div class="container">
+   <form clrForm clrLayout="horizontal">
+      <vsan-date-range-picker
+            (changeRange)="onDateRangeChange($event)">
+      </vsan-date-range-picker>
+
+      <div class="container" *ngIf="!loading">
+         <div style="width:700px;">
+            <chart [options]="chartOptions"></chart>
+         </div>
+      </div>
+      <span class="spinner spinner-inline" *ngIf="loading">
+         Loading...
+      </span>
+   </form>
+</div>

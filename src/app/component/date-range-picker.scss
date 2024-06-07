@@ -1,0 +1,41 @@
+/* Copyright 2019 VMware, Inc. All rights reserved. -- VMware Confidential */
+$picker-height: 2rem;
+$range-dropdown-height: 1rem;
+$day-interval-container-width: 6.5rem;
+$day-interval-input-width: 3rem;
+
+:host {
+   display: flex;
+   flex: 0 0 auto;
+   // Fixed height to reserve space for input filed error message.
+   height: $picker-height;
+   margin-bottom: 24px;
+}
+
+#range-dropdown {
+   height: $range-dropdown-height;
+}
+
+#query-range-btn {
+   margin: 0;
+}
+
+.clr-form-control {
+   width: 100%;
+}
+
+.clr-control-container {
+   display: flex;
+}
+
+.day-interval-container {
+   width: $day-interval-container-width;
+   .day-interval-input {
+      width: $day-interval-input-width;
+   }
+}
+
+span,
+label {
+   white-space: nowrap;
+}

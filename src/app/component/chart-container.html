@@ -1,0 +1,59 @@
+<div id="groups-chart">
+   <form clrForm clrLayout="horizontal">
+      <clr-select-container *ngIf="!isSingleSvsStepsDetail">
+         <label>Show Chart: </label>
+         <select clrSelect name="supported-charts" id="supported-charts" [(ngModel)]="selectedChart">
+           <option *ngFor="let option of availableCharts" [value]="option.value">{{option.text}}</option>
+         </select>
+      </clr-select-container>
+      <clr-input-container *ngIf="isCandidateChart">
+         <label>User Id: </label>
+         <input clrInput name="user-filter" id="user-filter" [(ngModel)]="userFilter">
+      </clr-input-container>
+      <vsan-date-range-picker
+            *ngIf="datePickerRequired"
+            (changeRange)="getGroupsMetricsByDateRange($event)"></vsan-date-range-picker>
+      <div *ngIf="isCandidateChart" class="btn-group btn-sm">
+         <button *ngFor="let viewType of availableViewType; let i=index"
+                 id="view-{{i}}"
+                 class="btn"
+                 [class.btn-primary]="viewType.value === selectedViewType"
+                 (click)="selectedViewType = viewType.value">{{viewType.text}}</button>
+      </div>
+      <div class="container" [class.container-tall]="isSingleSvsStepsDetail" *ngIf="!loading && selectedViewType === ViewType.CHART">
+         <chart *ngFor="let chartOption of options" [options]="chartOption"></chart>
+      </div>
+      <div class="container" *ngIf="!loading && selectedViewType === ViewType.GRID">
+         <svs-statistic-grid-view [dailyData]="candidateData"></svs-statistic-grid-view>
+      </div>
+      <span class="spinner spinner-inline" *ngIf="loading">
+         Loading...
+      </span>
+      <clr-modal *ngIf="candidateDataOnSelectedDate"
+                 [clrModalOpen]="candidateDataOnSelectedDate != null"
+                 [clrModalClosable]="false">
+         <h3 class="modal-title">SVS statistics on {{candidateDataOnSelectedDate[0].date | date:'mediumDate'}}</h3>
+         <div class="modal-body">
+            <svs-statistic-grid-view [dailyData]="candidateDataOnSelectedDate"></svs-statistic-grid-view>
+         </div>
+         <div class="modal-footer">
+             <button type="button" class="btn btn-primary" (click)="candidateDataOnSelectedDate = null">
+                 Close
+             </button>
+         </div>
+      </clr-modal>
+      <clr-modal *ngIf="vsan2DataOnSelectedDate"
+                 [clrModalOpen]="vsan2DataOnSelectedDate != null"
+                 [clrModalClosable]="false">
+         <h3 class="modal-title">vSAN2 statistics on {{vsan2DataOnSelectedDate[0].date | date:'mediumDate'}}</h3>
+         <div class="modal-body">
+            <svs-statistic-grid-view [dailyData]="vsan2DataOnSelectedDate"></svs-statistic-grid-view>
+         </div>
+         <div class="modal-footer">
+             <button type="button" class="btn btn-primary" (click)="vsan2DataOnSelectedDate = null">
+                 Close
+             </button>
+         </div>
+      </clr-modal>
+   </form>
+</div>

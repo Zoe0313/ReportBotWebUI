@@ -1,0 +1,21 @@
+<h1>
+   Biweekly user rank
+</h1>
+<ng-container *ngIf="loading">
+   <span class="spinner spinner-inline">
+      Loading...
+  </span>
+  <span>
+      Loading...
+  </span>
+</ng-container>
+
+<ul class="list-unstyled" *ngIf="!loading">
+   <li *ngFor="let userData of rankData">
+      <clr-icon [attr.shape]="getShape(userData.change)"
+                class="icon-shape is-solid"
+                [class.green]="userData.change >= 0"
+                [class.red]="userData.change < 0"></clr-icon>
+      {{getRankLabel(userData)}}
+   </li>
+</ul>
