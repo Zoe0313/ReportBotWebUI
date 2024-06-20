@@ -1,0 +1,116 @@
+<div class="list-content">
+   <div class="report-header">My Reports</div>
+   <clr-datagrid [clrDgLoading]="loadingReports" class="my-report">
+      <clr-dg-column>
+         Report Title
+      </clr-dg-column>
+      <clr-dg-column>
+         Creator
+      </clr-dg-column>
+      <clr-dg-column>
+         Type
+      </clr-dg-column>
+      <clr-dg-column>
+         Recurrence
+      </clr-dg-column>
+      <clr-dg-column style="width: 120px;">
+         Status
+      </clr-dg-column>
+      <clr-dg-column style="width: 200px;">
+         Actions
+      </clr-dg-column>
+      <clr-dg-row *clrDgItems="let report of myReports" [clrDgItem]="report">
+         <clr-dg-cell class="mgmt-vmpool-datagrid-cell report-title-column">
+            {{ report.title }}
+         </clr-dg-cell>
+         <clr-dg-cell class="mgmt-report-datagrid-cell">
+            {{ report.creator }}
+         </clr-dg-cell>
+         <clr-dg-cell class="mgmt-report-datagrid-cell">
+            {{ report.reportType }}
+         </clr-dg-cell>
+         <clr-dg-cell class="mgmt-report-datagrid-cell">
+            {{ report.recurrence }}
+         </clr-dg-cell>
+         <clr-dg-cell class="mgmt-report-datagrid-cell">
+            {{ report.status }}
+         </clr-dg-cell>
+
+         <clr-dg-cell class="mgmt-vmpool-datagrid-cell pool-action">
+            <clr-tooltip>
+               <clr-icon clrTooltipTrigger shape="pencil" (click)="onEdit(report)"></clr-icon>
+               <clr-tooltip-content clrPosition="top-right" clrSize="xs" *clrIfOpen>
+                  <span>Edit</span>
+               </clr-tooltip-content>
+            </clr-tooltip>
+            <clr-tooltip>
+               <clr-icon clrTooltipTrigger shape="backup-restore" (click)="onEnable(report)"></clr-icon>
+               <clr-tooltip-content clrPosition="top-right" clrSize="xs" *clrIfOpen>
+                  <span>Enable</span>
+               </clr-tooltip-content>
+            </clr-tooltip>
+            <clr-tooltip>
+               <clr-icon clrTooltipTrigger shape="times-circle" (click)="onDisable(report)"></clr-icon>
+               <clr-tooltip-content clrPosition="top-right" clrSize="xs" *clrIfOpen>
+                  <span>Disable</span>
+               </clr-tooltip-content>
+            </clr-tooltip>
+            <clr-tooltip>
+               <clr-icon clrTooltipTrigger shape="trash" (click)="onDelete(report)"></clr-icon>
+               <clr-tooltip-content clrPosition="top-right" clrSize="xs" *clrIfOpen>
+                  <span>Delete</span>
+               </clr-tooltip-content>
+            </clr-tooltip>
+            <clr-tooltip>
+               <clr-icon clrTooltipTrigger shape="recycle" (click)="onSendNow(report)"></clr-icon>
+               <clr-tooltip-content clrPosition="top-left" clrSize="xs" *clrIfOpen>
+                  <span>Send notification Now</span>
+               </clr-tooltip-content>
+            </clr-tooltip>
+         </clr-dg-cell>
+      </clr-dg-row>
+      <clr-dg-footer>
+         <div class="pagination">
+            <div class="pagination-list ng-star-inserted">
+               <button class="pagination-previous"
+                       type="button"
+                       aria-label="First Page"
+                       [disabled]="currentPage == 0"
+                       (click)="getReports(0)">
+                  <clr-icon shape="step-forward-2 down" role="none"></clr-icon>
+               </button>
+               <button class="pagination-previous"
+                       type="button"
+                       aria-label="Previous Page"
+                       [disabled]="currentPage == 0"
+                       (click)="getReports(currentPage - 1)">
+                  <clr-icon shape="angle left" role="none"></clr-icon>
+               </button>
+               <input type="text"
+                      class="pagination-current clr-input ng-star-inserted"
+                      size="1"
+                      aria-label="Current Page"
+                      value="{{currentPage}}"
+                      (keyup)="onKeyUp($event)"
+                      (focusout)="onFocusout($event)">
+               &nbsp;/&nbsp;
+               <span aria-label="Total Pages">{{totalPage-1}}</span>
+               <button class="pagination-next"
+                       type="button"
+                       aria-label="Next Page"
+                       [disabled]="currentPage == totalPage-1"
+                       (click)="getReports(currentPage + 1)">
+                  <clr-icon shape="angle right" role="none"></clr-icon>
+               </button>
+               <button class="pagination-last"
+                       type="button"
+                       aria-label="Last Page"
+                       [disabled]="currentPage == totalPage-1"
+                       (click)="getReports(totalPage-1)">
+                  <clr-icon shape="step-forward-2 up" role="none"></clr-icon>
+               </button>
+            </div>
+         </div>
+     </clr-dg-footer>
+   </clr-datagrid>
+</div>

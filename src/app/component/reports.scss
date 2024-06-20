@@ -1,0 +1,97 @@
+
+.mgmt-report-datagrid-cell {
+   display: flex;
+   align-items: center;
+}
+
+.report-header {
+   padding: .5rem .75rem;
+   // font-family: Roboto,Arial,sans-serif;
+   color: #000;
+   background-color: #a5cf8c;
+   font-size: .75rem;
+   font-weight: 200;
+   letter-spacing: normal;
+}
+
+.my-report {
+   min-height: 346px;
+}
+
+.public-name {
+   margin-left: 12px;
+}
+
+.btn-apply {
+   margin-left: 0.5rem !important;
+}
+
+.help-icon {
+   color: hsl(198, 80%, 46%);
+   margin-left: 5px;
+}
+
+.clr-form-control {
+   margin: 0 10px;
+}
+
+clr-datagrid {
+   padding-bottom: 1rem;
+}
+
+.list-content {
+   width: 100%;
+   padding: 1rem;
+}
+
+.btn-column {
+   padding: 0;
+   .btn {
+      padding: 0;
+      margin: 0;
+   }
+}
+
+.resource-limit-column {
+   justify-content: space-between;
+}
+
+.datagrid-cell .tooltip {
+   margin-right: 0;
+}
+
+.report-action {
+   justify-content: space-evenly;
+}
+
+.spinner {
+   margin-left: 10px;
+}
+
+.report-title-column {
+   justify-content: space-between;
+}
+
+.status-enabled {
+   color: hsl(93, 77%, 44%);
+}
+
+.status-disabled {
+   color: hsl(14, 100%, 44%);
+}
+
+.status-deleted {
+   color: hsl(198, 0%, 45%);
+}
+
+::ng-deep.modal-dialog.modal-lg {
+   width: 33rem !important;
+}
+
+.pagination-list {
+   clr-icon {
+      height: 16px;
+      width: 16px;
+      cursor: pointer;
+   }
+}

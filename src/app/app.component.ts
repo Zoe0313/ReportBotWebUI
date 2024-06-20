@@ -1,51 +1,123 @@
-import { Component } from '@angular/core';
-import { PointData, ErrorFilter } from './component/chart-container.component';
+import { Component, OnInit, HostListener, ChangeDetectorRef } from '@angular/core';
+import { Router, ActivatedRoute, RoutesRecognized } from '@angular/router';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Location } from '@angular/common';
+import { ConfigService } from './service/configure.service';
+import { ReportsService } from './service/reports.service';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+   selector: 'app-root',
+   templateUrl: './app.component.html',
+   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-   userFilter: string;
-   teamFilter: string;
-   errorFilter: string;
-   timeRange: any;
-   dateFilter: Date;
-   includeTestRecords: boolean = false;
 
-   gridTabActive: boolean = true;
+export class AppComponent implements OnInit {
+   showDialog: boolean;
+   userName: string;
+   isDevEnv = true;
+   isSystemAdmin = false;
 
-   acceptFilter(filters: string[]) {
-      this.userFilter = filters[0];
-      this.teamFilter = filters[1];
-      if (filters[2]) {
-         this.dateFilter = new Date(parseInt(filters[2]));
-      } else {
-         this.dateFilter = null;
-      }
-      this.includeTestRecords = (filters[3] === "true");
-   }
+   constructor(
+      public router: Router,
+      public activatedRoute: ActivatedRoute,
+      public config: ConfigService,
+      private locale: Location,
+      private cdr: ChangeDetectorRef,
+      private http: HttpClient,
+      private reportsService: ReportsService,
+   ) {
+      this.isDevEnv = location.hostname === 'localhost';
+      localStorage.setItem('originalUrl', locale.path());
 
-   showDetailedPointData = (point: PointData | ErrorFilter) => {
-      this.gridTabActive = true;
-      if ((point as PointData).team) {
-         this.teamFilter = (point as PointData).team;
-         this.dateFilter = (point as PointData).date;
-         this.errorFilter = null,
-         this.timeRange = null;
-      } else {
-         let errorFilter: ErrorFilter = point as ErrorFilter;
-         let error: string = errorFilter.error;
-         // let definedErrors: string[] = ["E_INVALID_CLN", "E_SVS_FAIL", "E_INVALID_PARAM"];
-         this.errorFilter = error;
-         this.timeRange = {
-            start: errorFilter.start,
-            end: errorFilter.end
-         };
-         this.teamFilter = null;
-         this.dateFilter = null;
+      if (!this.isDevEnv) {
+         if (document.cookie === '') {
+            window.location.href = '/login';
+         } else {
+            console.log(document.cookie);
+            this.userName = this.getCookie('user');
+            if (this.userName !== '') {
+               this.config.userName = this.userName;
+            } else {
+               window.location.href = '/login';
+            }
+         }
       }
 
+      if (localStorage.getItem('originalUrl')) {
+         this.router.navigateByUrl(localStorage.getItem('originalUrl'));
+      } else {
+         if (locale.path() === '') {
+            this.router.navigateByUrl('/reports');
+         }
+      }
+
+      this.setReportTitle();
    }
+
+   setReportTitle() {
+      this.activatedRoute.queryParams.subscribe(params => {
+         if (!!params['reportTitle']) {
+            localStorage.setItem('reportTitle', params['reportTitle']);
+         } else {
+            localStorage.removeItem('reportTitle');
+         }
+      });
+   }
+
+   ngOnInit() {
+      if (this.isDevEnv) {
+         this.showDialog = !!!this.config.userName;
+      }
+      this.http.get('assets/config.json').subscribe(result => {
+         this.config.host = result['hostip'];
+      });
+
+      this.config.obs$.subscribe(
+         () => {
+            this.checkSystemAdmin();
+         });
+   }
+
+   checkSystemAdmin() {
+      if (this.config.userName && this.config.host && this.config.isSystemAdmin === undefined) {
+         this.reportsService.checkSystemAdmin().subscribe(result => {
+            this.isSystemAdmin = true;
+            this.config.isSystemAdmin = true;
+            console.log('checkSystemAdmin => true');
+         }, error => {
+            this.config.isSystemAdmin = false;
+            this.router.navigateByUrl('/vmpools');
+         });
+      }
+   }
+
+   closeModal() {
+      this.showDialog = false;
+      this.config.userName = this.userName;
+      this.checkSystemAdmin();
+   }
+
+   @HostListener('window:keydown', ['$event'])
+   handleKeyDown(event: KeyboardEvent) {
+      if (this.showDialog && this.userName && event.key === 'Enter') {
+         this.config.userName = this.userName;
+         this.showDialog = false;
+      }
+      this.cdr.detectChanges();
+   }
+
+   private getCookie(name: string) {
+      let ca: Array<string> = document.cookie.split(';');
+      let caLen: number = ca.length;
+      let cookieName = `${name}=`;
+      let c: string;
+
+      for (let i = 0; i < caLen; i += 1) {
+          c = ca[i].replace(/^\s+/g, '');
+          if (c.indexOf(cookieName) === 0) {
+              return c.substring(cookieName.length, c.length);
+          }
+      }
+      return '';
+  }
 }

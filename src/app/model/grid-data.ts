@@ -1,6 +1,8 @@
-import {FastSvsRecord} from "./record";
+import { ReportConfiguration } from "./report-configuration";
 
 export interface GridData {
-   record: FastSvsRecord[];
    total: number;
+   page: number;
+   limit: number;
+   reports: ReportConfiguration[];
 }

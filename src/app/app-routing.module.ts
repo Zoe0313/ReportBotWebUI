@@ -1,23 +1,18 @@
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
-import {HomeComponent} from "./home/home.component";
-import { TotStatisticsComponent } from './tot-statistics/tot-statistics.component';
-import {UserRankComponent} from "./user-rank/user-rank.component";
-import {ActiveUserComponent} from "./active-user/active-user.component";
-import { SingleSvsDetailsComponent } from './single-svs-details/single-svs-details.component';
-
+import { ReportsComponent } from './component/reports.component';
 
 const routes: Routes = [
-   {path: "fastsvs/home", pathMatch: "full", component: HomeComponent},
-   {path: "fastsvs/tot", pathMatch: "full", component: TotStatisticsComponent},
-   {path: "fastsvs/rank", pathMatch: "full", component: UserRankComponent},
-   {path: "fastsvs/singleSvs", pathMatch: "full", component: SingleSvsDetailsComponent},
-   {path: "fastsvs", redirectTo: "fastsvs/home", pathMatch: "full"},
-   {path: "fastsvs/activeUser", pathMatch: "full", component: ActiveUserComponent}
+   {path: "reports", component: ReportsComponent}
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+   imports: [
+      CommonModule,
+      RouterModule.forRoot(routes)
+   ],
+   exports: [ RouterModule ],
+   declarations: []
 })
 export class AppRoutingModule { }

@@ -1,12 +1,42 @@
-.clr-row {
-   padding-left: 12px;
-   display: flex;
-   flex-direction: column;
+.main-container {
+   font-family: Roboto,Arial,sans-serif;
+
+   .content-area {
+      padding: 0 0 1rem 0;
+   }
+
+   .header-nav {
+      font-size: 0.75rem;
+   }
+}
+.header .header-actions .nav-link {
+   opacity: 1;
 }
 
-.record-container {
-   max-width: 55rem;
-   padding-left: 12px;
+.dropdown {
+   // margin-right: 20px;
+   width: 60px;
+}
+
+.modal-body {
+   label {
+      margin-right: 10px;
+   }
+}
+
+.icon-request {
+   fill: #FFF;
+}
+
+.username {
    display: flex;
-   flex-direction: row;
+   align-items: center;
+   padding-right: 0.75rem;
+
+   .api-doc {
+      color: hsl(198, 0%, 91%);
+   }
+   .tooltip.tooltip-sm>.tooltip-content, .tooltip .tooltip-content.tooltip-sm {
+      width: 7rem !important;
+   }
 }

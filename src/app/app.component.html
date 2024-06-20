@@ -1,1 +1,76 @@
-<router-outlet></router-outlet>
+<div class="main-container" *ngIf="userName">
+   <header class="header header-7">
+      <div class="branding">
+         <a href="/" class="nav-link">
+            <clr-icon shape="vm-bug"></clr-icon>
+            <span class="title">VSAN Bot</span>
+         </a>
+      </div>
+      <div class="header-nav">
+         <a href="javascript://"
+            class="nav-link nav-text"
+            routerLink="reports"
+            [class.active]="router.url.includes('reports')"
+            >My Notifications</a>
+         <a href="javascript://"
+            class="nav-link nav-text"
+            routerLink="history"
+            [class.active]="router.url.includes('history')"
+            >Notification History</a>
+         <a href="javascript://"
+            *ngIf="isSystemAdmin"
+            class="nav-link nav-text"
+            routerLink="service"
+            [class.active]="router.url.includes('service')"
+            >Service Dashboard</a>
+      </div>
+      <div class="header-actions">
+         <div class="username"><label>{{ userName }}</label></div>
+         <div class="username">
+            <a href="https://vsanbot-staging.vdp.oc.vmware.com/api/v1/index.html#/"
+               target="_blank"
+               role="tooltip"
+               aria-haspopup="true"
+               class="tooltip tooltip-xs tooltip-bottom-left">
+               <img src="assets/api.svg" width="18" height="18">
+               <span class="tooltip-content">API doc</span>
+            </a>
+         </div>
+         <div class="username">
+            <a href="https://confluence.eng.vmware.com/display/SABU/vSAN+Slackbot+User+Manual"
+               target="_blank"
+               role="tooltip"
+               aria-haspopup="true"
+               class="tooltip tooltip-sm tooltip-bottom-left">
+               <img src="assets/confluence-logo.svg" width="18" height="18">
+               <span class="tooltip-content">User Manual</span>
+            </a>
+         </div>
+         <div class="username">
+            <a href="https://vmware.slack.com/archives/C02CG0G4W9J"
+               target="_blank"
+               role="tooltip"
+               aria-haspopup="true"
+               class="tooltip tooltip-sm tooltip-bottom-left">
+               <img src="assets/slack-logo.svg" width="18" height="18">
+               <span class="tooltip-content">Feedback</span>
+            </a>
+         </div>
+      </div>
+   </header>
+   <div class="content-container">
+      <div class="content-area">
+         <router-outlet></router-outlet>
+      </div>
+   </div>
+</div>
+<clr-modal [(clrModalOpen)]="showDialog" [clrModalClosable]="false" [clrModalSize]="'sm'">
+   <h3 class="modal-title">User</h3>
+   <div class="modal-body">
+      <label>User:</label>
+      <input type="text" class="clr-input" [(ngModel)]="userName">
+   </div>
+   <div class="modal-footer">
+      <button type="button" class="btn btn-outline" (click)="closeModal()" [disabled]="!!!userName">OK</button>
+   </div>
+</clr-modal>
