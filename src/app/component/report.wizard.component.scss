@@ -1,0 +1,89 @@
+.creation-items {
+   // width: 500px;
+   .clr-form-control {
+      margin-top: 0.7rem;
+   }
+   .clr-form-horizontal .clr-form-control>.clr-control-label {
+      text-align: right;
+   }
+   .clr-input, .clr-select {
+      width: 220px;
+   }
+   .clr-form-control-disabled {
+      opacity: 1;
+   }
+}
+
+.vertical-row {
+   display: flex;
+   flex-direction: column;
+}
+
+.modal-body {
+   height: 100%;
+}
+
+.layer-action {
+   width: 100%;
+   display: flex;
+   flex-direction: row;
+   justify-content: flex-start;
+   margin-top: 10px;
+   margin-left: 20px;
+
+   .btn.btn-primary {
+      width: 180px;
+   }
+   .btn.btn-remove-layer {
+      width: 180px;
+   }
+}
+
+.clr-accordion {
+   margin-bottom: 0;
+}
+
+clr-signpost-content {
+   max-width: unset;
+   white-space: initial;
+}
+
+clr-accordion-title {
+   word-break: break-all;
+   width: 100%;
+   .accordion-hdr {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      .layer-option {
+         display: flex;
+         align-items: center;
+         :first-child {
+            margin-right: 10px;
+            fill: green;
+         }
+         :last-child {
+            fill: #e03400;
+         }
+      }
+   }
+}
+
+.modal-xl {
+   ::ng-deep .modal-dialog {
+      width: 1440px !important;
+   }
+}
+
+.spinner-line {
+   padding-bottom: 10px;
+   display: flex;
+   align-items: center;
+   .spinner.spinner-inline {
+      margin-right: 10px;
+      min-height: 1.5rem;
+      min-width: 1.5rem;
+      height: 1.5rem;
+      width: 1.5rem;
+   }
+}

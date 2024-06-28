@@ -1,0 +1,113 @@
+<div class="vmpool-creation ">
+   <clr-wizard #poolWizard [(clrWizardOpen)]="open" class="modal-xl">
+      <clr-wizard-title>{{ wizardTitle }}</clr-wizard-title>
+
+      <clr-wizard-button [type]="'cancel'">Cancel</clr-wizard-button>
+      <clr-wizard-button *ngIf="poolWizard.navService.currentPage == layerPage"
+                        [clrWizardButtonDisabled]="validating"
+                        (click)="doFinish('createDraft')">
+         {{ isDraftCreated ? 'Go to dashboard' : 'Validate'}}
+      </clr-wizard-button>
+      <clr-wizard-button [type]="'previous'">Back</clr-wizard-button>
+      <clr-wizard-button [type]="'next'">Next</clr-wizard-button>
+      <clr-wizard-button [type]="'finish'">Finish</clr-wizard-button>
+
+      <clr-wizard-page [clrWizardPageNextDisabled]="!configPage.configForm.valid"
+                       [clrWizardPagePreventDefaultNext]="true"
+                       (clrWizardPageNext)="pageCustomNext()">
+         <ng-template clrPageTitle>Pool Config</ng-template>
+         <app-wizard-config-page #configPage
+                                 [poolConfigSpec]="poolConfigSpec"
+                                 [privilegedGroups]="privilegedGroups"
+                                 [privilegedUsers]="privilegedUsers"
+                                 [adminUsers]="adminUsers">
+         </app-wizard-config-page>
+      </clr-wizard-page>
+
+      <clr-wizard-page [clrWizardPagePreventDefaultNext]="true"
+                       (clrWizardPageNext)="pageResourcesNext()">
+         <ng-template clrPageTitle>Declare Pool Resources</ng-template>
+         <app-wizard-resources-page #resourcesPage
+                                    [poolConfigSpec]="poolConfigSpec"
+                                    [resource]="poolConfigSpec.PoolConfig.FixedResource ? 'customized' : 'nimbus'">
+         </app-wizard-resources-page>
+      </clr-wizard-page>
+
+      <clr-wizard-page *ngIf="action == 'vsanTestbeds'"
+                       [clrWizardPagePreventDefaultNext]="true"
+                       (clrWizardPageNext)="pageComposeNext()">
+         <ng-template clrPageTitle>Compose vSAN cluster</ng-template>
+         <clr-alert [clrAlertType]="'danger'" *ngFor="let msg of alertMessages">
+            <clr-alert-item>
+               <span class="alert-text">{{ msg }}</span>
+            </clr-alert-item>
+         </clr-alert>
+         <div *ngIf="loading" class="spinner-line">
+            <span class="spinner spinner-inline">Loading...</span>
+            <span>Uploading the Json file...</span>
+         </div>
+         <app-wizard-spec-customized-page [specLayer]="poolConfigSpec.DeploySpec.Layers[0]"
+                                          [commandModel]="commandModel">
+         </app-wizard-spec-customized-page>
+      </clr-wizard-page>
+
+      <clr-wizard-page #layerPage
+                       [clrWizardPagePreventDefaultNext]="true"
+                       (clrWizardPageOnCommit)="doFinish('createPool')">
+         <ng-template clrPageTitle>
+            {{ !editable ? 'View Deploy Spec' : 'Compose Deploy Spec'}}
+         </ng-template>
+         <clr-alert [clrAlertType]="'danger'" *ngFor="let msg of alertMessages">
+            <clr-alert-item>
+               <span class="alert-text">{{ msg }}</span>
+            </clr-alert-item>
+         </clr-alert>
+         <clr-accordion>
+            <!-- <app-vmpool-spec-layer *ngFor="let layer of poolConfigSpec.DeploySpec.Layers"
+                                   [editable]="editable"
+                                   [specLayer]="layer">
+            </app-vmpool-spec-layer> -->
+            <clr-accordion-panel *ngFor="let layer of poolConfigSpec.DeploySpec.Layers; let i = index">
+               <clr-accordion-title>
+                  <div class="accordion-hdr">
+                     <span>{{ layer.Name }} : {{ layer.Command }}</span>
+                     <div class="layer-option">
+                        <clr-icon shape="plus" size="18" (click)="insertLayer($event, i)"></clr-icon>
+                        <clr-icon shape="times" size="18" (click)="deleteLayer($event, i)"></clr-icon>
+                     </div>
+                  </div>
+                  
+               </clr-accordion-title>
+               <clr-accordion-content *clrIfExpanded>
+                  <app-vmpool-spec-layer [specLayer]="layer" [editable]="editable">
+                  </app-vmpool-spec-layer>
+               </clr-accordion-content>
+            </clr-accordion-panel>
+         </clr-accordion>
+         <div class="layer-action" *ngIf="editable">
+            <button class="btn btn-primary btn-add-layer" (click)="addLayer()">Add more layer</button>
+            <button class="btn btn-remove-layer"
+                     (click)="removeLayer()"
+                     [disabled]="poolConfigSpec.DeploySpec.Layers.length == 1">
+               Remove layer
+            </button>
+         </div>
+      </clr-wizard-page>
+   </clr-wizard>
+   
+</div>
+
+<clr-modal [(clrModalOpen)]="showDeleteLayer">
+   <h3 class="modal-title">Delete {{deletedLayerName}}</h3>
+   <div class="modal-body">
+       <p>
+         <span style="color: dodgerblue;">{{deletedLayerName}}</span>
+          is referenced by <span style="color: firebrick">{{existedLayerNames}}</span>,
+          do you want to delete  <span style="color: dodgerblue;">{{deletedLayerName}}</span>
+      </p>
+   </div>
+   <div class="modal-footer">
+       <button type="button" class="btn btn-outline" (click)="showDeleteLayer = false">Cancel</button>
+       <button type="button" class="btn btn-primary" (click)="showDeleteLayer = false; deleteLayerHandler()">Ok</button>
+   </div>
+</clr-modal>

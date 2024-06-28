@@ -1,0 +1,61 @@
+<div class="report-details" [clrLoading]="loading">
+   <div class="details-group">
+      <label class="bold-label">Notification details</label>
+      <div class="clr-row first-row">
+         <div class="clr-col">
+            <label>Notification Type:</label>
+            <label>{{ ReportDetail.reportType }}</label>
+         </div>
+         <div class="clr-col">
+            <label>Sharable:</label>
+            <label>{{ ReportDetail.sharable }}</label>
+         </div>
+         <div class="clr-col">
+         </div>
+         <div class="clr-col">
+         </div>
+      </div>
+      <div class="clr-row">
+         <div class="clr-col">
+            <label>Google Space:</label>
+            <label>{{ ReportDetail.conversations }}</label>
+         </div>
+         <div class="clr-col">
+            <label>Mention Users/Groups:</label>
+            <label>{{ ReportDetail.mentionUsers }}</label>
+         </div>
+         <div class="clr-col">
+         </div>
+         <div class="clr-col">
+         </div>
+      </div>
+      <div class="clr-row">
+         <div class="clr-col">
+            <label>Start Date:</label>
+            <label>{{ ReportDetail.startDate }}</label>
+         </div>
+         <div class="clr-col">
+            <label>End Date:</label>
+            <label>{{ ReportDetail.endDate }}</label>
+         </div>
+         <div class="clr-col">
+         </div>
+         <div class="clr-col">
+         </div>
+      </div>
+      <div class="clr-row">
+         <div class="clr-col">
+            <label>Recurrence:</label>
+            <label>{{ ReportDetail.recurrence }}</label>
+         </div>
+         <div class="clr-col">
+            <label>Next Sending Time:</label>
+            <label>{{ ReportDetail.sendTime }}</label>
+         </div>
+         <div class="clr-col">
+         </div>
+         <div class="clr-col">
+         </div>
+      </div>
+   </div>
+</div>

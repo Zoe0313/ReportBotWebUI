@@ -4,7 +4,10 @@ import { Routes, RouterModule } from '@angular/router';
 import { ReportsComponent } from './component/reports.component';
 
 const routes: Routes = [
-   {path: "reports", component: ReportsComponent}
+
+   {path: "reports", pathMatch: "full", component: ReportsComponent},
+   {path: "history", pathMatch: "full", component: ReportsComponent},
+
 ];
 
 @NgModule({

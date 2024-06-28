@@ -1,7 +1,16 @@
 
-.mgmt-report-datagrid-cell {
-   display: flex;
-   align-items: center;
+.report-list {
+   margin: 1rem;
+   height: 100%;
+
+   clr-datagrid {
+      // padding: 0 30px;
+      min-height: 238px;
+      height: 100%;
+   }
+   clr-dg-row-detail {
+      padding-top: 0;
+   }
 }
 
 .report-header {
@@ -12,23 +21,84 @@
    font-size: .75rem;
    font-weight: 200;
    letter-spacing: normal;
+
+   .btn-create-report {
+      margin-left: 1000px;
+   }
 }
 
-.my-report {
-   min-height: 346px;
+.report-datagrid-cell {
+   display: flex;
+   align-items: center;
+   font-size: .6rem;
 }
 
-.public-name {
-   margin-left: 12px;
+.report-title-column {
+   width: 540px;
+}
+.report-type-column {
+   width: 260px;
+   font-size: .65rem;
+}
+.report-status-column {
+   width: 200px;
 }
 
-.btn-apply {
-   margin-left: 0.5rem !important;
+.icon-name {
+   display: flex;
+   align-items: center;
+   width: 20px;
+   min-width: 20px;
+
+   .signpost-content {
+      min-width: 20rem;
+      max-width: 30rem;
+      height: 210px;
+
+      ::ng-deep .signpost-wrap {
+         height: 100%;
+         ::ng-deep .signpost-content-body {
+            height: 100%;
+         }
+      }
+   }
+
+   .tooltip:focus>:first-child {
+      outline-style: none;
+   }
 }
 
-.help-icon {
-   color: hsl(198, 80%, 46%);
-   margin-left: 5px;
+.favorite-icon {
+   margin-right: 5px;
+}
+
+.favorite-icon-solid {
+   color: hsl(48, 95%, 48%);
+   cursor: pointer;
+}
+
+label>clr-icon {
+   fill: chartreuse;
+}
+
+.status {
+   margin-right: 3px;
+}
+
+.status-created {
+   color: hsl(48, 100%, 69%);
+}
+
+.status-enabled {
+   color: hsl(93, 77%, 44%);
+}
+
+.status-disabled {
+   color: hsl(198, 100%, 41%);
+}
+
+.status-removed {
+   color: hsl(198, 0%, 45%);
 }
 
 .clr-form-control {
@@ -39,49 +109,12 @@ clr-datagrid {
    padding-bottom: 1rem;
 }
 
-.list-content {
-   width: 100%;
-   padding: 1rem;
-}
-
 .btn-column {
    padding: 0;
    .btn {
       padding: 0;
       margin: 0;
    }
-}
-
-.resource-limit-column {
-   justify-content: space-between;
-}
-
-.datagrid-cell .tooltip {
-   margin-right: 0;
-}
-
-.report-action {
-   justify-content: space-evenly;
-}
-
-.spinner {
-   margin-left: 10px;
-}
-
-.report-title-column {
-   justify-content: space-between;
-}
-
-.status-enabled {
-   color: hsl(93, 77%, 44%);
-}
-
-.status-disabled {
-   color: hsl(14, 100%, 44%);
-}
-
-.status-deleted {
-   color: hsl(198, 0%, 45%);
 }
 
 ::ng-deep.modal-dialog.modal-lg {

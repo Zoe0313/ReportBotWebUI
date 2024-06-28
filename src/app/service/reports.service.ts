@@ -2,8 +2,6 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ConfigService } from './configure.service';
-// import { ReportConfiguration } from "../model/report-configuration";
-// import { GridData } from '../model/grid-data';
 
 @Injectable({
    providedIn: 'root'
@@ -12,48 +10,82 @@ import { ConfigService } from './configure.service';
 @Injectable()
 export class ReportsService {
 
-   host: string;
-
    constructor(
       private config: ConfigService,
       private http: HttpClient
    ) {
-      this.host = config.host;
    }
 
-   getReports(page: number): Observable<any> {
-      const url = `${this.config.host}${this.config.API.REPORT_CONFIGURATION_LIST}`
+   getReports(page: number): Promise<any> {
+      const url = `${this.config.API.REPORT_CONFIGURATION_LIST}`
                   .replace('{0}', page.toString())
-                  .replace('{1}', '10');
+                  .replace('{1}', '20');
 
-      return this.http.get<any>(url, this.getRequestOptions());
+      return this.http.get<any>(url, this.getNoCacheRequestOptions()).toPromise();
    }
 
-   getReportDetail(reportID: string): Observable<any> {
-      const url = `${this.config.host}${this.config.API.REPORT_CONFIGURATION_DETAILS}`
+   getReportDetail(reportID: string): Promise<any> {
+      const url = `${this.config.API.REPORT_CONFIGURATION_DETAILS}`
                   .replace('{0}', reportID);
 
-      return this.http.get<any>(url, this.getRequestOptions());
+      return this.http.get<any>(url, this.getNoCacheRequestOptions()).toPromise();
    }
 
    checkSystemAdmin(): Observable<any> {
-      const url = `${this.config.host}${this.config.API.CHECK_SYSTEM_ADMIN}`
+      const url = `${this.config.API.CHECK_SYSTEM_ADMIN}`
                   .replace('{0}', this.config.userName);
 
-      return this.http.get(url, this.getRequestOptions());
+      return this.http.get(url, this.getNoCacheRequestOptions());
    }
 
-   protected getRequestOptions(httpOptions?: any): any {
-      httpOptions = { headers: new HttpHeaders() };
-      httpOptions.headers = {
-         'User': this.config.userName,
-         'Content-Security-Policy': 'upgrade-insecure-requests',
-         'Access-Control-Allow-Origin': '*',
-         'Cache-Control': 'no-cache',
-         'Pragma': 'no-cache',
-         'Expires': 'Sat, 01 Jan 2000 00:00:00 GMT'
-      };
-      return httpOptions;
+   addFavored(reportID: string) {
+      const url = `${this.config.API.USERS_FAVORED}`
+                  .replace('{0}', reportID);
+
+      return this.http.put(url, '', this.getNoCacheRequestOptions());
+   }
+
+   removeFavored(reportID: string) {
+      const url = `${this.config.API.USERS_FAVORED}`
+                  .replace('{0}', reportID);
+
+      return this.http.delete(url, this.getNoCacheRequestOptions());
+   }
+
+   deleteReport(reportID: string) {
+      const url = `${this.config.API.DELETE_REPORT_CONFIGURATION}`
+                  .replace('{0}', reportID);
+
+      return this.http.delete(url, this.getNoCacheRequestOptions());
+   }
+
+   disableReport(reportID: string) {
+      const url = `${this.config.API.UPDATE_REPORT_STATUS}`
+                  .replace('{0}', reportID)
+                  .replace('{1}', 'disable');
+
+      return this.http.patch(url, this.getNoCacheRequestOptions());
+   }
+
+   enableReport(reportID: string) {
+      const url = `${this.config.API.UPDATE_REPORT_STATUS}`
+                  .replace('{0}', reportID)
+                  .replace('{1}', 'enable');
+
+      return this.http.patch(url, this.getNoCacheRequestOptions());
+   }
+   /**
+    * Returns HttpOptions preconfigured with headers that imply no caching.
+    */
+   private getNoCacheRequestOptions(): HttpOptions {
+      const options: HttpOptions = new HttpOptions();
+      let headers = new HttpHeaders();
+      // Add cache control headers to avoid data caching in IE browser
+      headers = headers.append(HttpHeader.CACHE_CONTROL, HttpHeader.NO_CACHE);
+      headers = headers.append(HttpHeader.PRAGMA, HttpHeader.NO_CACHE);
+      headers = headers.append(HttpHeader.EXPIRES, "Sat, 01 Jan 2000 00:00:00 GMT");
+      options.headers = headers;
+      return options;
    }
 
 }

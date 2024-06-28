@@ -10,11 +10,13 @@ import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { ReportsService } from './service/reports.service';
 import { ReportsComponent } from './component/reports.component';
+import { ReportDetailsComponent } from './component/report-details.component';
 
 @NgModule({
    declarations: [
       AppComponent,
-      ReportsComponent
+      ReportsComponent,
+      ReportDetailsComponent
    ],
    imports: [
       BrowserModule,

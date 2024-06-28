@@ -14,7 +14,7 @@ import { ReportsService } from './service/reports.service';
 export class AppComponent implements OnInit {
    showDialog: boolean;
    userName: string;
-   isDevEnv = true;
+   isDevEnv = false;
    isSystemAdmin = false;
 
    constructor(
@@ -68,10 +68,6 @@ export class AppComponent implements OnInit {
       if (this.isDevEnv) {
          this.showDialog = !!!this.config.userName;
       }
-      this.http.get('assets/config.json').subscribe(result => {
-         this.config.host = result['hostip'];
-      });
-
       this.config.obs$.subscribe(
          () => {
             this.checkSystemAdmin();
@@ -79,14 +75,14 @@ export class AppComponent implements OnInit {
    }
 
    checkSystemAdmin() {
-      if (this.config.userName && this.config.host && this.config.isSystemAdmin === undefined) {
+      if (this.config.userName && this.config.isSystemAdmin === undefined) {
          this.reportsService.checkSystemAdmin().subscribe(result => {
             this.isSystemAdmin = true;
             this.config.isSystemAdmin = true;
             console.log('checkSystemAdmin => true');
          }, error => {
             this.config.isSystemAdmin = false;
-            this.router.navigateByUrl('/vmpools');
+            this.router.navigateByUrl('/reports');
          });
       }
    }
@@ -94,7 +90,7 @@ export class AppComponent implements OnInit {
    closeModal() {
       this.showDialog = false;
       this.config.userName = this.userName;
-      this.checkSystemAdmin();
+      //this.checkSystemAdmin();
    }
 
    @HostListener('window:keydown', ['$event'])

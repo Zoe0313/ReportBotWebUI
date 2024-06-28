@@ -1,0 +1,45 @@
+.report-details {
+   display: flex;
+   flex-direction: column;
+   // width: 60%;
+   padding-left: 50px;
+   padding-bottom: 20px;
+}
+
+.first-row {
+   margin-top: 10px;
+}
+
+.clr-row {
+   margin-left: .5rem;
+}
+
+.clr-col {
+   display: flex;
+   align-items: center;
+}
+
+.clr-col>label:first-child {
+   width: 150px;
+   font-weight: bold;
+   font-size: 13px;
+}
+
+.clr-form-control {
+   margin-top: 0;
+   margin-top: 10px;
+}
+
+.clr-form-horizontal .clr-form-control>.clr-control-label  {
+   width: 8rem;
+}
+
+.clr-col-md-7 {
+   font-weight: normal;
+}
+
+.bold-label {
+   font-weight: bold;
+   font-size: 16px;
+}
+

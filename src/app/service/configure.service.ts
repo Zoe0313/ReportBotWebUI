@@ -7,9 +7,10 @@ interface API {
    REPORT_CONFIGURATION_LIST: string;
    REPORT_CONFIGURATION_DETAILS: string;
    CREATE_REPORT_CONFIGURATION: string;
-   UPDATE_REPORT_CONFIGURATION: string;
+   UPDATE_REPORT_STATUS: string;
    DELETE_REPORT_CONFIGURATION: string;
    CHECK_SYSTEM_ADMIN: string;
+   USERS_FAVORED: string;
  }
 
 @Injectable({
@@ -23,16 +24,6 @@ export class ConfigService {
    sysAdmin$ = this.isSystemAdminSubject.asObservable();
 
    API: API;
-
-   // tslint:disable-next-line: variable-name
-   private _host: string;
-   public set host(value: string) {
-      this._host = value;
-      this.subject.next(value);
-   }
-   public get host(): string {
-      return this._host;
-   }
 
    // tslint:disable-next-line: variable-name
    private _username: string;
@@ -58,14 +49,14 @@ export class ConfigService {
    }
 
    getConfig() {
-      this.host = environment.appUrl;
       this.API = {
          REPORT_CONFIGURATION_LIST: '/report/configuration?page={0}&limit={1}',
          REPORT_CONFIGURATION_DETAILS: '/report/{0}/configuration',
          CREATE_REPORT_CONFIGURATION: '/report/configuration',
-         UPDATE_REPORT_CONFIGURATION: '/report/{0}/configuration?status={1}',
+         UPDATE_REPORT_STATUS: '/report/{0}/configuration?status={1}',
          DELETE_REPORT_CONFIGURATION: '/report/{0}/configuration',
-         CHECK_SYSTEM_ADMIN: '/service/admins/{0}'
+         CHECK_SYSTEM_ADMIN: '/service/admins/{0}',
+         USERS_FAVORED: '/user/favoredReports?reportID={0}'
       };
    }
 }

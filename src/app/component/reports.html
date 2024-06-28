@@ -1,76 +1,109 @@
-<div class="list-content">
-   <div class="report-header">My Reports</div>
-   <clr-datagrid [clrDgLoading]="loadingReports" class="my-report">
-      <clr-dg-column>
-         Report Title
+<clr-alert [clrAlertType]="'danger'" *ngIf="alertMessage != ''">
+   <clr-alert-item>
+      <span class="alert-text">
+         {{ alertMessage }}
+      </span>
+   </clr-alert-item>
+</clr-alert>
+
+
+<div class="report-list">
+   <div class="report-header">
+      There are {{ ReportList.length }} notifications in your account.
+      <button type="button"
+              (click)="openCreateReportDialog()"
+              class="btn btn-primary btn-icon btn-create-report">
+         <clr-icon shape="plus" ></clr-icon>
+         Create Report
+     </button>
+   </div>
+   <clr-datagrid [clrDgLoading]="loading">
+      <clr-dg-column style="width: 550px;" [clrDgField]="'title'">
+         Name
       </clr-dg-column>
-      <clr-dg-column>
+      <clr-dg-column style="width: 200px;" *ngIf="config.isSystemAdmin">
          Creator
       </clr-dg-column>
-      <clr-dg-column>
+      <clr-dg-column style="width: 260px;" [clrDgField]="'reportType'">
          Type
       </clr-dg-column>
-      <clr-dg-column>
-         Recurrence
-      </clr-dg-column>
-      <clr-dg-column style="width: 120px;">
+      <clr-dg-column style="width: 200px;" [clrDgField]="'status'">
          Status
       </clr-dg-column>
-      <clr-dg-column style="width: 200px;">
+      <clr-dg-column>
          Actions
       </clr-dg-column>
-      <clr-dg-row *clrDgItems="let report of myReports" [clrDgItem]="report">
-         <clr-dg-cell class="mgmt-vmpool-datagrid-cell report-title-column">
-            {{ report.title }}
-         </clr-dg-cell>
-         <clr-dg-cell class="mgmt-report-datagrid-cell">
-            {{ report.creator }}
-         </clr-dg-cell>
-         <clr-dg-cell class="mgmt-report-datagrid-cell">
-            {{ report.reportType }}
-         </clr-dg-cell>
-         <clr-dg-cell class="mgmt-report-datagrid-cell">
-            {{ report.recurrence }}
-         </clr-dg-cell>
-         <clr-dg-cell class="mgmt-report-datagrid-cell">
-            {{ report.status }}
+      <clr-dg-row *clrDgItems="let report of ReportList" [clrDgItem]="report">
+         <clr-dg-cell class="report-datagrid-cell report-title-column">
+            <div class="icon-name">
+               <clr-icon shape="star" size="20"
+                        class="favorite-icon"
+                        [ngClass]="getFavoriteIconClass(report)"
+                        (click)="addOrRemoveFavorite(report)"></clr-icon>
+            </div>
+            <span>{{ report.title }}</span>
          </clr-dg-cell>
 
-         <clr-dg-cell class="mgmt-vmpool-datagrid-cell pool-action">
-            <clr-tooltip>
-               <clr-icon clrTooltipTrigger shape="pencil" (click)="onEdit(report)"></clr-icon>
-               <clr-tooltip-content clrPosition="top-right" clrSize="xs" *clrIfOpen>
-                  <span>Edit</span>
-               </clr-tooltip-content>
-            </clr-tooltip>
-            <clr-tooltip>
-               <clr-icon clrTooltipTrigger shape="backup-restore" (click)="onEnable(report)"></clr-icon>
-               <clr-tooltip-content clrPosition="top-right" clrSize="xs" *clrIfOpen>
-                  <span>Enable</span>
-               </clr-tooltip-content>
-            </clr-tooltip>
-            <clr-tooltip>
-               <clr-icon clrTooltipTrigger shape="times-circle" (click)="onDisable(report)"></clr-icon>
-               <clr-tooltip-content clrPosition="top-right" clrSize="xs" *clrIfOpen>
-                  <span>Disable</span>
-               </clr-tooltip-content>
-            </clr-tooltip>
-            <clr-tooltip>
-               <clr-icon clrTooltipTrigger shape="trash" (click)="onDelete(report)"></clr-icon>
-               <clr-tooltip-content clrPosition="top-right" clrSize="xs" *clrIfOpen>
-                  <span>Delete</span>
-               </clr-tooltip-content>
-            </clr-tooltip>
-            <clr-tooltip>
-               <clr-icon clrTooltipTrigger shape="recycle" (click)="onSendNow(report)"></clr-icon>
-               <clr-tooltip-content clrPosition="top-left" clrSize="xs" *clrIfOpen>
-                  <span>Send notification Now</span>
-               </clr-tooltip-content>
-            </clr-tooltip>
+         <clr-dg-cell class="report-datagrid-cell report-status-column" *ngIf="config.isSystemAdmin">
+            <span>{{ report.creator }}</span>
          </clr-dg-cell>
+
+         <clr-dg-cell class="report-datagrid-cell report-type-column">
+            <span>{{ report.reportType }}</span>
+         </clr-dg-cell>
+
+         <clr-dg-cell class="report-datagrid-cell report-status-column">
+            <div class="icon-name">
+               <clr-icon shape="info-circle" size="22"
+                         class="is-solid status"
+                         [ngClass]="getReportStatusClass(report.status)"></clr-icon>
+            </div>
+            <span>{{ report.status }}</span>
+         </clr-dg-cell>
+
+         <clr-dg-cell class="report-datagrid-cell">
+            <button type="button"
+                    class="btn btn-icon btn-info-outline"
+                    aria-label="edit"
+                    (click)="onEdit(report)">
+                  <clr-icon shape="pencil"></clr-icon>
+               Edit
+            </button>
+         </clr-dg-cell>
+
+         <clr-dg-cell class="report-datagrid-cell" *ngIf="report.status != 'Enabled'">
+            <button type="button"
+                    class="btn btn-icon btn-success-outline"
+                    aria-label="enable"
+                    (click)="onEnable(report)">
+               <clr-icon shape="check"></clr-icon>
+               Enable
+            </button>
+         </clr-dg-cell>
+
+         <clr-dg-cell class="report-datagrid-cell" *ngIf="report.status == 'Enabled'">
+            <button type="button"
+                    class="btn btn-icon btn-warning-outline"
+                    aria-label="disable"
+                    (click)="onDisable(report)">
+               <clr-icon shape="times"></clr-icon>
+               Disable
+            </button>
+         </clr-dg-cell>
+
+         <clr-dg-cell class="report-datagrid-cell" *ngIf="config.isSystemAdmin">
+            <button type="button"
+                    class="btn btn-icon btn-danger"
+                    aria-label="remove"
+                    (click)="onRemove(report)">
+               <clr-icon shape="trash"></clr-icon>
+            </button>
+         </clr-dg-cell>
+
+         <app-report-details *clrIfExpanded [report]="report" ngProjectAs="clr-dg-row-detail"></app-report-details>
       </clr-dg-row>
       <clr-dg-footer>
-         <div class="pagination">
+         <div class="pagination" *ngIf="ReportList.length > 20">
             <div class="pagination-list ng-star-inserted">
                <button class="pagination-previous"
                        type="button"
@@ -114,3 +147,38 @@
      </clr-dg-footer>
    </clr-datagrid>
 </div>
+
+<!--<app-report-wizard (refreshEmitter)="getReports(currentPage)"></app-report-wizard>-->
+
+<clr-modal [(clrModalOpen)]="showRemoveConfirmDialog" [clrModalClosable]="false">
+   <h3 class="modal-title">Delete Notification</h3>
+   <div class="modal-body">
+      <p>Are you sure remove the notification "{{ selectedReport?.title }}"?</p>
+   </div>
+   <div class="modal-footer">
+      <button type="button" class="btn btn-outline" (click)="showRemoveConfirmDialog = false">Cancel</button>
+      <button type="button" class="btn btn-danger" (click)="onRemoveHandler()">Delete</button>
+   </div>
+</clr-modal>
+
+<clr-modal [(clrModalOpen)]="showEnableConfirmDialog" [clrModalClosable]="false">
+   <h3 class="modal-title">Enable Notification</h3>
+   <div class="modal-body">
+      <p>Are you sure enable this notification "{{ selectedReport?.title }}"?</p>
+   </div>
+   <div class="modal-footer">
+      <button type="button" class="btn btn-outline" (click)="showEnableConfirmDialog = false">Cancel</button>
+      <button type="button" class="btn btn-success" (click)="onEnableHandler()">Confirm</button>
+   </div>
+</clr-modal>
+
+<clr-modal [(clrModalOpen)]="showDisableConfirmDialog" [clrModalClosable]="false">
+   <h3 class="modal-title">Disable Notification</h3>
+   <div class="modal-body">
+      <p>Are you sure disable this notification "{{ selectedReport?.title }}"?</p>
+   </div>
+   <div class="modal-footer">
+      <button type="button" class="btn btn-outline" (click)="showDisableConfirmDialog = false">Cancel</button>
+      <button type="button" class="btn btn-success" (click)="onDisableHandler()">Confirm</button>
+   </div>
+</clr-modal>
