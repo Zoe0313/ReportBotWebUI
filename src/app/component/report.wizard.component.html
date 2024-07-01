@@ -12,17 +12,15 @@
                        (clrWizardPageNext)="onReportSpecPage()">
          <ng-template clrPageTitle>Basic Configuration</ng-template>
          <app-wizard-basic-page #basicPage
-                                [reportSpec]="reportSpec"
-                                [reportType]="reportType">
+                                [reportSpec]="reportSpec">
          </app-wizard-basic-page>
       </clr-wizard-page>
 
       <clr-wizard-page
                        [clrWizardPagePreventDefaultNext]="true"
                        (clrWizardPageNext)="onRecurrencePage()">
-         <ng-template clrPageTitle>Spec Configuration</ng-template>
+         <ng-template clrPageTitle>{{ reportTypeName }} Spec Configuration</ng-template>
          <app-wizard-spec-page #specPage
-                               [reportSpec]="reportSpec"
                                [reportType]="reportType">
          </app-wizard-spec-page>
       </clr-wizard-page>

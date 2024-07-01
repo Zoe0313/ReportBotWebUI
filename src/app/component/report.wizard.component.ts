@@ -38,6 +38,7 @@ export class ReportWizardComponent {
    loading = false;
 
    wizardTitle = '';
+   reportTypeName = '';
 
    constructor(
       private service: ReportsService,
@@ -63,7 +64,8 @@ export class ReportWizardComponent {
    }
 
    onReportSpecPage() {
-      this.specPage.reportType = this.reportType;
+      this.specPage.reportType = this.basicPage.reportType;
+      this.reportTypeName = this.basicPage.getReportTypeName();
       this.reportWizard.forceNext();
    }
 

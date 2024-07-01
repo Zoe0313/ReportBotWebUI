@@ -10,8 +10,7 @@ import { ReportConfiguration } from '../model/report.model';
 
 export class ReportSpecWizardComponent {
    @Input() reportSpec: ReportConfiguration;
-
-   reportType = '';
+   @Input() reportType: string;
 
    bugzillaLink = '';
    mentionUsers = '';

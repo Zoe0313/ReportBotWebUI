@@ -13,6 +13,16 @@
          <a href="https://bugzilla.eng.vmware.com/query.cgi?">bugzilla list</a>
       </clr-control-helper>
    </clr-input-container>
+
+   <clr-input-container *ngIf="reportType == 'bugzilla_by_assignee'">
+      <label class="config-name">Input bugzilla assignees</label>
+      <input clrInput
+             name="bugzilla-assignees"
+             [(ngModel)]="bugzillaAssignees"
+             placeholder="Bugzilla assignees to be monitor"/>
+      <clr-control-error>Please complete this required field.</clr-control-error>
+      <clr-control-helper>Please input VMWare AD accounts by format: user1, user2</clr-control-helper>
+   </clr-input-container>
    <br />
 
    <clr-input-container>

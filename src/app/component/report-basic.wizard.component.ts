@@ -21,8 +21,8 @@ export class ReportBasicWizardComponent {
    reportTitle = '';
    webhooks = '';
 
-   getReportTypeName(reportType: string) {
-      switch (reportType) {
+   getReportTypeName() {
+      switch (this.reportType) {
          case 'bugzilla':
             return 'Bugzilla report'
          case 'bugzilla_by_assignee':
