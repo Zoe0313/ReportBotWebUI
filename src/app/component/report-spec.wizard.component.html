@@ -1,0 +1,43 @@
+<div class="creation-items report-basic-config-card" >
+
+   <clr-input-container *ngIf="reportType == 'bugzilla'">
+      <label class="config-name">Input bugzilla link</label>
+      <input clrInput
+             name="bugzilla-link"
+             [(ngModel)]="bugzillaLink"
+             placeholder="Bugzilla link of tabular report or list report"/>
+      <clr-control-error>Please complete this required field.</clr-control-error>
+      <clr-control-helper>Refer to
+         <a href="https://bugzilla.eng.vmware.com/query.cgi?format=report-table">creating bugzilla tabular report</a>
+          or
+         <a href="https://bugzilla.eng.vmware.com/query.cgi?">bugzilla list</a>
+      </clr-control-helper>
+   </clr-input-container>
+   <br />
+
+   <clr-input-container>
+      <label class="config-name">Input users you want to mention in spaces (optional)</label>
+      <input clrInput
+             name="mention-users"
+             [(ngModel)]="mentionUsers"
+             placeholder="Users to be mentioned"/>
+      <clr-control-error>Please complete this required field.</clr-control-error>
+      <clr-control-helper>Please input VMWare AD accounts by format: user1, user2</clr-control-helper>
+   </clr-input-container>
+   <br />
+
+   <clr-radio-container clrInline  *ngIf="reportType != 'nanny_reminder' && reportType != 'text'">
+      <label class="config-name">Skip report if no bug/change found (optional)</label>
+      <clr-radio-wrapper>
+         <input type="radio" clrRadio name="options" required value="yes" [(ngModel)]="skipEmptyReport" />
+         <label>Yes</label>
+      </clr-radio-wrapper>
+      <clr-radio-wrapper>
+         <input type="radio" clrRadio name="options" required value="no" [(ngModel)]="skipEmptyReport" />
+         <label>No</label>
+      </clr-radio-wrapper>
+   </clr-radio-container>
+
+</div>
+
+

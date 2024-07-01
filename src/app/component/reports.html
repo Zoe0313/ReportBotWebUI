@@ -11,10 +11,10 @@
    <div class="report-header">
       There are {{ ReportList.length }} notifications in your account.
       <button type="button"
-              (click)="openCreateReportDialog()"
+              (click)="openCreateReportWizard()"
               class="btn btn-primary btn-icon btn-create-report">
          <clr-icon shape="plus" ></clr-icon>
-         Create Report
+         Create notification
      </button>
    </div>
    <clr-datagrid [clrDgLoading]="loading">
@@ -148,7 +148,7 @@
    </clr-datagrid>
 </div>
 
-<!--<app-report-wizard (refreshEmitter)="getReports(currentPage)"></app-report-wizard>-->
+<app-report-wizard (refreshEmitter)="getReports(currentPage)"></app-report-wizard>
 
 <clr-modal [(clrModalOpen)]="showRemoveConfirmDialog" [clrModalClosable]="false">
    <h3 class="modal-title">Delete Notification</h3>

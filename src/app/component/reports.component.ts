@@ -12,6 +12,8 @@ import { ReportConfiguration } from '../model/report.model';
 })
 
 export class ReportsComponent implements OnInit {
+   @ViewChild(ReportWizardComponent, { static: true })
+   reportWizard: ReportWizardComponent;
 
    ReportList = [];
    loading = false;
@@ -21,19 +23,10 @@ export class ReportsComponent implements OnInit {
    showEnableConfirmDialog = false;
    showDisableConfirmDialog = false;
 
-   @Input()
    alertMessage = '';
-   @Input()
    numOfReports: number;
-   @Input()
    totalPage: number;
-   @Input()
    currentPage: number = -1;
-   @ViewChild(ReportWizardComponent, { static: true })
-   reportWizard: ReportWizardComponent;
-
-   @Output()
-   public refreshEmitter: EventEmitter<void> = new EventEmitter();
 
    constructor(
       public router: Router,
@@ -136,9 +129,15 @@ export class ReportsComponent implements OnInit {
       });
    }
 
+   openCreateReportWizard() {
+      this.reportWizard.init('create', null);
+      this.reportWizard.open = true;
+   }
+
    onEdit(report: any) {
       this.reportWizard.init('update', report.id);
       this.reportWizard.open = true;
+      this.reportWizard.reportType = this.selectedReport.reportType;
    }
 
    onRemove(report: any) {

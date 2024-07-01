@@ -1,209 +1,76 @@
-<div class="creation-items pool-config-card">
-   <h4>Notification Configuration</h4>
-   <form class="clr-form clr-form-compact" [formGroup]="configForm">
-      <div class="clr-form-control">
-         <label class="clr-control-label">Notification Title</label>
-         <div class="clr-control-container" [ngClass]="!poolConfigSpec.PoolAttributes.Product ? 'clr-error' : ''">
-            <div class="clr-input-wrapper">
-               <input name="product"
-                     placeholder="Product"
-                     formControlName="product"
-                     type="text"
-                     class="clr-input public-name-part"
-                     [(ngModel)]="poolConfigSpec.PoolAttributes.Product"
-                     (change)="setPoolName()"
-                     required>
-            </div>
+<div class="creation-items report-basic-config-card">
+   <div class="clr-control-container">
+       <label class="config-name">Select a notification type</label>
+       <div class="clr-radio-wrapper">
+            <input type="radio" name="radio-full" class="clr-radio" id="vertical-radio1" value="bugzilla" [(ngModel)]="reportType"/>
+            <label for="vertical-radio1" class="clr-control-label">Bugzilla</label>
          </div>
-         -
-         <div class="clr-control-container" [ngClass]="!poolConfigSpec.PoolAttributes.Branch ? 'clr-error' : ''">
-            <div class="clr-input-wrapper">
-               <input name="branch"
-                     placeholder="Branch"
-                     formControlName="branch"
-                     type="text"
-                     class="clr-input public-name-part"
-                     [(ngModel)]="poolConfigSpec.PoolAttributes.Branch"
-                     (change)="setPoolName()"
-                     required>
-            </div>
+       <div class="clr-radio-wrapper">
+            <input type="radio" name="radio-full" class="clr-radio" id="vertical-radio2" value="bugzilla_by_assignee" [(ngModel)]="reportType"/>
+            <label for="vertical-radio2" class="clr-control-label">Bugzilla by assignee</label>
          </div>
-         -
-         <div class="clr-control-container" [ngClass]="!poolConfigSpec.PoolAttributes.Project ? 'clr-error' : ''">
-            <div class="clr-input-wrapper">
-               <input name="project"
-                     placeholder="Project"
-                     formControlName="project"
-                     type="text"
-                     class="clr-input public-name-part"
-                     [(ngModel)]="poolConfigSpec.PoolAttributes.Project"
-                     (change)="setPoolName()"
-                     required>
-            </div>
+       <div class="clr-radio-wrapper">
+            <input type="radio" name="radio-full" class="clr-radio" id="vertical-radio3" value="perforce_checkin" [(ngModel)]="reportType"/>
+            <label for="vertical-radio3" class="clr-control-label">Perforce branch checkin</label>
          </div>
-         -
-         <div class="clr-control-container" [ngClass]="!poolConfigSpec.PoolAttributes.VmNameTag ? 'clr-error' : ''">
-            <div class="clr-input-wrapper">
-               <input name="vmNameTag"
-                     placeholder="VM name tag"
-                     formControlName="vmNameTag"
-                     type="text"
-                     class="clr-input public-name-part"
-                     [(ngModel)]="poolConfigSpec.PoolAttributes.VmNameTag"
-                     (change)="setPoolName()"
-                     required>
-            </div>
+       <div class="clr-radio-wrapper">
+            <input type="radio" name="radio-full" class="clr-radio" id="vertical-radio4" value="nanny_reminder" [(ngModel)]="reportType"/>
+            <label for="vertical-radio4" class="clr-control-label">Nanny reminder</label>
          </div>
-         -
-         <div class="clr-control-container" [ngClass]="!poolConfigSpec.PoolAttributes.ExtraNameTag ? 'clr-error' : ''">
-            <div class="clr-input-wrapper">
-               <input name="extraNameTag"
-                     placeholder="Extra name tag"
-                     formControlName="extraNameTag"
-                     type="text"
-                     class="clr-input public-name-part"
-                     [(ngModel)]="poolConfigSpec.PoolAttributes.ExtraNameTag"
-                     (change)="setPoolName()"
-                     required>
-            </div>
+       <div class="clr-radio-wrapper">
+            <input type="radio" name="radio-full" class="clr-radio" id="vertical-radio5" value="jira_list" [(ngModel)]="reportType"/>
+            <label for="vertical-radio5" class="clr-control-label">Jira list</label>
          </div>
+       <div class="clr-radio-wrapper">
+          <input type="radio" name="radio-full" class="clr-radio" id="vertical-radio6" value="text" [(ngModel)]="reportType"/>
+          <label for="vertical-radio6" class="clr-control-label">Plain text</label>
+       </div>
+   </div>
+   <div class="model-description">
+      <div class="selected-item">
+         {{ getReportTypeName(reportType) }}
       </div>
-      <clr-input-container>
-         <label>Description</label>
-         <input clrInput name="description"
-                formControlName="description" 
-                [(ngModel)]="poolConfigSpec.Description"
-                required/>
-         <clr-control-error>This field is required!</clr-control-error>
-         <!-- <clr-control-error *clrIfError="'required'">This field is required!</clr-control-error> -->
-         <!-- <clr-control-error *clrIfError="'pattern'">'/' is not allowed in description!</clr-control-error> -->
-      </clr-input-container>
-      <div class="clr-form-control">
-         <label class="clr-control-label">Privileged Users</label>
-         <div class="clr-control-container" [ngClass]="privilegedUsers.indexOf('@') != -1 ? 'clr-error' : ''">
-            <div class="clr-input-wrapper">
-               <input type="text" class="clr-input"
-                     name="accessList"
-                     [(ngModel)]="privilegedUsers"
-                     [ngModelOptions]="{standalone: true}"
-                     placeholder="Please type AD account name."
-                     (change)="changeAccessList($event)"/>
-               <clr-icon shape="exclamation-circle"
-                         class="clr-validate-icon ng-star-inserted"
-                         *ngIf="privilegedUsers.indexOf('@') != -1"></clr-icon>
-               <clr-control-error *ngIf="privilegedUsers.indexOf('@') != -1">Email is denied! Please use user AD account name.</clr-control-error>
-            </div>
-            <clr-signpost>
-               <clr-icon shape="info-standard"
-                        class="help-icon is-solid"
-                        clrSignpostTrigger>
-               </clr-icon>
-               <clr-signpost-content class="help-content" [clrPosition]="'right-middle'" *clrIfOpen>
-                  Individuals you want to designate as a privilege user.
-               </clr-signpost-content>
-            </clr-signpost>
-         </div>
+      <div *ngIf="reportType == 'bugzilla'" class="description-item">
+         <label>Create a notification of bugzilla. You can create a table or list report by providing a bugzilla link. Not recommend to use short url by via server(deactivated).</label>
       </div>
-      <div class="clr-form-control">
-         <label class="clr-control-label">Privileged Groups</label>
-         <div class="clr-control-container">
-            <div class="clr-input-wrapper">
-               <input type="text" class="clr-input"
-                      name="groupAccessList"
-                      [(ngModel)]="privilegedGroups"
-                      [ngModelOptions]="{standalone: true}"
-                      placeholder="Please type AD account name."
-                      (change)="changeGroupAccessList($event)"/>
-            </div>
-            <clr-signpost>
-               <clr-icon shape="info-standard"
-                        class="help-icon is-solid"
-                        clrSignpostTrigger>
-               </clr-icon>
-               <clr-signpost-content class="help-content" [clrPosition]="'right-middle'" *clrIfOpen>
-                  Groups you want to designate as privilege users. (Fill the name of group manager).
-               </clr-signpost-content>
-            </clr-signpost>
-         </div>
+      <div *ngIf="reportType == 'perforce_checkin'" class="description-item">
+         <label>Create a notification of perforce checkin. You can provide the perforce checkin branch and members which you want to monitor.</label>
       </div>
-      <div class="clr-form-control">
-         <label class="clr-control-label">Admin Users</label>
-         <div class="clr-control-container">
-            <div class="clr-input-wrapper">
-               <input type="text" class="clr-input"
-                      name="adminUsers"
-                      [(ngModel)]="adminUsers"
-                      [ngModelOptions]="{standalone: true}"
-                      placeholder="Please type AD account name."
-                      (change)="changeSysAdminList($event)"/>
-            </div>
-            <clr-signpost>
-               <clr-icon shape="info-standard"
-                        class="help-icon is-solid"
-                        clrSignpostTrigger>
-               </clr-icon>
-               <clr-signpost-content class="help-content" [clrPosition]="'right-middle'" *clrIfOpen>
-                  <div>
-                     People who has administrative privilege to the pool. E.g., making changes.
-                  </div>
-               </clr-signpost-content>
-            </clr-signpost>
-         </div>
+      <div *ngIf="reportType == 'nanny_reminder'" class="description-item">
+         <label>Create a notification of weekly nanny reminder. The notification will mention the nanny assignee with duty messages.</label>
       </div>
-      <div class="clr-form-control refresh-hours">
-         <label class="clr-control-label">VM Refresh Hours</label>
-         <div class="clr-control-container"
-              [ngClass]="!poolConfigSpec.PoolConfig.VmRefreshHours ? 'clr-form-control-disabled' : ''">
-            <div class="clr-select-wrapper">
-               <select class="clr-select"
-                       name="paramSource"
-                       [(ngModel)]="poolConfigSpec.PoolConfig.VmRefreshHours"
-                       [ngModelOptions]="{standalone: true}"
-                       (change)="refreshHourChangeHandler()">
-                  <option value="">None</option>
-                  <option value="24">24 Hours</option>
-                  <option value="36">36 Hours</option>
-                  <option value="72">72 Hours</option>
-               </select>
-            </div>
-            <clr-checkbox-wrapper>
-               <input type="checkbox" clrCheckbox
-                      name="ProgressiveRefresh"
-                      [(ngModel)]="poolConfigSpec.PoolConfig.ProgressiveRefresh"
-                      [ngModelOptions]="{standalone: true}"
-                      [disabled]="!poolConfigSpec.PoolConfig.VmRefreshHours"/>
-               <label>Progressive Refresh</label>
-            </clr-checkbox-wrapper>
-            <clr-signpost>
-               <clr-icon shape="info-standard"
-                        class="help-icon is-solid"
-                        clrSignpostTrigger>
-               </clr-icon>
-               <clr-signpost-content class="help-content" [clrPosition]="'right-middle'" *clrIfOpen>
-                  <div>
-                     <span>Refresh Hours </span> controls the life span of the VMs in the pool after it's being created.
-                      For example, a 72 hours setting means all the VMs in the pool should have a life span less than 72 hours.
-                  </div>
-                  <div>
-                     <span>Progressive Refresh</span> enables VMPool to progressively refresh the VMs in the pool. (Often 
-                     used when the most recent builds are required)
-                  </div>
-               </clr-signpost-content>
-            </clr-signpost>
-         </div>
+      <div *ngIf="reportType == 'jira_list'" class="description-item">
+         <label>Create a notification of jira list. You can create a list report by providing a jira JQL which you want to monitor.</label>
       </div>
-      <clr-checkbox-container>
-         <label>Sharable</label>
-         <clr-checkbox-wrapper>
-            <input type="checkbox" clrCheckbox
-                   name="sharable"
-                   [(ngModel)]="poolConfigSpec.PoolAttributes.Sharable"
-                   [ngModelOptions]="{standalone: true}"/>
-         </clr-checkbox-wrapper>
-      </clr-checkbox-container>
-   </form>
+      <div *ngIf="reportType == 'bugzilla_by_assignee'" class="description-item">
+         <label>Create a notification of assignees' bug list. The notification will show the bugs owned by assignees who you want to monitor.</label>
+      </div>
+      <div *ngIf="reportType == 'text'" class="description-item">
+         <label>Create a notification of plain text. The text message will notify you on time.</label>
+      </div>
+   </div>
 </div>
 
-<div class="pool-config-card customized-tag">
-   <app-vmpool-tag [tags]="poolConfigSpec.PoolAttributes.Tags"></app-vmpool-tag>
+<div class="creation-items report-basic-config-card">
+    <clr-input-container>
+        <label class="config-name">Input a title for notification</label>
+        <input clrInput
+               name="report-title"
+               [(ngModel)]="reportTitle"
+               placeholder="E.g. vSAN product bugs report"
+               required/>
+        <clr-control-error>Please complete this required field.</clr-control-error>
+    </clr-input-container>
+    <br/>
+
+    <clr-input-container>
+        <label class="config-name">Input multiple webhooks of gChat spaces you want to send</label>
+        <input clrInput
+               name="send-by-webhooks"
+               [(ngModel)]="webhooks"
+               placeholder="E.g. https://chat.googleapis.com/v1/spaces/AAAAZN9zJCU/messages?key=..."
+               required/>
+        <clr-control-error>Please complete this required field.</clr-control-error>
+        <clr-control-helper>Please use format: webhook1, webhook2.</clr-control-helper>
+    </clr-input-container>
 </div>

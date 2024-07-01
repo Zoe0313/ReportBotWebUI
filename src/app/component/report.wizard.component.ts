@@ -7,6 +7,8 @@ import { ReportsService } from '../service/reports.service';
 import { ConfigService } from '../service/configure.service';
 import { ReportConfiguration } from '../model/report.model';
 import { ReportBasicWizardComponent } from './report-basic.wizard.component';
+import { ReportSpecWizardComponent } from './report-spec.wizard.component';
+import { ReportRecurrenceWizardComponent } from './report-recurrence.wizard.component';
 
 @Component({
    selector: 'app-report-wizard',
@@ -15,16 +17,20 @@ import { ReportBasicWizardComponent } from './report-basic.wizard.component';
 })
 
 export class ReportWizardComponent {
-   @Input()
-   open = false;
    @Output()
    public refreshEmitter: EventEmitter<boolean> = new EventEmitter();
+
+   @Input() open = false;
+   @Input() reportType = 'bugzilla';
+
    @ViewChild('reportWizard', { static: true })
    reportWizard: ClrWizard;
-   @ViewChild('layerPage', { static: true })
-   layerPage: ClrWizardPage;
-   @ViewChild('configPage', { static: true })
-   configPage: ReportBasicWizardComponent;
+   @ViewChild('basicPage', { static: true })
+   basicPage: ReportBasicWizardComponent;
+   @ViewChild('specPage', { static: true })
+   specPage: ReportSpecWizardComponent;
+   @ViewChild('recurrencePage', { static: true })
+   recurrencePage: ReportRecurrenceWizardComponent;
 
    action = '';
    alertMessages = [];
@@ -56,4 +62,16 @@ export class ReportWizardComponent {
       }
    }
 
+   onReportSpecPage() {
+      this.specPage.reportType = this.reportType;
+      this.reportWizard.forceNext();
+   }
+
+   onRecurrencePage() {
+      this.reportWizard.forceNext();
+   }
+
+   onFinish() {
+      this.refreshEmitter.emit();
+   }
 }

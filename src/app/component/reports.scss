@@ -128,3 +128,14 @@ clr-datagrid {
       cursor: pointer;
    }
 }
+
+.create-report-dialog {
+   ::ng-deep .modal-header {
+      padding-bottom: 0 !important;
+   }
+}
+
+.btn-group {
+   padding-top: 1rem;
+}
+

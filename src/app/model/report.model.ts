@@ -4,7 +4,7 @@ export class ReportConfiguration {
    creatorVMWareId: string;
    status: string;
    reportType: string;
-   webhooks: string[];
+   webhooks: string;
    mentionUsers: string[];
    skipEmptyReport = false;
    text: TextSpec = new TextSpec();
