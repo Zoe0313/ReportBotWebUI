@@ -62,6 +62,7 @@ export class ReportWizardComponent {
       } else if (action === 'update') {
          this.wizardTitle = 'Edit Report';
          this.reportSpec = spec;
+         console.log(spec);
       }
       this.updateView();
    }

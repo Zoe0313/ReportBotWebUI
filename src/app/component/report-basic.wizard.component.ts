@@ -14,7 +14,7 @@ export class ReportBasicWizardComponent {
    @Input() reportSpec: ReportConfiguration;
 
    configForm = new FormGroup({
-      reportTitle: new FormControl('', Validators.required),
+      title: new FormControl('', Validators.required),
       webhooks: new FormControl('', Validators.required),
    });
 
