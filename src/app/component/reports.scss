@@ -14,16 +14,21 @@
 }
 
 .report-header {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
    padding: .5rem .75rem;
-   // font-family: Roboto,Arial,sans-serif;
    color: #000;
    background-color: #a5cf8c;
-   font-size: .75rem;
-   font-weight: 200;
-   letter-spacing: normal;
+   label, a {
+      font-size: .75rem;
+      font-weight: 200;
+      letter-spacing: normal;
+   }
 
    .btn-create-report {
-      margin-left: 1000px;
+      justify-content: flex-end;
+      margin-right: 10px;
    }
 }
 
@@ -77,9 +82,9 @@
    cursor: pointer;
 }
 
-label>clr-icon {
-   fill: chartreuse;
-}
+// label>clr-icon {
+//    fill: chartreuse;
+// }
 
 .status {
    margin-right: 3px;
@@ -105,16 +110,8 @@ label>clr-icon {
    margin: 0 10px;
 }
 
-clr-datagrid {
-   padding-bottom: 1rem;
-}
-
-.btn-column {
-   padding: 0;
-   .btn {
-      padding: 0;
-      margin: 0;
-   }
+.btn-icon {
+   min-width: 0;
 }
 
 ::ng-deep.modal-dialog.modal-lg {
@@ -128,14 +125,3 @@ clr-datagrid {
       cursor: pointer;
    }
 }
-
-.create-report-dialog {
-   ::ng-deep .modal-header {
-      padding-bottom: 0 !important;
-   }
-}
-
-.btn-group {
-   padding-top: 1rem;
-}
-

@@ -21,7 +21,6 @@ export class ReportWizardComponent {
    public refreshEmitter: EventEmitter<boolean> = new EventEmitter();
 
    @Input() open = false;
-   @Input() reportType = 'bugzilla';
 
    @ViewChild('reportWizard', { static: true })
    reportWizard: ClrWizard;
@@ -34,11 +33,15 @@ export class ReportWizardComponent {
 
    action = '';
    alertMessages = [];
-   reportSpec: ReportConfiguration = new ReportConfiguration();
    loading = false;
 
    wizardTitle = '';
    reportTypeName = '';
+
+   reportSpec: ReportConfiguration = new ReportConfiguration();
+   reportType = '';
+   webhooks = '';
+   repeatType = '';
 
    constructor(
       private service: ReportsService,
@@ -48,24 +51,41 @@ export class ReportWizardComponent {
       private router: Router
    ) { }
 
-   init(action: string, reportId: string) {
+   init(action: string, spec?: ReportConfiguration) {
       this.reportWizard.reset();
       this.alertMessages = [];
       this.action = action;
       if (action === 'create') {
          this.wizardTitle = 'Create Report';
-         //this.reportSpec = new ReportConfiguration();
-         //this.configPage.configForm.reset();
+         this.basicPage.configForm.reset();
+         this.reportSpec = new ReportConfiguration();
       } else if (action === 'update') {
          this.wizardTitle = 'Edit Report';
-         //this.reportSpec = spec;
-         //this.updateView();
+         this.reportSpec = spec;
+      }
+      this.updateView();
+   }
+
+   updateView() {
+      if (this.reportSpec.reportType) {
+         this.reportType = this.reportSpec.reportType;
+      } else {
+         this.reportType = 'bugzilla';
+      }
+      if (this.reportSpec.webhooks) {
+         this.webhooks = this.reportSpec.webhooks.join(',');
+      } else {
+         this.webhooks = '';
+      }
+      if (this.reportSpec.repeatConfig.repeatType) {
+         this.repeatType = this.reportSpec.repeatConfig.repeatType;
+      } else {
+         this.repeatType = 'daily';
       }
    }
 
    onReportSpecPage() {
-      this.specPage.reportType = this.basicPage.reportType;
-      this.reportTypeName = this.basicPage.getReportTypeName();
+      this.reportTypeName = this.getReportTypeName();
       this.reportWizard.forceNext();
    }
 
@@ -75,5 +95,26 @@ export class ReportWizardComponent {
 
    onFinish() {
       this.refreshEmitter.emit();
+   }
+
+   getReportTypeName() {
+      switch (this.reportType) {
+         case 'bugzilla':
+            return 'Bugzilla report'
+         case 'bugzilla_by_assignee':
+            return 'Bugzilla report by assignee'
+         case 'perforce_checkin':
+            return 'Perforce branch checkin report';
+         case 'perforce_review_check':
+            return 'Perforce review check report';
+         case 'jira_list':
+            return 'JIRA list report';
+         case 'nanny_reminder':
+            return 'Nanny reminder';
+         case 'text':
+            return 'Plain text';
+         default:
+            return 'Unknown'
+      }
    }
 }

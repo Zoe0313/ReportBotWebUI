@@ -1,19 +1,21 @@
 export class ReportConfiguration {
    id: string;
    title: string;
-   creatorVMWareId: string;
+   creator: string; //VMWareId
    status: string;
    reportType: string;
-   webhooks: string;
+   webhooks: string[];
    mentionUsers: string[];
-   skipEmptyReport = false;
-   text: TextSpec = new TextSpec();
-   bugzilla: BugzillaSpec = new BugzillaSpec();
-   bugzillaAssignee: BugzillaAssigneeSpec = new BugzillaAssigneeSpec();
-   perforceCheckin: PerforceCheckinSpec = new PerforceCheckinSpec();
-   nannyReminder: NannyReminderSpec = new NannyReminderSpec();
-   jira: JiraSpec = new JiraSpec();
-   repeat: RepeatConfig = new RepeatConfig();
+   skipEmptyReport: boolean;
+   favored = false;
+   reportSpec: any;
+//    text: TextSpec = new TextSpec();
+//    bugzilla: BugzillaSpec = new BugzillaSpec();
+//    bugzillaAssignee: BugzillaAssigneeSpec = new BugzillaAssigneeSpec();
+//    perforceCheckin: PerforceCheckinSpec = new PerforceCheckinSpec();
+//    nannyReminder: NannyReminderSpec = new NannyReminderSpec();
+//    jira: JiraSpec = new JiraSpec();
+   repeatConfig: RepeatConfig = new RepeatConfig();
 }
 
 export class TextSpec {

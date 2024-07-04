@@ -9,9 +9,9 @@ import { ReportConfiguration } from '../model/report.model';
 })
 
 export class ReportRecurrenceWizardComponent {
+   @Input() repeatType: string;
    @Input() reportSpec: ReportConfiguration;
 
-   repeatType = 'daily';
    userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
    configForm = new FormGroup({

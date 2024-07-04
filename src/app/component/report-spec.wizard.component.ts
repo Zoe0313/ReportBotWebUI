@@ -9,11 +9,30 @@ import { ReportConfiguration } from '../model/report.model';
 })
 
 export class ReportSpecWizardComponent {
-   @Input() reportSpec: ReportConfiguration;
    @Input() reportType: string;
+   @Input() mentionUsers: string;
+   @Input() skipEmptyReport: boolean;
+   @Input() reportSpec: ReportConfiguration;
 
-   bugzillaLink = '';
-   mentionUsers = '';
-   skipEmptyReport = 'yes';
+   configForm = new FormGroup({
+      bugzillaLink: new FormControl(''),
+      bugzillaAssignees: new FormControl(''),
+   });
+
+   changeMentionUsers(event: any) {
+      this.reportSpec.mentionUsers = [];
+      if (event.target.value === '') {
+         return;
+      }
+      event.target.value.split(',').map(user => {
+         this.reportSpec.mentionUsers.push(user.trim());
+      });
+      console.log(this.reportSpec.mentionUsers);
+   }
+
+   changeSkipEmptyReport(event: any) {
+      this.skipEmptyReport = (event.target.value == 'Yes');
+      console.log(this.skipEmptyReport);
+   }
 
 }

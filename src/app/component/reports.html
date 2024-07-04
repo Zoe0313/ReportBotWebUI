@@ -9,7 +9,7 @@
 
 <div class="report-list">
    <div class="report-header">
-      There are {{ ReportList.length }} notifications in your account.
+      <label>There are {{ ReportList.length }} notifications in your account.</label>
       <button type="button"
               (click)="openCreateReportWizard()"
               class="btn btn-primary btn-icon btn-create-report">
@@ -58,7 +58,7 @@
                          class="is-solid status"
                          [ngClass]="getReportStatusClass(report.status)"></clr-icon>
             </div>
-            <span>{{ report.status }}</span>
+            <span>{{ getReportStatusName(report.status) }}</span>
          </clr-dg-cell>
 
          <clr-dg-cell class="report-datagrid-cell">
@@ -71,7 +71,7 @@
             </button>
          </clr-dg-cell>
 
-         <clr-dg-cell class="report-datagrid-cell" *ngIf="report.status != 'Enabled'">
+         <clr-dg-cell class="report-datagrid-cell" *ngIf="report.status != 'ENABLED'">
             <button type="button"
                     class="btn btn-icon btn-success-outline"
                     aria-label="enable"
@@ -81,7 +81,7 @@
             </button>
          </clr-dg-cell>
 
-         <clr-dg-cell class="report-datagrid-cell" *ngIf="report.status == 'Enabled'">
+         <clr-dg-cell class="report-datagrid-cell" *ngIf="report.status == 'ENABLED'">
             <button type="button"
                     class="btn btn-icon btn-warning-outline"
                     aria-label="disable"

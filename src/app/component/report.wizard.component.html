@@ -7,21 +7,25 @@
       <clr-wizard-button [type]="'next'">Next</clr-wizard-button>
       <clr-wizard-button [type]="'finish'">Finish</clr-wizard-button>
 
-<!--      <clr-wizard-page [clrWizardPageNextDisabled]="!basicPage.configForm.valid"-->
-      <clr-wizard-page [clrWizardPagePreventDefaultNext]="true"
+      <clr-wizard-page [clrWizardPageNextDisabled]="!basicPage.configForm.valid"
+                       [clrWizardPagePreventDefaultNext]="true"
                        (clrWizardPageNext)="onReportSpecPage()">
          <ng-template clrPageTitle>Basic Configuration</ng-template>
          <app-wizard-basic-page #basicPage
-                                [reportSpec]="reportSpec">
+                                [reportSpec]="reportSpec"
+                                [reportType]="reportType"
+                                [webhooks]="webhooks">
          </app-wizard-basic-page>
       </clr-wizard-page>
 
-      <clr-wizard-page
+      <clr-wizard-page [clrWizardPageNextDisabled]="!specPage.configForm.valid"
                        [clrWizardPagePreventDefaultNext]="true"
                        (clrWizardPageNext)="onRecurrencePage()">
          <ng-template clrPageTitle>{{ reportTypeName }} Spec Configuration</ng-template>
          <app-wizard-spec-page #specPage
-                               [reportType]="reportType">
+                               [reportSpec]="reportSpec"
+                               [reportType]="reportType"
+                               [mentionUsers]="mentionUsers">
          </app-wizard-spec-page>
       </clr-wizard-page>
 
@@ -31,7 +35,7 @@
          <ng-template clrPageTitle>Recurrence Configuration</ng-template>
          <app-wizard-recurrence-page #recurrencePage
                                      [reportSpec]="reportSpec"
-                                     [reportType]="reportType">
+                                     [repeatType]="repeatType">
          </app-wizard-recurrence-page>
       </clr-wizard-page>
 

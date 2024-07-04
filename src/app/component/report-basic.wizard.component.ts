@@ -9,43 +9,29 @@ import { ReportConfiguration } from '../model/report.model';
 })
 
 export class ReportBasicWizardComponent {
+   @Input() reportType: string;
+   @Input() webhooks: string;
    @Input() reportSpec: ReportConfiguration;
 
    configForm = new FormGroup({
-      reportType: new FormControl('', Validators.required),
       reportTitle: new FormControl('', Validators.required),
       webhooks: new FormControl('', Validators.required),
    });
 
-   reportType = 'bugzilla';
-   reportTitle = '';
-   webhooks = '';
+   changeReportType(event: any) {
+      this.reportType = event.target.value
+      console.log(this.reportType)
+   }
 
-   getReportTypeName() {
-      switch (this.reportType) {
-         case 'bugzilla':
-            return 'Bugzilla report'
-         case 'bugzilla_by_assignee':
-            return 'Bugzilla report by assignee'
-         case 'perforce_checkin':
-            return 'Perforce branch checkin report';
-         case 'perforce_review_check':
-            return 'Perforce review check report';
-         case 'jira_list':
-            return 'JIRA list report';
-         case 'nanny_reminder':
-            return 'Nanny reminder';
-         case 'text':
-            return 'Plain text';
-         default:
-            return 'Unknown'
+   changeWebhooks(event: any) {
+      this.reportSpec.webhooks = [];
+      if (event.target.value === '') {
+         return;
       }
+      event.target.value.split(',').map(url => {
+         this.reportSpec.webhooks.push(url.trim());
+      });
+      console.log(this.reportSpec.webhooks);
    }
 
-   changeReportTitle(event) {
-      console.log(event)
-   }
-   changeWebhook(event) {
-      console.log(event)
-   }
 }

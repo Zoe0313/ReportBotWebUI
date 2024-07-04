@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ReportsService } from '../service/reports.service';
 import { ConfigService } from '../service/configure.service';
 import { ReportWizardComponent } from './report.wizard.component';
-import { ReportConfiguration } from '../model/report.model';
+import { ReportConfiguration, BugzillaSpec, BugzillaAssigneeSpec, RepeatConfig } from '../model/report.model';
 
 @Component({
     selector: 'app-reports',
@@ -48,14 +48,32 @@ export class ReportsComponent implements OnInit {
       this.service.getReports(page).then(
          result => {
             this.ReportList = result['reports'].map(report => {
-               return {
+               const reportType = report['reportType'];
+               const reportSpecConfig = report['reportSpecConfig'];
+               const repeatConfig = report['repeatConfig'];
+               let reportSpec: any
+               if (reportType == 'bugzilla') {
+                  reportSpec = new BugzillaSpec();
+                  reportSpec.bugzillaLink = reportSpecConfig['bugzillaLink'];
+               } else if (reportType == 'bugzilla_by_assignee') {
+                  reportSpec = new BugzillaAssigneeSpec();
+                  reportSpec.bugzillaAssignees = reportSpecConfig['bugzillaAssignee'];
+               }
+               let data = new ReportConfiguration();
+               data = {
                   id: report['_id'],
                   title: report['title'],
                   creator: report['vmwareId'] || 'Unknown',
-                  reportType: report['reportType'],
-                  status: this.getReportStatusName(report['status']),
+                  status: report['status'],
+                  reportType: reportType,
+                  webhooks: report['webhooks'],
+                  mentionUsers: report['mentionUsers'],
+                  skipEmptyReport: report['skipEmptyReport'] == 'Yes',
+                  reportSpec: reportSpec,
+                  repeatConfig: repeatConfig,
                   favored: false
                };
+               return data;
             })
             this.numOfReports = result['total'];
             this.currentPage = result['page'];
@@ -71,14 +89,14 @@ export class ReportsComponent implements OnInit {
 
    getReportStatusClass(status: string) {
       switch (status) {
-         case 'Created':
-         case 'Draft':
+         case 'CREATED':
+         case 'DRAFT':
             return 'status-created';
-         case 'Enabled':
+         case 'ENABLED':
             return 'status-enabled';
-         case 'Disabled':
+         case 'DISABLED':
             return 'status-disabled';
-         case 'Removed':
+         case 'REMOVED':
             return 'status-removed';
          default:
             return 'status-disabled';
@@ -135,9 +153,8 @@ export class ReportsComponent implements OnInit {
    }
 
    onEdit(report: any) {
-      this.reportWizard.init('update', report.id);
+      this.reportWizard.init('update', report);
       this.reportWizard.open = true;
-      this.reportWizard.reportType = this.selectedReport.reportType;
    }
 
    onRemove(report: any) {

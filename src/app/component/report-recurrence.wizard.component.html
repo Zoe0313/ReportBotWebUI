@@ -1,5 +1,37 @@
 <div class="creation-items report-basic-config-card">
-   <h5 class="config-name">Setup up the recurrence</h5>
+   <div class="clr-control-container">
+       <label class="config-name">Select a recurrence type</label>
+       <div class="clr-radio-wrapper">
+            <input type="radio" name="radio-full" class="clr-radio" id="vertical-radio1" value="not_repeat" [(ngModel)]="repeatType"/>
+            <label for="vertical-radio1" class="clr-control-label">Do not repeat</label>
+         </div>
+       <div class="clr-radio-wrapper">
+            <input type="radio" name="radio-full" class="clr-radio" id="vertical-radio2" value="hourly" [(ngModel)]="repeatType"/>
+            <label for="vertical-radio2" class="clr-control-label">Repeat hourly</label>
+         </div>
+       <div class="clr-radio-wrapper">
+            <input type="radio" name="radio-full" class="clr-radio" id="vertical-radio3" value="daily" [(ngModel)]="repeatType"/>
+            <label for="vertical-radio3" class="clr-control-label">Repeat daily</label>
+         </div>
+       <div class="clr-radio-wrapper">
+            <input type="radio" name="radio-full" class="clr-radio" id="vertical-radio4" value="weekly" [(ngModel)]="repeatType"/>
+            <label for="vertical-radio4" class="clr-control-label">Repeat weekly</label>
+         </div>
+       <div class="clr-radio-wrapper">
+            <input type="radio" name="radio-full" class="clr-radio" id="vertical-radio5" value="monthly" [(ngModel)]="repeatType"/>
+            <label for="vertical-radio5" class="clr-control-label">Repeat monthly</label>
+         </div>
+       <div class="clr-radio-wrapper">
+          <input type="radio" name="radio-full" class="clr-radio" id="vertical-radio6" value="cron_expression" [(ngModel)]="repeatType"/>
+          <label for="vertical-radio6" class="clr-control-label">Cron Expression</label>
+       </div>
+       <div class="clr-subtext-wrapper">
+          <clr-icon class="clr-validate-icon" shape="exclamation-circle"></clr-icon>
+          <span class="clr-subtext">
+             "Do not repeat" option is not recommended for nanny reminder reports as it disables the rolling of nanny duty.
+          </span>
+       </div>
+   </div>
 </div>
 
 
