@@ -18,15 +18,17 @@
          </app-wizard-basic-page>
       </clr-wizard-page>
 
-      <clr-wizard-page [clrWizardPageNextDisabled]="!specPage.configForm.valid"
+      <clr-wizard-page *ngIf="reportType == 'bugzilla'"
+                       [clrWizardPageNextDisabled]="!bugzillaPage.configForm.valid"
                        [clrWizardPagePreventDefaultNext]="true"
                        (clrWizardPageNext)="onRecurrencePage()">
-         <ng-template clrPageTitle>{{ reportTypeName }} Spec Configuration</ng-template>
-         <app-wizard-spec-page #specPage
+         <ng-template clrPageTitle>Bugzilla Configuration</ng-template>
+         <app-wizard-bugzilla-page #bugzillaPage
                                [reportSpec]="reportSpec"
                                [reportType]="reportType"
-                               [mentionUsers]="mentionUsers">
-         </app-wizard-spec-page>
+                               [mentionUsers]="mentionUsers"
+                               [skipEmptyReport]="skipEmptyReport">
+         </app-wizard-bugzilla-page>
       </clr-wizard-page>
 
       <clr-wizard-page #recurrencePage

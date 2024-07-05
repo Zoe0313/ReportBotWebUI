@@ -15,7 +15,7 @@
               class="btn btn-primary btn-icon btn-create-report">
          <clr-icon shape="plus" ></clr-icon>
          Create notification
-     </button>
+      </button>
    </div>
    <clr-datagrid [clrDgLoading]="loading">
       <clr-dg-column style="width: 550px;" [clrDgField]="'title'">
@@ -101,6 +101,7 @@
          </clr-dg-cell>
 
          <app-report-details *clrIfExpanded [report]="report" ngProjectAs="clr-dg-row-detail"></app-report-details>
+         <app-profile-editor *clrIfExpanded [report]="report" ngProjectAs="clr-dg-row-detail"></app-profile-editor>
       </clr-dg-row>
       <clr-dg-footer>
          <div class="pagination" *ngIf="ReportList.length > 20">

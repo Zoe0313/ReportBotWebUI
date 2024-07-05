@@ -7,8 +7,8 @@ import { ReportsService } from '../service/reports.service';
 import { ConfigService } from '../service/configure.service';
 import { ReportConfiguration } from '../model/report.model';
 import { ReportBasicWizardComponent } from './report-basic.wizard.component';
-import { ReportSpecWizardComponent } from './report-spec.wizard.component';
 import { ReportRecurrenceWizardComponent } from './report-recurrence.wizard.component';
+import { BugzillaReportWizardComponent } from './spec/bugzilla-report.wizard.component';
 
 @Component({
    selector: 'app-report-wizard',
@@ -26,21 +26,22 @@ export class ReportWizardComponent {
    reportWizard: ClrWizard;
    @ViewChild('basicPage', { static: true })
    basicPage: ReportBasicWizardComponent;
-   @ViewChild('specPage', { static: true })
-   specPage: ReportSpecWizardComponent;
    @ViewChild('recurrencePage', { static: true })
    recurrencePage: ReportRecurrenceWizardComponent;
+   @ViewChild('bugzillaPage', { static: true })
+   bugzillaPage: BugzillaReportWizardComponent;
 
    action = '';
    alertMessages = [];
    loading = false;
 
    wizardTitle = '';
-   reportTypeName = '';
 
    reportSpec: ReportConfiguration = new ReportConfiguration();
    reportType = '';
    webhooks = '';
+   mentionUsers = '';
+   skipEmptyReport = '';
    repeatType = '';
 
    constructor(
@@ -78,6 +79,12 @@ export class ReportWizardComponent {
       } else {
          this.webhooks = '';
       }
+      if (this.reportSpec.mentionUsers) {
+         this.mentionUsers = this.reportSpec.mentionUsers.join(',');
+      } else {
+         this.mentionUsers = '';
+      }
+      this.skipEmptyReport = (this.reportSpec.skipEmptyReport == true) ? 'Yes' : 'No';
       if (this.reportSpec.repeatConfig.repeatType) {
          this.repeatType = this.reportSpec.repeatConfig.repeatType;
       } else {
@@ -86,7 +93,6 @@ export class ReportWizardComponent {
    }
 
    onReportSpecPage() {
-      this.reportTypeName = this.getReportTypeName();
       this.reportWizard.forceNext();
    }
 

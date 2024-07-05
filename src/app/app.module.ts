@@ -13,8 +13,9 @@ import { ReportsComponent } from './component/reports.component';
 import { ReportDetailsComponent } from './component/report-details.component';
 import { ReportWizardComponent } from './component/report.wizard.component';
 import { ReportBasicWizardComponent } from './component/report-basic.wizard.component';
-import { ReportSpecWizardComponent } from './component/report-spec.wizard.component';
+import { BugzillaReportWizardComponent } from './component/spec/bugzilla-report.wizard.component';
 import { ReportRecurrenceWizardComponent } from './component/report-recurrence.wizard.component';
+import { ProfileEditorComponent } from './component/profile-editor.component';
 
 @NgModule({
    declarations: [
@@ -23,8 +24,9 @@ import { ReportRecurrenceWizardComponent } from './component/report-recurrence.w
       ReportDetailsComponent,
       ReportWizardComponent,
       ReportBasicWizardComponent,
-      ReportSpecWizardComponent,
-      ReportRecurrenceWizardComponent
+      BugzillaReportWizardComponent,
+      ReportRecurrenceWizardComponent,
+      ProfileEditorComponent
    ],
    imports: [
       BrowserModule,

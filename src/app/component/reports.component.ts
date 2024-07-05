@@ -3,7 +3,9 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { ReportsService } from '../service/reports.service';
 import { ConfigService } from '../service/configure.service';
 import { ReportWizardComponent } from './report.wizard.component';
-import { ReportConfiguration, BugzillaSpec, BugzillaAssigneeSpec, RepeatConfig } from '../model/report.model';
+import { ReportConfiguration, BugzillaSpec, BugzillaAssigneeSpec,
+         PerforceCheckinSpec, NannyReminderSpec, TextSpec, JiraSpec,
+         RepeatConfig } from '../model/report.model';
 
 @Component({
     selector: 'app-reports',
@@ -51,13 +53,32 @@ export class ReportsComponent implements OnInit {
                const reportType = report['reportType'];
                const reportSpecConfig = report['reportSpecConfig'];
                const repeatConfig = report['repeatConfig'];
-               let reportSpec: any
+               let bugzilla: BugzillaSpec = new BugzillaSpec();
+               let bugzillaAssignee: BugzillaAssigneeSpec = new BugzillaAssigneeSpec();
+               let perforceCheckin: PerforceCheckinSpec = new PerforceCheckinSpec();
+               let nannyReminder: NannyReminderSpec = new NannyReminderSpec();
+               let text: TextSpec = new TextSpec();
+               let jira: JiraSpec = new JiraSpec();
                if (reportType == 'bugzilla') {
-                  reportSpec = new BugzillaSpec();
-                  reportSpec.bugzillaLink = reportSpecConfig['bugzillaLink'];
+                  bugzilla.bugzillaLink = reportSpecConfig['bugzillaLink'];
                } else if (reportType == 'bugzilla_by_assignee') {
-                  reportSpec = new BugzillaAssigneeSpec();
-                  reportSpec.bugzillaAssignees = reportSpecConfig['bugzillaAssignee'];
+                  bugzillaAssignee.bugzillaAssignees = reportSpecConfig['bugzillaAssignee'];
+               } else if (reportType == 'perforce_checkin') {
+                  perforceCheckin.branches = reportSpecConfig['branches'];
+                  perforceCheckin.needCheckinApproved = (reportSpecConfig['needCheckinApproved'] == 'Yes');
+                  perforceCheckin.flattenMembers = reportSpecConfig['flattenMembers'];
+                  perforceCheckin.membersFilters = reportSpecConfig['membersFilters'];
+               } else if (reportType == 'nanny_reminder') {
+                  nannyReminder.nannyCode = reportSpecConfig['nannyCode'];
+                  nannyReminder.nannyAssignee = reportSpecConfig['nannyCode'];
+                  nannyReminder.nannyRoster = reportSpecConfig['nannyRoster'];
+                  nannyReminder.text = reportSpecConfig['text'];
+               } else if (reportType == 'text') {
+                  text.text = reportSpecConfig['text'];
+               } else if (reportType == 'jira_list') {
+                  jira.jql = reportSpecConfig['jira']['jql'];
+                  jira.fields = reportSpecConfig['jira']['fields'];
+                  jira.groupby = reportSpecConfig['jira']['groupby'];
                }
                let data = new ReportConfiguration();
                data = {
@@ -69,7 +90,12 @@ export class ReportsComponent implements OnInit {
                   webhooks: report['webhooks'],
                   mentionUsers: report['mentionUsers'],
                   skipEmptyReport: report['skipEmptyReport'] == 'Yes',
-                  reportSpec: reportSpec,
+                  bugzilla: bugzilla,
+                  bugzillaAssignee: bugzillaAssignee,
+                  perforceCheckin: perforceCheckin,
+                  nannyReminder: nannyReminder,
+                  text: text,
+                  jira: jira,
                   repeatConfig: repeatConfig,
                   favored: false
                };

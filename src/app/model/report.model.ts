@@ -7,15 +7,14 @@ export class ReportConfiguration {
    webhooks: string[];
    mentionUsers: string[];
    skipEmptyReport: boolean;
-   favored = false;
-   reportSpec: any;
-//    text: TextSpec = new TextSpec();
-//    bugzilla: BugzillaSpec = new BugzillaSpec();
-//    bugzillaAssignee: BugzillaAssigneeSpec = new BugzillaAssigneeSpec();
-//    perforceCheckin: PerforceCheckinSpec = new PerforceCheckinSpec();
-//    nannyReminder: NannyReminderSpec = new NannyReminderSpec();
-//    jira: JiraSpec = new JiraSpec();
+   bugzilla: BugzillaSpec = new BugzillaSpec();
+   bugzillaAssignee: BugzillaAssigneeSpec = new BugzillaAssigneeSpec();
+   perforceCheckin: PerforceCheckinSpec = new PerforceCheckinSpec();
+   nannyReminder: NannyReminderSpec = new NannyReminderSpec();
+   text: TextSpec = new TextSpec();
+   jira: JiraSpec = new JiraSpec();
    repeatConfig: RepeatConfig = new RepeatConfig();
+   favored = false;
 }
 
 export class TextSpec {
@@ -45,7 +44,7 @@ export class PerforceCheckinSpec {
 
 export class NannyReminderSpec {
    nannyCode: string;
-   nannyAssignees: string;
+   nannyAssignee: string;
    nannyRoster: string;
    text: string;
 }
