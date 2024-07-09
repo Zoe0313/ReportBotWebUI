@@ -6,7 +6,7 @@
             <clr-radio-wrapper>
                <input clrRadio type="radio"
                       value="bugzilla"
-                      [(ngModel)]="reportType"
+                      [(ngModel)]="reportSpec.reportType"
                       [ngModelOptions]="{standalone: true}"
                       (change)="changeReportType($event)"/>
                <label>Bugzilla</label>
@@ -14,7 +14,7 @@
             <clr-radio-wrapper>
                <input clrRadio type="radio"
                       value="bugzilla_by_assignee"
-                      [(ngModel)]="reportType"
+                      [(ngModel)]="reportSpec.reportType"
                       [ngModelOptions]="{standalone: true}"
                       (change)="changeReportType($event)"/>
                <label>Bugzilla by assignee</label>
@@ -25,7 +25,7 @@
             <clr-radio-wrapper >
                <input clrRadio type="radio"
                       value="perforce_checkin"
-                      [(ngModel)]="reportType"
+                      [(ngModel)]="reportSpec.reportType"
                       [ngModelOptions]="{standalone: true}"
                       disabled/>
                <label>Perforce branch checkin (TBD)</label>
@@ -33,7 +33,7 @@
             <clr-radio-wrapper>
                <input clrRadio type="radio"
                       value="nanny_reminder"
-                      [(ngModel)]="reportType"
+                      [(ngModel)]="reportSpec.reportType"
                       [ngModelOptions]="{standalone: true}"
                       disabled/>
                <label>Nanny reminder (TBD)</label>
@@ -41,7 +41,7 @@
             <clr-radio-wrapper>
                <input clrRadio type="radio"
                       value="jira_list"
-                      [(ngModel)]="reportType"
+                      [(ngModel)]="reportSpec.reportType"
                       [ngModelOptions]="{standalone: true}"
                       disabled/>
                <label>Jira list (TBD)</label>
@@ -49,22 +49,21 @@
             <clr-radio-wrapper>
                <input clrRadio type="radio"
                       value="text"
-                      [(ngModel)]="reportType"
+                      [(ngModel)]="reportSpec.reportType"
                       [ngModelOptions]="{standalone: true}"
                       disabled/>
                <label>Plain text (TBD)</label>
             </clr-radio-wrapper>
          </clr-radio-container>
-         <clr-control-helper class="hint-label">
-            <label *ngIf="reportType == 'bugzilla'">Create a notification of bugzilla. You can create a table or list report by providing a bugzilla link. Not recommend to use short url by via server(deactivated).</label>
-            <label *ngIf="reportType == 'bugzilla_by_assignee'">Create a notification of assignees' bug list. The notification will show the bugs owned by assignees who you want to monitor.</label>
-            <label *ngIf="reportType == 'perforce_checkin'">Create a notification of perforce checkin. You can provide the perforce checkin branch and members which you want to monitor.</label>
-            <label *ngIf="reportType == 'nanny_reminder'">Create a notification of weekly nanny reminder. The notification will mention the nanny assignee with duty messages.</label>
-            <label *ngIf="reportType == 'jira_list'">Create a notification of jira list. You can create a list report by providing a jira JQL which you want to monitor.</label>
-            <label *ngIf="reportType == 'text'">Create a notification of plain text. The text message will notify you on time.</label>
-         </clr-control-helper>
-
       </clr-control-container>
+      <div class="description-item">
+         <label *ngIf="reportSpec.reportType == 'bugzilla'">Create a notification of bugzilla. You can create a table or list report by providing a bugzilla link. Not recommend to use short url by via server(deactivated).</label>
+         <label *ngIf="reportSpec.reportType == 'bugzilla_by_assignee'">Create a notification of assignees' bug list. The notification will show the bugs owned by assignees who you want to monitor.</label>
+         <label *ngIf="reportSpec.reportType == 'perforce_checkin'">Create a notification of perforce checkin. You can provide the perforce checkin branch and members which you want to monitor.</label>
+         <label *ngIf="reportSpec.reportType == 'nanny_reminder'">Create a notification of weekly nanny reminder. The notification will mention the nanny assignee with duty messages.</label>
+         <label *ngIf="reportSpec.reportType == 'jira_list'">Create a notification of jira list. You can create a list report by providing a jira JQL which you want to monitor.</label>
+         <label *ngIf="reportSpec.reportType == 'text'">Create a notification of plain text. The text message will notify you on time.</label>
+      </div>
    </div>
 
    <div class="config-item">
@@ -75,11 +74,14 @@
                    placeholder="E.g. vSAN product bugs report"
                    formControlName="title"
                    [(ngModel)]="reportSpec.title"
+                   (change)="changeTitle($event)"
                    required/>
             <clr-control-error>Please complete this required field.</clr-control-error>
-            <clr-control-helper>As the report title, please use meaningful words.</clr-control-helper>
          </clr-input-container>
       </clr-control-container>
+      <div class="description-item">
+         <label>Hint: As the report title, please use meaningful words.</label>
+      </div>
    </div>
 
    <div class="config-item">
@@ -91,10 +93,15 @@
                    formControlName="webhooks"
                    [(ngModel)]="webhooks"
                    (change)="changeWebhooks($event)"
-                   required/>
-            <clr-control-error>Please complete this required field.</clr-control-error>
-            <clr-control-helper>Please use format: webhook1, webhook2.</clr-control-helper>
+                   required invalidWebhook/>
+            <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
+            <clr-control-error *clrIfError="'invalidWebhook'">Unsupported Google Chat webhook. Refer to the hint as below for creating a webhook.</clr-control-error>
          </clr-input-container>
       </clr-control-container>
+      <div class="description-item">
+         <label>Hint: Please use format: webhook1, webhook2.
+            Refer to <a href="https://confluence.eng.vmware.com/display/SABU/How+to+add+webhooks+in+vSANSlackbot+report">How to create webhook in Google Chat Space</a>.
+         </label>
+      </div>
    </div>
 </form>

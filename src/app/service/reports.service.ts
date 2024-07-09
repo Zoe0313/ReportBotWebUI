@@ -74,6 +74,12 @@ export class ReportsService {
 
       return this.http.patch(url, this.getNoCacheRequestOptions());
    }
+
+   validateADaccount(account: string): Promise<any> {
+      const url = 'https://ldap-data.vdp.oc.vmware.com/ldap/_doc/' + account;
+      return this.http.get<any>(url).toPromise();
+   }
+
    /**
     * Returns HttpOptions preconfigured with headers that imply no caching.
     */

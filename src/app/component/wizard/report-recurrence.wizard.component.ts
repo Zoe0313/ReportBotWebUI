@@ -1,10 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ReportConfiguration } from '../model/report.model';
+import { ReportConfiguration } from '../../model/report.model';
 
 @Component({
    selector: 'app-wizard-recurrence-page',
-   styleUrls: ['report-recurrence.wizard.component.scss'],
+   styleUrls: ['report-spec.wizard.component.scss'],
    templateUrl: 'report-recurrence.wizard.component.html'
 })
 

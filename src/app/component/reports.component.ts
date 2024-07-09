@@ -2,7 +2,7 @@ import { Component, Input, ViewChild, EventEmitter, Output, OnInit } from '@angu
 import { Router, ActivatedRoute } from '@angular/router';
 import { ReportsService } from '../service/reports.service';
 import { ConfigService } from '../service/configure.service';
-import { ReportWizardComponent } from './report.wizard.component';
+import { ReportWizardComponent } from './wizard/report.wizard.component';
 import { ReportConfiguration, BugzillaSpec, BugzillaAssigneeSpec,
          PerforceCheckinSpec, NannyReminderSpec, TextSpec, JiraSpec,
          RepeatConfig } from '../model/report.model';
@@ -45,61 +45,65 @@ export class ReportsComponent implements OnInit {
          });
    }
 
+   initReportConfiguration(report): ReportConfiguration {
+      const reportType = report['reportType'];
+      const reportSpecConfig = report['reportSpecConfig'];
+      const repeatConfig = report['repeatConfig'];
+      let bugzilla: BugzillaSpec = new BugzillaSpec();
+      let bugzillaAssignee: BugzillaAssigneeSpec = new BugzillaAssigneeSpec();
+      let perforceCheckin: PerforceCheckinSpec = new PerforceCheckinSpec();
+      let nannyReminder: NannyReminderSpec = new NannyReminderSpec();
+      let text: TextSpec = new TextSpec();
+      let jira: JiraSpec = new JiraSpec();
+      if (reportType == 'bugzilla') {
+         bugzilla.bugzillaLink = reportSpecConfig['bugzillaLink'];
+      } else if (reportType == 'bugzilla_by_assignee') {
+         bugzillaAssignee.bugzillaAssignees = reportSpecConfig['bugzillaAssignee'];
+      } else if (reportType == 'perforce_checkin') {
+         perforceCheckin.branches = reportSpecConfig['branches'];
+         perforceCheckin.needCheckinApproved = (reportSpecConfig['needCheckinApproved'] == 'Yes');
+         perforceCheckin.flattenMembers = reportSpecConfig['flattenMembers'];
+         perforceCheckin.membersFilters = reportSpecConfig['membersFilters'];
+      } else if (reportType == 'nanny_reminder') {
+         nannyReminder.nannyCode = reportSpecConfig['nannyCode'];
+         nannyReminder.nannyAssignee = reportSpecConfig['nannyCode'];
+         nannyReminder.nannyRoster = reportSpecConfig['nannyRoster'];
+         nannyReminder.text = reportSpecConfig['text'];
+      } else if (reportType == 'text') {
+         text.text = reportSpecConfig['text'];
+      } else if (reportType == 'jira_list') {
+         jira.jql = reportSpecConfig['jira']['jql'];
+         jira.fields = reportSpecConfig['jira']['fields'];
+         jira.groupby = reportSpecConfig['jira']['groupby'];
+      }
+      let data = new ReportConfiguration();
+      data = {
+         id: report['_id'],
+         title: report['title'],
+         creator: report['vmwareId'] || 'Unknown',
+         status: report['status'],
+         reportType: reportType,
+         webhooks: report['webhooks'],
+         mentionUsers: report['mentionUsers'],
+         skipEmptyReport: report['skipEmptyReport'] == 'Yes',
+         bugzilla: bugzilla,
+         bugzillaAssignee: bugzillaAssignee,
+         perforceCheckin: perforceCheckin,
+         nannyReminder: nannyReminder,
+         text: text,
+         jira: jira,
+         repeatConfig: repeatConfig,
+         favored: false
+      };
+      return data;
+  }
+
    getReports(page: number) {
       this.loading = true;
       this.service.getReports(page).then(
          result => {
             this.ReportList = result['reports'].map(report => {
-               const reportType = report['reportType'];
-               const reportSpecConfig = report['reportSpecConfig'];
-               const repeatConfig = report['repeatConfig'];
-               let bugzilla: BugzillaSpec = new BugzillaSpec();
-               let bugzillaAssignee: BugzillaAssigneeSpec = new BugzillaAssigneeSpec();
-               let perforceCheckin: PerforceCheckinSpec = new PerforceCheckinSpec();
-               let nannyReminder: NannyReminderSpec = new NannyReminderSpec();
-               let text: TextSpec = new TextSpec();
-               let jira: JiraSpec = new JiraSpec();
-               if (reportType == 'bugzilla') {
-                  bugzilla.bugzillaLink = reportSpecConfig['bugzillaLink'];
-               } else if (reportType == 'bugzilla_by_assignee') {
-                  bugzillaAssignee.bugzillaAssignees = reportSpecConfig['bugzillaAssignee'];
-               } else if (reportType == 'perforce_checkin') {
-                  perforceCheckin.branches = reportSpecConfig['branches'];
-                  perforceCheckin.needCheckinApproved = (reportSpecConfig['needCheckinApproved'] == 'Yes');
-                  perforceCheckin.flattenMembers = reportSpecConfig['flattenMembers'];
-                  perforceCheckin.membersFilters = reportSpecConfig['membersFilters'];
-               } else if (reportType == 'nanny_reminder') {
-                  nannyReminder.nannyCode = reportSpecConfig['nannyCode'];
-                  nannyReminder.nannyAssignee = reportSpecConfig['nannyCode'];
-                  nannyReminder.nannyRoster = reportSpecConfig['nannyRoster'];
-                  nannyReminder.text = reportSpecConfig['text'];
-               } else if (reportType == 'text') {
-                  text.text = reportSpecConfig['text'];
-               } else if (reportType == 'jira_list') {
-                  jira.jql = reportSpecConfig['jira']['jql'];
-                  jira.fields = reportSpecConfig['jira']['fields'];
-                  jira.groupby = reportSpecConfig['jira']['groupby'];
-               }
-               let data = new ReportConfiguration();
-               data = {
-                  id: report['_id'],
-                  title: report['title'],
-                  creator: report['vmwareId'] || 'Unknown',
-                  status: report['status'],
-                  reportType: reportType,
-                  webhooks: report['webhooks'],
-                  mentionUsers: report['mentionUsers'],
-                  skipEmptyReport: report['skipEmptyReport'] == 'Yes',
-                  bugzilla: bugzilla,
-                  bugzillaAssignee: bugzillaAssignee,
-                  perforceCheckin: perforceCheckin,
-                  nannyReminder: nannyReminder,
-                  text: text,
-                  jira: jira,
-                  repeatConfig: repeatConfig,
-                  favored: false
-               };
-               return data;
+               return this.initReportConfiguration(report);
             })
             this.numOfReports = result['total'];
             this.currentPage = result['page'];
@@ -179,8 +183,19 @@ export class ReportsComponent implements OnInit {
    }
 
    onEdit(report: any) {
-      this.reportWizard.init('update', report);
-      this.reportWizard.open = true;
+      this.loading = true;
+      this.service.getReportDetail(report.id).then(
+         result => {
+            const reportSpec = this.initReportConfiguration(result);
+            this.reportWizard.init('update', reportSpec);
+            this.reportWizard.open = true;
+            this.loading = false;
+         },
+         error => {
+            console.log(error);
+            this.loading = false;
+         }
+      );
    }
 
    onRemove(report: any) {

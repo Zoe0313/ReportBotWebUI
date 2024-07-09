@@ -22,8 +22,23 @@
   .clr-input, .clr-select {
      width: 450px;
   }
+
+  .description-item {
+     max-width: 100%;
+
+     label {
+        padding: 0px;
+        font-size: .5rem;
+        color: #737373;
+     }
+  }
 }
 
-
-
-
+.report-basic-config-card {
+   border: 1px solid #aaa;
+   border-radius: 10px;
+   padding-top: 10px;
+   padding-bottom: 10px;
+   padding-left: 20px;
+   margin-bottom: 20px;
+}

@@ -1,0 +1,23 @@
+<form clrForm [formGroup]="configForm">
+
+   <div class="config-item">
+      <label class="config-name">Input bugzilla assignee(s)</label>
+      <clr-control-container>
+         <clr-input-container class="config-text-input">
+            <input clrInput type="text"
+                   placeholder="Bugzilla report by which assignee"
+                   formControlName="bugzillaAssignees"
+                   [(ngModel)]="bugzillaAssignees"
+                   (change)="changeBugzillaAssignees($event)"
+                   required/>
+            <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
+            <clr-control-error *ngIf="invalidUser !== ''">{{ invalidUser }} is an invalid AD account.</clr-control-error>
+            <clr-control-helper></clr-control-helper>
+         </clr-input-container>
+      </clr-control-container>
+      <div class="description-item">
+         <label>Hint: Input VMWare AD accounts by format: user1, user2.</label>
+      </div>
+   </div>
+
+</form>

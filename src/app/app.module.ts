@@ -11,10 +11,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { ReportsService } from './service/reports.service';
 import { ReportsComponent } from './component/reports.component';
 import { ReportDetailsComponent } from './component/report-details.component';
-import { ReportWizardComponent } from './component/report.wizard.component';
-import { ReportBasicWizardComponent } from './component/report-basic.wizard.component';
-import { BugzillaReportWizardComponent } from './component/spec/bugzilla-report.wizard.component';
-import { ReportRecurrenceWizardComponent } from './component/report-recurrence.wizard.component';
+
+import { ReportWizardComponent } from './component/wizard/report.wizard.component';
+import { ReportBasicWizardComponent } from './component/wizard/report-basic.wizard.component';
+import { BugzillaReportWizardComponent } from './component/wizard/bugzilla-report.wizard.component';
+import { BugzillaAssigneeReportWizardComponent } from './component/wizard/bugzilla-assignee-report.wizard.component';
+import { AdvanceOptionComponent } from './component/wizard/advance-option.component';
+import { ReportRecurrenceWizardComponent } from './component/wizard/report-recurrence.wizard.component';
+
 import { ProfileEditorComponent } from './component/profile-editor.component';
 
 @NgModule({
@@ -25,6 +29,8 @@ import { ProfileEditorComponent } from './component/profile-editor.component';
       ReportWizardComponent,
       ReportBasicWizardComponent,
       BugzillaReportWizardComponent,
+      BugzillaAssigneeReportWizardComponent,
+      AdvanceOptionComponent,
       ReportRecurrenceWizardComponent,
       ProfileEditorComponent
    ],
