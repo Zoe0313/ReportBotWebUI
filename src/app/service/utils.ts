@@ -1,11 +1,11 @@
 import moment from 'moment-timezone'
 
-export function FormatDate(date, formatStr) {
+export function FormatDate(date, formatStr='MM/DD/YYYY') {
    if (date == null || date === '') {
       return ''
    }
    try {
-      return moment(date).format(formatStr || 'YYYY-MM-DD')
+      return moment(date).format(formatStr)
    } catch (e) {
       console.error(e)
       return ''
@@ -43,7 +43,7 @@ export function ConvertTimeWithTz(timeStr, oldTz, curTz) {
       return { time: null, dayOffset: 0 }
    }
    try {
-      const todayWithConfigTime = FormatDate(new Date(), null) + ' ' + timeStr
+      const todayWithConfigTime = FormatDate(new Date()) + ' ' + timeStr
       const dateWithOldTZ = ParseDateWithTz(todayWithConfigTime, oldTz)
       const dateWithNewTZ = FormatDateTime(dateWithOldTZ, curTz)
       const timeWithNewTZ = dateWithNewTZ.split(' ')[1]

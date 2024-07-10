@@ -1,5 +1,9 @@
 <div class="report-creation">
-   <clr-wizard #reportWizard [(clrWizardOpen)]="open" class="modal-xl">
+   <clr-wizard #reportWizard
+               [(clrWizardOpen)]="open"
+               [clrWizardSize]="'xl'"
+               [clrWizardPreventDefaultCancel]="true"
+               (clrWizardOnCancel)="doCancel()">
       <clr-wizard-title>{{ wizardTitle }}</clr-wizard-title>
 
       <clr-wizard-button [type]="'cancel'">Cancel</clr-wizard-button>
@@ -9,7 +13,9 @@
 
       <clr-wizard-page [clrWizardPageNextDisabled]="!basicPage.configForm.valid"
                        [clrWizardPagePreventDefaultNext]="true"
-                       (clrWizardPageNext)="onReportSpecPage()">
+                       (clrWizardPageNext)="onNextPage()"
+                       [clrWizardPagePreventDefaultCancel]="true"
+                       (clrWizardPageOnCancel)="doCancel()">
          <ng-template clrPageTitle>Basic Configuration</ng-template>
          <app-wizard-basic-page #basicPage
                                 [reportSpec]="reportSpec"
@@ -20,14 +26,15 @@
       <clr-wizard-page *ngIf="reportSpec.reportType === 'bugzilla'"
                        [clrWizardPageNextDisabled]="!bugzillaPage.configForm.valid"
                        [clrWizardPagePreventDefaultNext]="true"
-                       (clrWizardPageNext)="onRecurrencePage()">
+                       (clrWizardPageNext)="onNextPage()"
+                       [clrWizardPagePreventDefaultCancel]="true"
+                       (clrWizardPageOnCancel)="doCancel()">
          <ng-template clrPageTitle>Bugzilla Configuration</ng-template>
          <app-wizard-bugzilla-page #bugzillaPage
                                    [reportSpec]="reportSpec">
          </app-wizard-bugzilla-page>
          <app-report-advance-option #advanceOption
                                     [mentionUsers]="mentionUsers"
-                                    [skipEmptyReport]="skipEmptyReport"
                                     [reportSpec]="reportSpec">
          </app-report-advance-option>
       </clr-wizard-page>
@@ -35,7 +42,9 @@
       <clr-wizard-page *ngIf="reportSpec.reportType === 'bugzilla_by_assignee'"
                        [clrWizardPageNextDisabled]="!bugzillaAssigneePage.configForm.valid"
                        [clrWizardPagePreventDefaultNext]="true"
-                       (clrWizardPageNext)="onRecurrencePage()">
+                       (clrWizardPageNext)="onNextPage()"
+                       [clrWizardPagePreventDefaultCancel]="true"
+                       (clrWizardPageOnCancel)="doCancel()">
          <ng-template clrPageTitle>Bugzilla by Assignee Configuration</ng-template>
          <app-wizard-bugzilla-assignee-page #bugzillaAssigneePage
                                             [bugzillaAssignees]="bugzillaAssignees"
@@ -43,19 +52,18 @@
          </app-wizard-bugzilla-assignee-page>
          <app-report-advance-option #advanceOption
                                     [mentionUsers]="mentionUsers"
-                                    [skipEmptyReport]="skipEmptyReport"
                                     [reportSpec]="reportSpec">
          </app-report-advance-option>
       </clr-wizard-page>
 
       <clr-wizard-page #recurrencePage
-                       [clrWizardPageNextDisabled]="!recurrencePage.configForm.valid"
                        [clrWizardPagePreventDefaultNext]="true"
-                       (clrWizardPageNext)="doFinish()">
+                       (clrWizardPageNext)="doFinish()"
+                       [clrWizardPagePreventDefaultCancel]="true"
+                       (clrWizardPageOnCancel)="doCancel()">
          <ng-template clrPageTitle>Recurrence Configuration</ng-template>
          <app-wizard-recurrence-page #recurrencePage
-                                     [reportSpec]="reportSpec"
-                                     [repeatType]="repeatType">
+                                     [reportSpec]="reportSpec">
          </app-wizard-recurrence-page>
       </clr-wizard-page>
 

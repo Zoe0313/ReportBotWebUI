@@ -6,6 +6,7 @@ import { ReportWizardComponent } from './wizard/report.wizard.component';
 import { ReportConfiguration, BugzillaSpec, BugzillaAssigneeSpec,
          PerforceCheckinSpec, NannyReminderSpec, TextSpec, JiraSpec,
          RepeatConfig } from '../model/report.model';
+import { DisplayTimeSetting, FormatDate, FormatDateTime } from '../service/utils'
 
 @Component({
     selector: 'app-reports',
@@ -48,7 +49,6 @@ export class ReportsComponent implements OnInit {
    initReportConfiguration(report): ReportConfiguration {
       const reportType = report['reportType'];
       const reportSpecConfig = report['reportSpecConfig'];
-      const repeatConfig = report['repeatConfig'];
       let bugzilla: BugzillaSpec = new BugzillaSpec();
       let bugzillaAssignee: BugzillaAssigneeSpec = new BugzillaAssigneeSpec();
       let perforceCheckin: PerforceCheckinSpec = new PerforceCheckinSpec();
@@ -76,6 +76,28 @@ export class ReportsComponent implements OnInit {
          jira.fields = reportSpecConfig['jira']['fields'];
          jira.groupby = reportSpecConfig['jira']['groupby'];
       }
+      const repeatConfig = report['repeatConfig'];
+      const repeatType = repeatConfig['repeatType'];
+      let recurrence: RepeatConfig = new RepeatConfig();
+      recurrence.repeatType = repeatType;
+      recurrence.startDate = FormatDate(repeatConfig['startDate']);
+      recurrence.endDate = FormatDate(repeatConfig['endDate']);
+      if (repeatType === 'not_repeat') {
+         recurrence.date = FormatDate(repeatConfig['date']);
+         recurrence.time = repeatConfig['time'];
+      } else if (repeatType === 'hourly') {
+         recurrence.minsOfHour = repeatConfig['minsOfHour'];
+      } else if (repeatType === 'daily') {
+         recurrence.time = repeatConfig['time'];
+      } else if (repeatType === 'weekly') {
+         recurrence.dayOfWeek = repeatConfig['dayOfWeek'];
+         recurrence.time = repeatConfig['time'];
+      } else if (repeatType === 'monthly') {
+         recurrence.dayOfMonth = repeatConfig['dayOfMonth'];
+         recurrence.time = repeatConfig['time'];
+      } else if (repeatType === 'cron_expression') {
+         recurrence.cronExpression = repeatConfig['cronExpression'];
+      }
       let data = new ReportConfiguration();
       data = {
          id: report['_id'],
@@ -92,7 +114,7 @@ export class ReportsComponent implements OnInit {
          nannyReminder: nannyReminder,
          text: text,
          jira: jira,
-         repeatConfig: repeatConfig,
+         repeatConfig: recurrence,
          favored: false
       };
       return data;

@@ -2,13 +2,6 @@
 
   margin-bottom: 2rem;
 
-  .config-name {
-     padding-left: 0px;
-     font-size: .7rem;
-     font-weight: 600;
-     max-width: 100%;
-  };
-
   .hint-label {
      margin-top: .7rem;
      font-size: .6rem;
@@ -22,19 +15,31 @@
   .clr-input, .clr-select {
      width: 450px;
   }
-
-  .description-item {
-     max-width: 100%;
-
-     label {
-        padding: 0px;
-        font-size: .5rem;
-        color: #737373;
-     }
-  }
 }
 
-.report-basic-config-card {
+.config-name {
+  padding-left: 0px;
+  font-size: .7rem;
+  font-weight: 600;
+  max-width: 100%;
+};
+
+.description-item {
+ max-width: 100%;
+
+ label {
+    padding: 0px;
+    font-size: .5rem;
+    color: #737373;
+ }
+}
+
+.time-config {
+   margin-bottom: 2rem;
+}
+
+
+.my-divider {
    border: 1px solid #aaa;
    border-radius: 10px;
    padding-top: 10px;

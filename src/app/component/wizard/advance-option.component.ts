@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { FormGroup, FormControl, Validators,
+         AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { ReportConfiguration } from '../../model/report.model';
 import { ReportsService } from '../../service/reports.service';
 
@@ -15,41 +16,52 @@ export class AdvanceOptionComponent {
    ) {
    }
 
-   @Input() mentionUsers: string;
-   @Input() skipEmptyReport: string;
    @Input() reportSpec: ReportConfiguration;
+   @Input() mentionUsers: string;
 
-   invalidUser = '';
+   accountValidator(service): ValidatorFn {
+      return (control: AbstractControl): ValidationErrors | null => {
+         const value = control.value;
+         if (typeof value == 'undefined' || value === '' || value === null) {
+            return null;
+         }
+         let invalidUser = '';
+         value.split(',').map(async function(user){
+            const account = user.trim();
+            service.validateADaccount(account).then(
+               res => {
+                  console.log('valid user:', account);
+               },
+               err => {
+                  invalidUser = account;
+                  console.log('invalid user:', account);
+               }
+            );
+         });
+         setTimeout(() => {
+            console.log('return:', invalidUser);
+            if (invalidUser.length>0) {
+               return { invalidAccount: true };
+            }
+            return null;
+         }, 1000);
+      };
+   }
 
    configForm = new FormGroup({
-      mentionUsers: new FormControl(''),
+      mentionUsers: new FormControl('', [this.accountValidator(this.service)]),
    });
 
    changeMentionUsers(event: any) {
-      this.invalidUser = '';
+      console.log('changeMentionUsers:', event.target.value);
       this.reportSpec.mentionUsers = [];
       if (event.target.value === '') {
          return;
       }
-      event.target.value.split(',').map(user => {
+      this.mentionUsers = event.target.value;
+      this.mentionUsers.split(',').map(user => {
          const account = user.trim();
-         this.service.validateADaccount(account).then(
-            res => {
-               console.log('res:', res);
-               const ldapName = res['_source']['username'];
-               this.reportSpec.mentionUsers.push(ldapName);
-            },
-            err => {
-               console.log('err:', err);
-               this.invalidUser = account;
-            }
-         );
+         this.reportSpec.mentionUsers.push(account);
       });
-      console.log(this.reportSpec.mentionUsers);
-   }
-
-   changeSkipEmptyReport(event: any) {
-      this.skipEmptyReport = event.target.value;
-      console.log(this.skipEmptyReport);
    }
 }

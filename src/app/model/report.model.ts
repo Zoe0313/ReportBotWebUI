@@ -1,12 +1,14 @@
+import moment from 'moment-timezone'
+
 export class ReportConfiguration {
-   id: string;
-   title: string;
-   creator: string; //VMWareId
-   status: string;
-   reportType: string;
-   webhooks: string[];
-   mentionUsers: string[];
-   skipEmptyReport: boolean;
+   id: string = '';
+   title: string = '';
+   creator: string = ''; //VMWareId
+   status: string = 'CREATED';
+   reportType: string = 'bugzilla';
+   webhooks: string[] = [];
+   mentionUsers: string[] = [];
+   skipEmptyReport: boolean = false;
    bugzilla: BugzillaSpec = new BugzillaSpec();
    bugzillaAssignee: BugzillaAssigneeSpec = new BugzillaAssigneeSpec();
    perforceCheckin: PerforceCheckinSpec = new PerforceCheckinSpec();
@@ -14,57 +16,57 @@ export class ReportConfiguration {
    text: TextSpec = new TextSpec();
    jira: JiraSpec = new JiraSpec();
    repeatConfig: RepeatConfig = new RepeatConfig();
-   favored = false;
+   favored: boolean = false;
 }
 
 export class TextSpec {
-   text: string;
+   text: string = '';
 }
 
 export class BugzillaSpec {
-   bugzillaLink: string;
+   bugzillaLink: string = '';
 }
 
 export class BugzillaAssigneeSpec {
-   bugzillaAssignees: string[];
+   bugzillaAssignees: string[] = [];
 }
 
 class PerforceCheckinMembersFilter {
-   members: string[];
-   condition: string;// include, exclude
-   type: string;// selected, direct_reporters, all_reporters
+   members: string[] = [];
+   condition: string = 'include';// include, exclude
+   type: string = 'selected';// selected, direct_reporters, all_reporters
 }
 
 export class PerforceCheckinSpec {
-   branches: string[];
-   needCheckinApproved = true;
-   membersFilters: PerforceCheckinMembersFilter[];
-   flattenMembers: string[];
+   branches: string[] = [];
+   needCheckinApproved: boolean = true;
+   membersFilters: PerforceCheckinMembersFilter[] = [];
+   flattenMembers: string[] = [];
 }
 
 export class NannyReminderSpec {
-   nannyCode: string;
-   nannyAssignee: string;
-   nannyRoster: string;
-   text: string;
+   nannyCode: string = '';
+   nannyAssignee: string = '';
+   nannyRoster: string = '';
+   text: string = '';
 }
 
 export class JiraSpec {
-   jql: string;
-   fields: string[];
-   groupby: string;
+   jql: string = '';
+   fields: string[] = [];
+   groupby: string = '';
 }
 
 export class RepeatConfig {
-   repeatType: string;// not_repeat, hourly, daily, weekly, monthly, cron_expression
-   tz: string;
-   startDate: string;
-   endDate: string;//not required
-   cronExpression: string;
-   date: string;//YYYY-MM-DD
-   time: string;//HH:mm
-   dayOfMonth: number;//[1-31]
-   dayOfWeek: number[];//[0, 1, 2, 3, 4, 5, 6]
-   minsOfHour: number;//[0-59]
-   nextInvocation: string;
+   repeatType: string = 'daily';// not_repeat, hourly, daily, weekly, monthly, cron_expression
+   tz: string = 'Asia/Shanghai';
+   startDate: string = moment(new Date()).format('MM/DD/YYYY');
+   endDate: string = '';//not required
+   cronExpression: string = '';
+   date: string = '';//YYYY-MM-DD
+   time: string = '08:00';//HH:mm
+   dayOfMonth: number = 1;//[1-31]
+   dayOfWeek: number[] = [];//[0, 1, 2, 3, 4, 5, 6]
+   minsOfHour: number = 0;//[0-59]
+   nextInvocation: string = '';
 }

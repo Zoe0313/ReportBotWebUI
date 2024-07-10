@@ -1,10 +1,6 @@
 import { Component, Input, Output, ViewChild, EventEmitter, ChangeDetectorRef } from '@angular/core';
 import { ClrWizard, ClrWizardPage } from '@clr/angular';
-import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router';
 import { combineLatest } from 'rxjs';
-import { ReportsService } from '../../service/reports.service';
-import { ConfigService } from '../../service/configure.service';
 import { ReportConfiguration } from '../../model/report.model';
 import { ReportBasicWizardComponent } from './report-basic.wizard.component';
 import { ReportRecurrenceWizardComponent } from './report-recurrence.wizard.component';
@@ -40,80 +36,74 @@ export class ReportWizardComponent {
    action = '';
    alertMessages = [];
    loading = false;
-
    wizardTitle = '';
+   reportSpec: ReportConfiguration = new ReportConfiguration;
 
-   reportSpec: ReportConfiguration = new ReportConfiguration();
    webhooks = '';
    mentionUsers = '';
-   skipEmptyReport = '';
    bugzillaAssignees = '';
-   repeatType = '';
 
    constructor(
-      private service: ReportsService,
-      private config: ConfigService,
       private cdRef: ChangeDetectorRef,
-      private http: HttpClient,
-      private router: Router
    ) { }
 
    init(action: string, spec?: ReportConfiguration) {
       this.action = action;
       this.reportWizard.reset();
       this.alertMessages = [];
-      this.webhooks = '';
-      this.mentionUsers = '';
-      this.skipEmptyReport = '';
-      this.bugzillaAssignees = '';
-      this.repeatType = '';
       if (action === 'create') {
          this.wizardTitle = 'Create Report';
          this.basicPage.configForm.reset();
          this.reportSpec = new ReportConfiguration();
-         this.reportSpec.reportType = 'bugzilla';
       } else if (action === 'update') {
          this.wizardTitle = 'Edit Report';
          this.reportSpec = spec;
-         console.log(spec);
       }
       this.updateView();
-      console.log('report type:', this.reportSpec.reportType);
-      console.log('report title:', this.reportSpec.title);
    }
 
    updateView() {
-      if (this.reportSpec.webhooks) {
+      console.log(this.reportSpec);
+      // basic page
+      if (this.reportSpec.webhooks.length>0) {
          this.webhooks = this.reportSpec.webhooks.join(',');
       } else {
          this.webhooks = '';
       }
-      if (this.reportSpec.mentionUsers) {
-         this.mentionUsers = this.reportSpec.mentionUsers.join(',');
-      } else {
-         this.mentionUsers = '';
-      }
-      if (this.reportSpec.bugzillaAssignee.bugzillaAssignees) {
+      console.log('webhooks:', this.webhooks);
+
+      // bugzilla by assignee page
+      if (this.reportSpec.bugzillaAssignee.bugzillaAssignees.length > 0) {
          this.bugzillaAssignees = this.reportSpec.bugzillaAssignee.bugzillaAssignees.join(',');
       } else {
          this.bugzillaAssignees = '';
       }
-      this.skipEmptyReport = (this.reportSpec.skipEmptyReport == true) ? 'Yes' : 'No';
-      if (this.reportSpec.repeatConfig.repeatType) {
-         this.repeatType = this.reportSpec.repeatConfig.repeatType;
+
+      // recurrence page
+      if (this.reportSpec.mentionUsers.length>0) {
+         this.mentionUsers = this.reportSpec.mentionUsers.join(',');
       } else {
-         this.repeatType = 'daily';
+         this.mentionUsers = '';
       }
+      console.log('mention users:', this.mentionUsers);
       this.cdRef.detectChanges();
    }
 
-   onReportSpecPage() {
-      console.log('page to report spec');
-      this.reportWizard.forceNext();
+   resetData() {
+      this.webhooks = '';
+      this.mentionUsers = '';
+      this.bugzillaAssignees = '';
    }
 
-   onRecurrencePage() {
-      console.log('page to recurrence');
+   doCancel() {
+      this.basicPage.configForm.reset();
+      this.reportWizard.reset();
+      this.reportWizard.previous();
+      this.reportWizard.close();
+      this.resetData();
+   }
+
+   onNextPage() {
       this.reportWizard.forceNext();
    }
 

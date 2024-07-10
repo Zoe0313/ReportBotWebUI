@@ -21,6 +21,11 @@ import { ReportRecurrenceWizardComponent } from './component/wizard/report-recur
 
 import { ProfileEditorComponent } from './component/profile-editor.component';
 
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+
+registerLocaleData(localeFr);
+
 @NgModule({
    declarations: [
       AppComponent,

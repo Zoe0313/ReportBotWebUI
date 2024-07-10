@@ -16,7 +16,7 @@ export class ReportBasicWizardComponent {
    webhookValidator(): ValidatorFn {
       return (control: AbstractControl): ValidationErrors | null => {
          const value = control.value;
-         if (typeof value == 'undefined' || value === '') {
+         if (typeof value == 'undefined' || value === '' || value === null) {
             return null;
          }
          try {
