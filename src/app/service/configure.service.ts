@@ -35,6 +35,14 @@ export class ConfigService {
       return this._username;
    }
 
+   private _password: string;
+   public set password(value: string) {
+      this._password = value;
+   }
+   public get password(): string {
+      return this._password;
+   }
+
    private _isSystemAdmin;
    public get isSystemAdmin() {
       return this._isSystemAdmin;
@@ -50,13 +58,13 @@ export class ConfigService {
 
    getConfig() {
       this.API = {
-         REPORT_CONFIGURATION_LIST: '/report/configuration?page={0}&limit={1}',
-         REPORT_CONFIGURATION_DETAILS: '/report/{0}/configuration',
-         CREATE_REPORT_CONFIGURATION: '/report/configuration',
-         UPDATE_REPORT_STATUS: '/report/{0}/configuration?status={1}',
-         DELETE_REPORT_CONFIGURATION: '/report/{0}/configuration',
-         CHECK_SYSTEM_ADMIN: '/service/admins/{0}',
-         USERS_FAVORED: '/user/favoredReports?reportID={0}'
+         REPORT_CONFIGURATION_LIST: '/report/configuration?page={0}&limit={1}&user={2}',
+         REPORT_CONFIGURATION_DETAILS: '/report/{0}/configuration?user={1}',
+         CREATE_REPORT_CONFIGURATION: '/report/configuration?user={0}',
+         UPDATE_REPORT_STATUS: '/report/{0}/configuration?status={1}&user={2}',
+         DELETE_REPORT_CONFIGURATION: '/report/{0}/configuration?user={1}',
+         CHECK_SYSTEM_ADMIN: '/service/admins?user={0}',
+         USERS_FAVORED: '/user/favoredReports?reportID={0}&user={1}'
       };
    }
 }

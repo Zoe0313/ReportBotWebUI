@@ -19,14 +19,16 @@ export class ReportsService {
    getReports(page: number): Promise<any> {
       const url = `${this.config.API.REPORT_CONFIGURATION_LIST}`
                   .replace('{0}', page.toString())
-                  .replace('{1}', '20');
+                  .replace('{1}', '20')
+                  .replace('{2}', this.config.userName);
 
       return this.http.get<any>(url, this.getNoCacheRequestOptions()).toPromise();
    }
 
    getReportDetail(reportID: string): Promise<any> {
       const url = `${this.config.API.REPORT_CONFIGURATION_DETAILS}`
-                  .replace('{0}', reportID);
+                  .replace('{0}', reportID)
+                  .replace('{1}', this.config.userName);
 
       return this.http.get<any>(url, this.getNoCacheRequestOptions()).toPromise();
    }
@@ -40,21 +42,24 @@ export class ReportsService {
 
    addFavored(reportID: string) {
       const url = `${this.config.API.USERS_FAVORED}`
-                  .replace('{0}', reportID);
+                  .replace('{0}', reportID)
+                  .replace('{1}', this.config.userName);
 
       return this.http.put(url, '', this.getNoCacheRequestOptions());
    }
 
    removeFavored(reportID: string) {
       const url = `${this.config.API.USERS_FAVORED}`
-                  .replace('{0}', reportID);
+                  .replace('{0}', reportID)
+                  .replace('{1}', this.config.userName);
 
       return this.http.delete(url, this.getNoCacheRequestOptions());
    }
 
    deleteReport(reportID: string) {
       const url = `${this.config.API.DELETE_REPORT_CONFIGURATION}`
-                  .replace('{0}', reportID);
+                  .replace('{0}', reportID)
+                  .replace('{1}', this.config.userName);
 
       return this.http.delete(url, this.getNoCacheRequestOptions());
    }
@@ -62,7 +67,8 @@ export class ReportsService {
    disableReport(reportID: string) {
       const url = `${this.config.API.UPDATE_REPORT_STATUS}`
                   .replace('{0}', reportID)
-                  .replace('{1}', 'disable');
+                  .replace('{1}', 'disable')
+                  .replace('{2}', this.config.userName);
 
       return this.http.patch(url, this.getNoCacheRequestOptions());
    }
@@ -70,7 +76,8 @@ export class ReportsService {
    enableReport(reportID: string) {
       const url = `${this.config.API.UPDATE_REPORT_STATUS}`
                   .replace('{0}', reportID)
-                  .replace('{1}', 'enable');
+                  .replace('{1}', 'enable')
+                  .replace('{2}', this.config.userName);
 
       return this.http.patch(url, this.getNoCacheRequestOptions());
    }
@@ -90,6 +97,8 @@ export class ReportsService {
       headers = headers.append(HttpHeader.CACHE_CONTROL, HttpHeader.NO_CACHE);
       headers = headers.append(HttpHeader.PRAGMA, HttpHeader.NO_CACHE);
       headers = headers.append(HttpHeader.EXPIRES, "Sat, 01 Jan 2000 00:00:00 GMT");
+//       const token = this.config.userName + ":" + this.config.password;
+//       headers = headers.append(HttpHeader.AUTHORIZATION, btoa(token));
       options.headers = headers;
       return options;
    }

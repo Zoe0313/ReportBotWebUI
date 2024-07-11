@@ -14,6 +14,7 @@ import { ReportsService } from './service/reports.service';
 export class AppComponent implements OnInit {
    showDialog: boolean;
    userName: string;
+   userPassword: string;
    isDevEnv = false;
    isSystemAdmin = false;
 
@@ -37,6 +38,7 @@ export class AppComponent implements OnInit {
             this.userName = this.getCookie('user');
             if (this.userName !== '') {
                this.config.userName = this.userName;
+               this.config.password = this.userPassword;
             } else {
                window.location.href = '/login';
             }
@@ -90,6 +92,7 @@ export class AppComponent implements OnInit {
    closeModal() {
       this.showDialog = false;
       this.config.userName = this.userName;
+      this.config.password = this.userPassword;
       //this.checkSystemAdmin();
    }
 
@@ -97,6 +100,7 @@ export class AppComponent implements OnInit {
    handleKeyDown(event: KeyboardEvent) {
       if (this.showDialog && this.userName && event.key === 'Enter') {
          this.config.userName = this.userName;
+         this.config.password = this.userPassword;
          this.showDialog = false;
       }
       this.cdr.detectChanges();

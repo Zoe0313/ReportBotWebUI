@@ -19,7 +19,7 @@
    </div>
    <clr-datagrid [clrDgLoading]="loading">
       <clr-dg-column style="width: 550px;" [clrDgField]="'title'">
-         Name
+         Title
       </clr-dg-column>
       <clr-dg-column style="width: 200px;" *ngIf="config.isSystemAdmin">
          Creator
@@ -154,11 +154,12 @@
 <clr-modal [(clrModalOpen)]="showRemoveConfirmDialog" [clrModalClosable]="false">
    <h3 class="modal-title">Delete Notification</h3>
    <div class="modal-body">
-      <p>Are you sure remove the notification "{{ selectedReport?.title }}"?</p>
+      <label>Are you sure remove the notification: </label>
+      <input type="text" class="clr-input" placeholder="Notification title" [(ngModel)]="removeReportTitle">
    </div>
    <div class="modal-footer">
       <button type="button" class="btn btn-outline" (click)="showRemoveConfirmDialog = false">Cancel</button>
-      <button type="button" class="btn btn-danger" (click)="onRemoveHandler()">Delete</button>
+      <button type="button" class="btn btn-danger" (click)="onRemoveHandler()" [disabled]="removeReportTitle!=selectedReport?.title">Delete</button>
    </div>
 </clr-modal>
 

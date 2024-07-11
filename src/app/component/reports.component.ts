@@ -25,6 +25,7 @@ export class ReportsComponent implements OnInit {
    showRemoveConfirmDialog = false;
    showEnableConfirmDialog = false;
    showDisableConfirmDialog = false;
+   removeReportTitle = '';
 
    alertMessage = '';
    numOfReports: number;
@@ -121,6 +122,9 @@ export class ReportsComponent implements OnInit {
   }
 
    getReports(page: number) {
+      if (!!!this.config.userName) {
+         return;
+      }
       this.loading = true;
       this.service.getReports(page).then(
          result => {

@@ -65,10 +65,18 @@
    </div>
 </div>
 <clr-modal [(clrModalOpen)]="showDialog" [clrModalClosable]="false" [clrModalSize]="'sm'">
-   <h3 class="modal-title">User</h3>
+   <h3 class="modal-title">Login</h3>
    <div class="modal-body">
       <label>User:</label>
-      <input type="text" class="clr-input" [(ngModel)]="userName">
+      <input type="text" class="clr-input" placeholder="VMWare ID" [(ngModel)]="userName">
+<!--      <clr-input-container>-->
+<!--         <label>User</label>-->
+<!--         <input clrInput type="text" placeholder="VMWare ID" [(ngModel)]="userName" />-->
+<!--      </clr-input-container>-->
+<!--      <clr-password-container>-->
+<!--         <label>Password</label>-->
+<!--         <input clrPassword type="password" placeholder="Password" [(ngModel)]="userPassword" />-->
+<!--      </clr-password-container>-->
    </div>
    <div class="modal-footer">
       <button type="button" class="btn btn-outline" (click)="closeModal()" [disabled]="!!!userName">OK</button>
