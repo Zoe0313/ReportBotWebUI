@@ -13,7 +13,15 @@ import { FormatDate } from '../../service/utils'
 
 export class ReportRecurrenceWizardComponent {
    @Input() reportSpec: ReportConfiguration;
-   weekChecked = [false, false, false, false, false, false, false];
+
+   private _weekChecked: boolean[];
+   public get weekChecked(): boolean[] {
+      this._weekChecked = [];
+      for (let i=0; i<=6; i++) {
+         this._weekChecked.push(this.reportSpec.repeatConfig.dayOfWeek.includes(i));
+      }
+      return this._weekChecked;
+   }
 
    userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
    todayDate = FormatDate(new Date());

@@ -24,15 +24,30 @@
          </app-wizard-basic-page>
       </clr-wizard-page>
 
-      <clr-wizard-page #recurrencePage
-                       [clrWizardPagePreventDefaultNext]="true"
-                       (clrWizardPageNext)="doFinish()"
+      <clr-wizard-page [clrWizardPagePreventDefaultNext]="true"
+                       (clrWizardPageNext)="doNext()"
                        [clrWizardPagePreventDefaultCancel]="true"
                        (clrWizardPageOnCancel)="doCancel()">
          <ng-template clrPageTitle>Recurrence Configuration</ng-template>
          <app-wizard-recurrence-page #recurrencePage
                                      [reportSpec]="reportSpec">
          </app-wizard-recurrence-page>
+      </clr-wizard-page>
+
+      <clr-wizard-page [clrWizardPageNextDisabled]="!isValid"
+                       [clrWizardPagePreventDefaultNext]="true"
+                       (clrWizardPageNext)="doFinish()"
+                       [clrWizardPagePreventDefaultCancel]="true"
+                       (clrWizardPageOnCancel)="doCancel()">
+         <ng-template clrPageTitle>Notification Configuration Overview</ng-template>
+         <ng-template clrPageNavTitle>
+            <span *ngIf="isValid">Ready to go!</span>
+            <span *ngIf="!isValid">Not ready yet</span>
+         </ng-template>
+         <app-wizard-overview-page #overviewPage
+                                   [reportSpec]="reportSpec"
+                                   [isValid]="isValid">
+         </app-wizard-overview-page>
       </clr-wizard-page>
 
    </clr-wizard>

@@ -1,0 +1,50 @@
+<div *ngIf="isValid">
+   <p>Congratulations! You are done with this notification configuration.</p>
+   <label>Notification information</label>
+   <section>
+      <p>
+         <label>Title:</label>
+         <span>{{ reportSpec.title }}</span>
+      </p>
+      <p>
+         <label>Webhook(s):</label>
+         <span *ngFor="let webhook of reportSpec.webhooks; let i = index">
+            <a href="'webhook'">webhook-{{ i + 1 }}</a>
+         </span>
+      </p>
+      <p *ngIf="reportSpec.reportType === 'bugzilla'">
+         <label>Bugzilla link:</label>
+         <a href="'reportSpec.bugzilla.bugzillaLink'">url</a>
+      </p>
+      <p *ngIf="reportSpec.reportType === 'bugzilla_by_assignee'">
+         <label>Bugzilla by assignee(s):</label>
+         <span *ngFor="let assignee of reportSpec.bugzillaAssignee.bugzillaAssignees">
+            {{ assignee }}
+         </span>
+      </p>
+      <p>
+         <label>Mention user(s):</label>
+         <span *ngFor="let user of reportSpec.mentionUsers">
+            {{ user }}
+         </span>
+      </p>
+      <p>
+         <label>Skip report if no bug/change found:</label>
+         <span *ngIf="reportSpec.skipEmptyReport">Yes</span>
+         <span *ngIf="!reportSpec.skipEmptyReport">No</span>
+      </p>
+      <p>
+         <label>Recurrence:</label>
+         <span>{{ recurrence }}</span>
+      </p>
+      <p>
+         <label>Next sending time:</label>
+         <span>{{ nextSendingTime }}</span>
+      </p>
+    </section>
+</div>
+
+
+
+
+

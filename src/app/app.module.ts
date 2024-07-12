@@ -14,6 +14,7 @@ import { ReportDetailsComponent } from './component/report-details.component';
 import { ReportWizardComponent } from './component/wizard/report.wizard.component';
 import { ReportBasicWizardComponent } from './component/wizard/report-basic.wizard.component';
 import { ReportRecurrenceWizardComponent } from './component/wizard/report-recurrence.wizard.component';
+import { ReportOverviewWizardComponent } from './component/wizard/report-overview.wizard.component';
 
 import { ProfileEditorComponent } from './component/profile-editor.component';
 
@@ -30,6 +31,7 @@ registerLocaleData(localeFr);
       ReportWizardComponent,
       ReportBasicWizardComponent,
       ReportRecurrenceWizardComponent,
+      ReportOverviewWizardComponent,
       ProfileEditorComponent
    ],
    imports: [

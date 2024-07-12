@@ -4,6 +4,7 @@ import { combineLatest } from 'rxjs';
 import { ReportConfiguration } from '../../model/report.model';
 import { ReportBasicWizardComponent } from './report-basic.wizard.component';
 import { ReportRecurrenceWizardComponent } from './report-recurrence.wizard.component';
+import { ReportOverviewWizardComponent } from './report-overview.wizard.component';
 
 @Component({
    selector: 'app-report-wizard',
@@ -23,11 +24,14 @@ export class ReportWizardComponent {
    basicPage: ReportBasicWizardComponent;
    @ViewChild('recurrencePage', { static: true })
    recurrencePage: ReportRecurrenceWizardComponent;
+   @ViewChild('overviewPage', { static: true })
+   overviewPage: ReportOverviewWizardComponent;
 
    action = '';
    alertMessages = [];
    loading = false;
    wizardTitle = '';
+   isValid = true;
    reportSpec: ReportConfiguration = new ReportConfiguration;
 
    webhooks = '';
