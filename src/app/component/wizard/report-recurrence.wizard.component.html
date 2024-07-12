@@ -1,110 +1,198 @@
-<form clrForm>
-   <h4>Select a recurrence type</h4>
-   <clr-radio-container>
-      <clr-radio-wrapper>
-         <input clrRadio type="radio"
-                value="not_repeat"
-                [(ngModel)]="reportSpec.repeatConfig.repeatType"
+<form clrForm [formGroup]="configForm">
+   <div>
+      <h4>Select a recurrence type</h4>
+      <clr-radio-container>
+         <clr-radio-wrapper>
+            <input clrRadio type="radio"
+                   value="not_repeat"
+                   [(ngModel)]="reportSpec.repeatConfig.repeatType"
+                   [ngModelOptions]="{standalone: true}"
+                   (change)="changeRepeatType($event)"/>
+            <label>Do not repeat</label>
+         </clr-radio-wrapper>
+         <clr-radio-wrapper>
+            <input clrRadio type="radio"
+                   value="hourly"
+                   [(ngModel)]="reportSpec.repeatConfig.repeatType"
+                   [ngModelOptions]="{standalone: true}"
+                   (change)="changeRepeatType($event)"/>
+            <label>Repeat hourly</label>
+         </clr-radio-wrapper>
+         <clr-radio-wrapper>
+            <input clrRadio type="radio"
+                   value="daily"
+                   [(ngModel)]="reportSpec.repeatConfig.repeatType"
+                   [ngModelOptions]="{standalone: true}"
+                   (change)="changeRepeatType($event)"/>
+            <label>Repeat daily</label>
+         </clr-radio-wrapper>
+         <clr-radio-wrapper>
+            <input clrRadio type="radio"
+                   value="weekly"
+                   [(ngModel)]="reportSpec.repeatConfig.repeatType"
+                   [ngModelOptions]="{standalone: true}"
+                   (change)="changeRepeatType($event)"/>
+            <label>Repeat weekly</label>
+         </clr-radio-wrapper>
+         <clr-radio-wrapper>
+            <input clrRadio type="radio"
+                   value="monthly"
+                   [(ngModel)]="reportSpec.repeatConfig.repeatType"
+                   [ngModelOptions]="{standalone: true}"
+                   (change)="changeRepeatType($event)"/>
+            <label>Repeat monthly</label>
+         </clr-radio-wrapper>
+         <clr-radio-wrapper>
+            <input clrRadio type="radio"
+                   value="cron_expression"
+                   [(ngModel)]="reportSpec.repeatConfig.repeatType"
+                   [ngModelOptions]="{standalone: true}"
+                   (change)="changeRepeatType($event)"/>
+            <label>Cron Expression</label>
+         </clr-radio-wrapper>
+         <clr-control-error>Please complete this required field.</clr-control-error>
+         <clr-control-helper>"Do not repeat" option is not recommended for nanny reminder reports as it disables the rolling of nanny duty.</clr-control-helper>
+      </clr-radio-container>
+   </div>
+
+   <div>
+      <h4 *ngIf="reportSpec.repeatConfig.repeatType == 'not_repeat'">Date time setting for one-time notification</h4>
+      <h4 *ngIf="reportSpec.repeatConfig.repeatType == 'hourly'">Hourly notification setting</h4>
+      <h4 *ngIf="reportSpec.repeatConfig.repeatType == 'daily'">Daily notification setting</h4>
+      <h4 *ngIf="reportSpec.repeatConfig.repeatType == 'weekly'">Weekly notification setting</h4>
+      <h4 *ngIf="reportSpec.repeatConfig.repeatType == 'monthly'">Monthly notification setting</h4>
+      <clr-date-container *ngIf="reportSpec.repeatConfig.repeatType == 'not_repeat'">
+         <label>Input date</label>
+         <input clrDate type="date"
+                autocomplete="off"
                 [ngModelOptions]="{standalone: true}"
-                (change)="changeRepeatType($event)"/>
-         <label>Do not repeat</label>
-      </clr-radio-wrapper>
-      <clr-radio-wrapper>
-         <input clrRadio type="radio"
-                value="hourly"
-                [(ngModel)]="reportSpec.repeatConfig.repeatType"
-                [ngModelOptions]="{standalone: true}"
-                (change)="changeRepeatType($event)"/>
-         <label>Repeat hourly</label>
-      </clr-radio-wrapper>
-      <clr-radio-wrapper>
-         <input clrRadio type="radio"
-                value="daily"
-                [(ngModel)]="reportSpec.repeatConfig.repeatType"
-                [ngModelOptions]="{standalone: true}"
-                (change)="changeRepeatType($event)"/>
-         <label>Repeat daily</label>
-      </clr-radio-wrapper>
-      <clr-radio-wrapper>
-         <input clrRadio type="radio"
-                value="weekly"
-                [(ngModel)]="reportSpec.repeatConfig.repeatType"
-                [ngModelOptions]="{standalone: true}"
-                (change)="changeRepeatType($event)"/>
-         <label>Repeat weekly</label>
-      </clr-radio-wrapper>
-      <clr-radio-wrapper>
-         <input clrRadio type="radio"
-                value="monthly"
-                [(ngModel)]="reportSpec.repeatConfig.repeatType"
-                [ngModelOptions]="{standalone: true}"
-                (change)="changeRepeatType($event)"/>
-         <label>Repeat monthly</label>
-      </clr-radio-wrapper>
-      <clr-radio-wrapper>
-         <input clrRadio type="radio"
-                value="cron_expression"
-                [(ngModel)]="reportSpec.repeatConfig.repeatType"
-                [ngModelOptions]="{standalone: true}"
-                (change)="changeRepeatType($event)"/>
-         <label>Cron Expression</label>
-      </clr-radio-wrapper>
-      <clr-control-error>Please complete this required field.</clr-control-error>
-      <clr-control-helper>"Do not repeat" option is not recommended for nanny reminder reports as it disables the rolling of nanny duty.</clr-control-helper>
-   </clr-radio-container>
+                [(ngModel)]="reportSpec.repeatConfig.date"
+                required/>
+         <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
+      </clr-date-container>
+
+      <clr-input-container *ngIf="reportSpec.repeatConfig.repeatType == 'hourly'">
+         <label>Minutes of per hour</label>
+         <input clrInput type="text"
+                placeholder="MM"
+                formControlName="minutesOfHour"
+                [(ngModel)]="minutesOfHour"
+                (change)="changeMinutesOfPerHour($event)"
+                required invalid_minute/>
+         <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
+         <clr-control-error *clrIfError="'invalid_minute'">Please input a number: 0 - 59.</clr-control-error>
+         <clr-control-helper>Valid input: 0 - 59, e.g. 30.</clr-control-helper>
+      </clr-input-container>
+
+      <clr-checkbox-container *ngIf="reportSpec.repeatConfig.repeatType == 'weekly'">
+         <label>Send the notification every</label>
+         <clr-checkbox-wrapper>
+         <input type="checkbox" clrCheckbox
+                formControlName="dayOfWeek"
+                [(ngModel)]="weekChecked[1]"
+                (change)="changeDayOfWeek(1)"/>
+         <label>Monday</label>
+      </clr-checkbox-wrapper>
+         <clr-checkbox-wrapper>
+            <input type="checkbox" clrCheckbox
+                   formControlName="dayOfWeek"
+                   [(ngModel)]="weekChecked[2]"
+                   (change)="changeDayOfWeek(2)"/>
+            <label>Tuesday</label>
+         </clr-checkbox-wrapper>
+         <clr-checkbox-wrapper>
+            <input type="checkbox" clrCheckbox
+                   formControlName="dayOfWeek"
+                   [(ngModel)]="weekChecked[3]"
+                   (change)="changeDayOfWeek(3)"/>
+            <label>Wednesday</label>
+         </clr-checkbox-wrapper>
+         <clr-checkbox-wrapper>
+            <input type="checkbox" clrCheckbox
+                   formControlName="dayOfWeek"
+                   [(ngModel)]="weekChecked[4]"
+                   (change)="changeDayOfWeek(4)"/>
+            <label>Thursday</label>
+         </clr-checkbox-wrapper>
+         <clr-checkbox-wrapper>
+            <input type="checkbox" clrCheckbox
+                   formControlName="dayOfWeek"
+                   [(ngModel)]="weekChecked[5]"
+                   (change)="changeDayOfWeek(5)"/>
+            <label>Friday</label>
+         </clr-checkbox-wrapper>
+         <clr-checkbox-wrapper>
+            <input type="checkbox" clrCheckbox
+                   formControlName="dayOfWeek"
+                   [(ngModel)]="weekChecked[6]"
+                   (change)="changeDayOfWeek(6)"/>
+            <label>Saturday</label>
+         </clr-checkbox-wrapper>
+         <clr-checkbox-wrapper>
+            <input type="checkbox" clrCheckbox
+                   formControlName="dayOfWeek"
+                   [(ngModel)]="weekChecked[0]"
+                   (change)="changeDayOfWeek(0)"/>
+            <label>Sunday</label>
+         </clr-checkbox-wrapper>
+      </clr-checkbox-container>
+      <div class="clr-subtext-wrapper" *ngIf="reportSpec.repeatConfig.dayOfWeek.length==0 && reportSpec.repeatConfig.repeatType == 'weekly'">
+         <clr-icon style="color:#c21d00; margin-top:3px;" shape="exclamation-circle"></clr-icon>
+         <clr-control-error style="color:#c21d00" class="clr-subtext">Please complete this required field.</clr-control-error>
+      </div>
+
+      <clr-input-container *ngIf="reportSpec.repeatConfig.repeatType == 'monthly'">
+         <label>Day of per month</label>
+         <input clrInput type="text"
+                placeholder="DD"
+                formControlName="dayOfMonth"
+                [(ngModel)]="dayOfMonth"
+                (change)="changeDayOfPerMonth($event)"
+                required invalid_day/>
+         <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
+         <clr-control-error *clrIfError="'invalid_day'">Please input a number: 1 - 31.</clr-control-error>
+         <clr-control-helper>Valid input: 1 - 31, e.g. 21.</clr-control-helper>
+      </clr-input-container>
+
+      <clr-input-container *ngIf="['not_repeat', 'daily', 'weekly', 'monthly'].includes(reportSpec.repeatConfig.repeatType)">
+         <label>Input time</label>
+         <input clrInput type="text"
+                placeholder="HH:MM"
+                formControlName="repeatTime"
+                [(ngModel)]="reportSpec.repeatConfig.time"
+                required invalid_time/>
+         <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
+         <clr-control-error *clrIfError="'invalid_time'">It must follow the time format "HH:MM".</clr-control-error>
+         <clr-control-helper>Input a specific time, e.g. 14:25.</clr-control-helper>
+      </clr-input-container>
+   </div>
+
+   <div>
+      <h4>Set up the effective time</h4>
+      <clr-date-container>
+         <label>Start date</label>
+         <input clrDate type="date"
+                autocomplete="off"
+                formControlName="startDate"
+                [(ngModel)]="reportSpec.repeatConfig.startDate"
+                required/>
+         <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
+      </clr-date-container>
+
+      <clr-date-container>
+         <label>End date</label>
+         <input clrDate type="date"
+                autocomplete="off"
+                formControlName="endDate"
+                [(ngModel)]="reportSpec.repeatConfig.endDate"
+                invalid_end_day/>
+         <clr-control-error *clrIfError="'invalid_end_day'">It should be greater than or equal to start date.</clr-control-error>
+         <clr-control-helper>Select a date greater than or equal to start date.</clr-control-helper>
+      </clr-date-container>
+   </div>
+
 </form>
 
-<form clrForm *ngIf="reportSpec.repeatConfig.repeatType == 'not_repeat'">
-   <h4>Date time setting for one-time notification</h4>
-   <clr-date-container>
-      <label>Input date</label>
-      <input clrDate type="date"
-             autocomplete="off"
-             name="not-repeat-date"
-             [(ngModel)]="reportSpec.repeatConfig.date"
-             min="todayDate"
-             required/>
-      <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
-      <clr-control-error *clrIfError="'min'">Invalid date.</clr-control-error>
-      <clr-control-helper>Select a date from today: {{ todayDate }}.</clr-control-helper>
-   </clr-date-container>
 
-   <clr-input-container>
-      <label>Input time</label>
-      <input clrInput type="text"
-             placeholder="HH:MM"
-             [(ngModel)]="notRepeatTime"
-             [ngModelOptions]="{standalone: true}"
-             (change)="changeNotRepeatTime($event)"
-             required/>
-      <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
-      <clr-control-error>Invalid time.</clr-control-error>
-      <clr-control-helper>Input a specific time, e.g. 14:25.</clr-control-helper>
-   </clr-input-container>
-</form>
 
-<form clrForm>
-   <h4>Set up the effective time</h4>
-   <clr-date-container>
-      <label>Start date</label>
-      <input clrDate type="date"
-             autocomplete="off"
-             name="startDate"
-             [(ngModel)]="reportSpec.repeatConfig.startDate"
-             required/>
-      <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
-      <clr-control-helper>Select a date from today: {{ todayDate }}.</clr-control-helper>
-   </clr-date-container>
-
-   <clr-date-container>
-      <label>End date</label>
-      <input clrDate type="date"
-             autocomplete="off"
-             name="endDate"
-             [(ngModel)]="reportSpec.repeatConfig.endDate"
-             min="reportSpec.repeatConfig.startDate"/>
-      <clr-control-error *clrIfError="'min'">Invalid date.</clr-control-error>
-      <clr-control-helper>Select a date greater than or equal to start date.</clr-control-helper>
-   </clr-date-container>
-</form>
 
