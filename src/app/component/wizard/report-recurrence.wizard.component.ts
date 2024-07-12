@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators,
          AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+import cron from 'cron-validate'
 import { ReportConfiguration } from '../../model/report.model';
 import { FormatDate } from '../../service/utils'
 
@@ -85,11 +86,26 @@ export class ReportRecurrenceWizardComponent {
       };
    }
 
+   cronValidator(): ValidatorFn {
+      return (control: AbstractControl): ValidationErrors | null => {
+         if (!control || control.value == null || control.value === '') {
+            return null;
+         }
+         try {
+            const cron_result = cron(control.value);
+            return cron_result.isValid() ? null : { invalid_cron: true };
+         } catch (err) {
+            return { invalid_cron: true };
+         }
+      };
+   }
+
    configForm = new FormGroup({
       repeatTime: new FormControl('', [Validators.required, this.repeatTimeValidator()]),
       minutesOfHour: new FormControl('', [Validators.required, this.minuteOfHourValidator()]),
       dayOfMonth: new FormControl('', [Validators.required, this.dayOfMonthValidator()]),
       dayOfWeek: new FormControl('', [Validators.required]),
+      cronExpression: new FormControl('', [Validators.required, this.cronValidator()]),
       startDate: new FormControl('', [Validators.required]),
       endDate: new FormControl('', [this.endDateValidator()]),
    });

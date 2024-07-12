@@ -61,6 +61,7 @@
       <h4 *ngIf="reportSpec.repeatConfig.repeatType == 'daily'">Daily notification setting</h4>
       <h4 *ngIf="reportSpec.repeatConfig.repeatType == 'weekly'">Weekly notification setting</h4>
       <h4 *ngIf="reportSpec.repeatConfig.repeatType == 'monthly'">Monthly notification setting</h4>
+      <h4 *ngIf="reportSpec.repeatConfig.repeatType == 'cron_expression'">Cron expression setting</h4>
       <clr-date-container *ngIf="reportSpec.repeatConfig.repeatType == 'not_repeat'">
          <label>Input date</label>
          <input clrDate type="date"
@@ -164,6 +165,21 @@
          <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
          <clr-control-error *clrIfError="'invalid_time'">It must follow the time format "HH:MM".</clr-control-error>
          <clr-control-helper>Input a specific time, e.g. 14:25.</clr-control-helper>
+      </clr-input-container>
+
+      <clr-input-container *ngIf="reportSpec.repeatConfig.repeatType == 'cron_expression'">
+         <label>Input crontab</label>
+         <input clrInput type="text"
+                placeholder="E.g. 30 14 * * 2"
+                formControlName="cronExpression"
+                [(ngModel)]="reportSpec.repeatConfig.cronExpression"
+                required invalid_cron/>
+         <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
+         <clr-control-error *clrIfError="'invalid_cron'">Invalid cron expression.</clr-control-error>
+         <clr-control-helper>
+            E.g. 30 14 * * 2, it means 14:30PM on every Tuesday.<br>
+            Refer to <a href="https://crontab.guru/">Quick and simple editor for cron schedule expressions</a>
+         </clr-control-helper>
       </clr-input-container>
    </div>
 
