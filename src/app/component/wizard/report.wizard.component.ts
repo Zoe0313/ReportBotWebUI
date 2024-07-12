@@ -4,9 +4,6 @@ import { combineLatest } from 'rxjs';
 import { ReportConfiguration } from '../../model/report.model';
 import { ReportBasicWizardComponent } from './report-basic.wizard.component';
 import { ReportRecurrenceWizardComponent } from './report-recurrence.wizard.component';
-import { BugzillaReportWizardComponent } from './bugzilla-report.wizard.component';
-import { BugzillaAssigneeReportWizardComponent } from './bugzilla-assignee-report.wizard.component';
-import { AdvanceOptionComponent } from './advance-option.component';
 
 @Component({
    selector: 'app-report-wizard',
@@ -26,12 +23,6 @@ export class ReportWizardComponent {
    basicPage: ReportBasicWizardComponent;
    @ViewChild('recurrencePage', { static: true })
    recurrencePage: ReportRecurrenceWizardComponent;
-   @ViewChild('bugzillaPage', { static: true })
-   bugzillaPage: BugzillaReportWizardComponent;
-   @ViewChild('bugzillaAssigneePage', { static: true })
-   bugzillaAssigneePage: BugzillaAssigneeReportWizardComponent;
-   @ViewChild('advanceOption', { static: true })
-   advanceOption: AdvanceOptionComponent;
 
    action = '';
    alertMessages = [];
@@ -70,9 +61,11 @@ export class ReportWizardComponent {
       } else {
          this.webhooks = '';
       }
-      console.log('webhooks:', this.webhooks);
-
-      // bugzilla by assignee page
+      if (this.reportSpec.mentionUsers.length>0) {
+         this.mentionUsers = this.reportSpec.mentionUsers.join(',');
+      } else {
+         this.mentionUsers = '';
+      }
       if (this.reportSpec.bugzillaAssignee.bugzillaAssignees.length > 0) {
          this.bugzillaAssignees = this.reportSpec.bugzillaAssignee.bugzillaAssignees.join(',');
       } else {
@@ -80,12 +73,7 @@ export class ReportWizardComponent {
       }
 
       // recurrence page
-      if (this.reportSpec.mentionUsers.length>0) {
-         this.mentionUsers = this.reportSpec.mentionUsers.join(',');
-      } else {
-         this.mentionUsers = '';
-      }
-      console.log('mention users:', this.mentionUsers);
+
       this.cdRef.detectChanges();
    }
 
@@ -103,7 +91,7 @@ export class ReportWizardComponent {
       this.resetData();
    }
 
-   onNextPage() {
+   doNext() {
       this.reportWizard.forceNext();
    }
 

@@ -11,49 +11,17 @@
       <clr-wizard-button [type]="'next'">Next</clr-wizard-button>
       <clr-wizard-button [type]="'finish'">Finish</clr-wizard-button>
 
-      <clr-wizard-page [clrWizardPageNextDisabled]="!basicPage.configForm.valid"
-                       [clrWizardPagePreventDefaultNext]="true"
-                       (clrWizardPageNext)="onNextPage()"
+      <clr-wizard-page [clrWizardPagePreventDefaultNext]="true"
+                       (clrWizardPageNext)="doNext()"
                        [clrWizardPagePreventDefaultCancel]="true"
                        (clrWizardPageOnCancel)="doCancel()">
          <ng-template clrPageTitle>Basic Configuration</ng-template>
          <app-wizard-basic-page #basicPage
                                 [reportSpec]="reportSpec"
-                                [webhooks]="webhooks">
+                                [webhooks]="webhooks"
+                                [mentionUsers]="mentionUsers"
+                                [bugzillaAssignees]="bugzillaAssignees">
          </app-wizard-basic-page>
-      </clr-wizard-page>
-
-      <clr-wizard-page *ngIf="reportSpec.reportType === 'bugzilla'"
-                       [clrWizardPageNextDisabled]="!bugzillaPage.configForm.valid"
-                       [clrWizardPagePreventDefaultNext]="true"
-                       (clrWizardPageNext)="onNextPage()"
-                       [clrWizardPagePreventDefaultCancel]="true"
-                       (clrWizardPageOnCancel)="doCancel()">
-         <ng-template clrPageTitle>Bugzilla Configuration</ng-template>
-         <app-wizard-bugzilla-page #bugzillaPage
-                                   [reportSpec]="reportSpec">
-         </app-wizard-bugzilla-page>
-         <app-report-advance-option #advanceOption
-                                    [mentionUsers]="mentionUsers"
-                                    [reportSpec]="reportSpec">
-         </app-report-advance-option>
-      </clr-wizard-page>
-
-      <clr-wizard-page *ngIf="reportSpec.reportType === 'bugzilla_by_assignee'"
-                       [clrWizardPageNextDisabled]="!bugzillaAssigneePage.configForm.valid"
-                       [clrWizardPagePreventDefaultNext]="true"
-                       (clrWizardPageNext)="onNextPage()"
-                       [clrWizardPagePreventDefaultCancel]="true"
-                       (clrWizardPageOnCancel)="doCancel()">
-         <ng-template clrPageTitle>Bugzilla by Assignee Configuration</ng-template>
-         <app-wizard-bugzilla-assignee-page #bugzillaAssigneePage
-                                            [bugzillaAssignees]="bugzillaAssignees"
-                                            [reportSpec]="reportSpec">
-         </app-wizard-bugzilla-assignee-page>
-         <app-report-advance-option #advanceOption
-                                    [mentionUsers]="mentionUsers"
-                                    [reportSpec]="reportSpec">
-         </app-report-advance-option>
       </clr-wizard-page>
 
       <clr-wizard-page #recurrencePage

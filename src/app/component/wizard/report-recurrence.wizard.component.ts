@@ -13,8 +13,6 @@ import { FormatDate } from '../../service/utils'
 
 export class ReportRecurrenceWizardComponent {
    @Input() reportSpec: ReportConfiguration;
-   @Input() minutesOfHour = '0';
-   @Input() dayOfMonth = '1';
    weekChecked = [false, false, false, false, false, false, false];
 
    userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -100,7 +98,7 @@ export class ReportRecurrenceWizardComponent {
       };
    }
 
-   configForm = new FormGroup({
+   recurrenceForm = new FormGroup({
       repeatTime: new FormControl('', [Validators.required, this.repeatTimeValidator()]),
       minutesOfHour: new FormControl('', [Validators.required, this.minuteOfHourValidator()]),
       dayOfMonth: new FormControl('', [Validators.required, this.dayOfMonthValidator()]),

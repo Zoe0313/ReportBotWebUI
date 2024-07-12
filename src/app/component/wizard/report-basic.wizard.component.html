@@ -1,6 +1,6 @@
 <form clrForm [formGroup]="configForm">
-   <div class="config-item">
-      <label class="config-name">Select a notification type</label>
+   <div *ngIf="action == 'create'">
+      <h4>Select a notification type</h4>
       <clr-control-container>
          <clr-radio-container>
             <clr-radio-wrapper>
@@ -66,42 +66,98 @@
       </div>
    </div>
 
-   <div class="config-item">
-      <label class="config-name">Input a title for notification</label>
-      <clr-control-container>
-         <clr-input-container class="config-text-input">
-            <input clrInput type="text"
-                   placeholder="E.g. vSAN product bugs report"
-                   formControlName="title"
-                   [(ngModel)]="reportSpec.title"
-                   (change)="changeTitle($event)"
-                   required/>
-            <clr-control-error>Please complete this required field.</clr-control-error>
-         </clr-input-container>
-      </clr-control-container>
-      <div class="description-item">
-         <label>Hint: As the report title, please use meaningful words.</label>
-      </div>
+   <div>
+      <h4>Input a title for notification</h4>
+      <clr-input-container>
+         <label>Notification title</label>
+         <input clrInput type="text" style="width:550px;"
+                placeholder="E.g. vSAN product bugs report"
+                formControlName="title"
+                [(ngModel)]="reportSpec.title"
+                required/>
+         <clr-control-error>Please complete this required field.</clr-control-error>
+         <clr-control-helper>As the notification title, please use meaningful words.</clr-control-helper>
+      </clr-input-container>
    </div>
 
-   <div class="config-item">
-      <label class="config-name">Input multiple webhooks of gChat spaces you want to send</label>
-      <clr-control-container>
-         <clr-input-container class="config-text-input">
-            <input clrInput type="text"
-                   placeholder="E.g. https://chat.googleapis.com/v1/spaces/.../messages?key=..."
-                   formControlName="webhooks"
-                   [(ngModel)]="webhooks"
-                   (change)="changeWebhooks($event)"
-                   required invalidWebhook/>
-            <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
-            <clr-control-error *clrIfError="'invalidWebhook'">Unsupported Google Chat webhook. Refer to the hint as below for creating a webhook.</clr-control-error>
-         </clr-input-container>
-      </clr-control-container>
-      <div class="description-item">
-         <label>Hint: Please use format: webhook1, webhook2.
+   <div>
+      <h4>Input multiple webhooks of Google Chat spaces you want to send</h4>
+      <clr-input-container>
+         <label>Webhook(s)</label>
+         <input clrInput type="text" style="width:550px;"
+                placeholder="E.g. https://chat.googleapis.com/v1/spaces/.../messages?key=..."
+                formControlName="webhooks"
+                [(ngModel)]="webhooks"
+                (change)="changeWebhooks($event)"
+                required invalid_webhook/>
+         <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
+         <clr-control-error *clrIfError="'invalid_webhook'">Unsupported Google Chat webhook. Refer to the hint as below for creating a webhook.</clr-control-error>
+         <clr-control-helper>
+            Please use format: webhook1, webhook2.<br>
             Refer to <a href="https://confluence.eng.vmware.com/display/SABU/How+to+add+webhooks+in+vSANSlackbot+report">How to create webhook in Google Chat Space</a>.
-         </label>
-      </div>
+         </clr-control-helper>
+      </clr-input-container>
    </div>
+
+   <div *ngIf="reportSpec.reportType === 'bugzilla'">
+      <h4>Input bugzilla link</h4>
+      <clr-input-container>
+         <label>Bugzilla link</label>
+         <input clrInput type="text" style="width:550px;"
+                placeholder="Bugzilla link of tabular report or list report"
+                formControlName="bugzillaLink"
+                [(ngModel)]="reportSpec.bugzilla.bugzillaLink"
+                required invalid_bugzilla_link/>
+         <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
+         <clr-control-error *clrIfError="'invalid_bugzilla_link'">Unsupported bugzilla url. Refer to the hint as below for creating a bugzilla report.</clr-control-error>
+         <clr-control-helper>
+            Refer to <a href="https://bugzilla.eng.vmware.com/query.cgi?format=report-table">creating bugzilla tabular report</a> or
+            <a href="https://bugzilla.eng.vmware.com/query.cgi?">bugzilla list</a>
+         </clr-control-helper>
+      </clr-input-container>
+   </div>
+
+   <div *ngIf="reportSpec.reportType === 'bugzilla_by_assignee'">
+      <h4>Input bugzilla assignee(s)</h4>
+      <clr-input-container>
+         <label>Bugzilla assignee(s)</label>
+         <input clrInput type="text" style="width:300px;"
+                placeholder="VMWare AD account"
+                formControlName="bugzillaAssignees"
+                [(ngModel)]="bugzillaAssignees"
+                (change)="changeBugzillaAssignees($event)"
+                required invalid_account/>
+         <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
+         <clr-control-error *clrIfError="invalid_account">Invalid account.</clr-control-error>
+         <clr-control-helper>Input VMWare AD accounts by format: user1, user2.</clr-control-helper>
+      </clr-input-container>
+   </div>
+
+   <div>
+      <h4>Advanced options</h4>
+      <clr-input-container>
+         <label>User(s) mentioned in notification</label>
+         <input clrInput type="text" style="width:300px;"
+                placeholder="Users to be mentioned"
+                formControlName="mentionUsers"
+                [(ngModel)]="mentionUsers"
+                (change)="changeMentionUsers($event)"
+                invalid_account/>
+         <clr-control-error *clrIfError="'invalid_account'">Invalid account.</clr-control-error>
+         <clr-control-helper>Input VMWare AD accounts by format: user1, user2.</clr-control-helper>
+      </clr-input-container>
+
+      <clr-checkbox-container>
+         <clr-checkbox-wrapper>
+            <input type="checkbox" clrCheckbox
+                   name="skipEmptyReport"
+                   [(ngModel)]="reportSpec.skipEmptyReport"
+                   [ngModelOptions]="{standalone: true}"/>
+            <label>Skip report if no bug/change found</label>
+         </clr-checkbox-wrapper>
+         <clr-control-helper *ngIf="reportSpec.skipEmptyReport">If choose Yes, you won't receive notification when no bug or changes.</clr-control-helper>
+         <clr-control-helper *ngIf="!reportSpec.skipEmptyReport">If choose No, you will still receive notification when no bug or changes.</clr-control-helper>
+      </clr-checkbox-container>
+   </div>
+
 </form>
