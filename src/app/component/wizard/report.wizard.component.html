@@ -37,7 +37,7 @@
 
       <clr-wizard-page [clrWizardPageNextDisabled]="!isValid"
                        [clrWizardPagePreventDefaultNext]="true"
-                       (clrWizardPageNext)="doFinish()"
+                       (clrWizardPageOnCommit)="doFinish()"
                        [clrWizardPagePreventDefaultCancel]="true"
                        (clrWizardPageOnCancel)="doCancel()">
          <ng-template clrPageTitle>Notification Configuration Overview</ng-template>

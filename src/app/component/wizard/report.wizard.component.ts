@@ -6,6 +6,7 @@ import { ReportBasicWizardComponent } from './report-basic.wizard.component';
 import { ReportRecurrenceWizardComponent } from './report-recurrence.wizard.component';
 import { ReportOverviewWizardComponent } from './report-overview.wizard.component';
 import { DisplayTimeSetting, NextInvocation } from '../../service/utils'
+import { ReportsService } from '../../service/reports.service';
 
 @Component({
    selector: 'app-report-wizard',
@@ -14,6 +15,12 @@ import { DisplayTimeSetting, NextInvocation } from '../../service/utils'
 })
 
 export class ReportWizardComponent {
+   constructor(
+      private service: ReportsService,
+      private cdRef: ChangeDetectorRef,
+   ) {
+   }
+
    @Output()
    public refreshEmitter: EventEmitter<boolean> = new EventEmitter();
 
@@ -39,10 +46,6 @@ export class ReportWizardComponent {
    mentionUsers = '';
    bugzillaAssignees = '';
    weekChecked = [];
-
-   constructor(
-      private cdRef: ChangeDetectorRef,
-   ) { }
 
    init(action: string, spec?: ReportConfiguration) {
       this.action = action;
@@ -115,7 +118,34 @@ export class ReportWizardComponent {
       this.reportWizard.forceNext();
    }
 
-   onFinish() {
+   doFinish() {
+      console.log('do finish');
+      if (this.action === 'create') {
+         this.loading = true;
+         this.service.createReport(JSON.stringify(this.reportSpec)).subscribe(
+            result => {
+               console.log('create report, result:', result);
+               this.loading = false;
+            },
+            error => {
+               console.log(error);
+               this.loading = false;
+            }
+         );
+      } else if (this.action === 'update') {
+         this.loading = true;
+         this.service.updateReport(this.reportSpec.id, JSON.stringify(this.reportSpec)).subscribe(
+            result => {
+               console.log('update report, result:', result);
+               this.loading = false;
+            },
+            error => {
+               console.log(error);
+               this.loading = false;
+            }
+         );
+      }
+
       this.refreshEmitter.emit();
    }
 

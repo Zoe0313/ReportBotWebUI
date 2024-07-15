@@ -59,7 +59,6 @@ function ConvertTimeWithTz(timeStr, oldTz, curTz) {
 }
 
 export function DisplayTimeSetting(repeatConfig, tz) {
-   console.log('display time setting:', repeatConfig, tz);
    const { time, dayOffset } = ConvertTimeWithTz(repeatConfig.time, repeatConfig.tz, tz);
    switch (repeatConfig.repeatType) {
       case 'not_repeat': {

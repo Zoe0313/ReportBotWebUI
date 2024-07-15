@@ -22,7 +22,7 @@
             {{ assignee }}
          </span>
       </p>
-      <p>
+      <p *ngIf="reportSpec.mentionUsers.length > 0">
          <label>Mention user(s):</label>
          <span *ngFor="let user of reportSpec.mentionUsers">
             {{ user }}

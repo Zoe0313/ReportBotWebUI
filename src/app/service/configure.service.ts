@@ -6,6 +6,7 @@ import { HttpClient } from '@angular/common/http';
 interface API {
    REPORT_CONFIGURATION_LIST: string;
    REPORT_CONFIGURATION_DETAILS: string;
+   UPDATE_REPORT_CONFIGURATION: string;
    CREATE_REPORT_CONFIGURATION: string;
    UPDATE_REPORT_STATUS: string;
    DELETE_REPORT_CONFIGURATION: string;
@@ -60,6 +61,7 @@ export class ConfigService {
       this.API = {
          REPORT_CONFIGURATION_LIST: '/report/configuration?page={0}&limit={1}&user={2}',
          REPORT_CONFIGURATION_DETAILS: '/report/{0}/configuration?user={1}',
+         UPDATE_REPORT_CONFIGURATION: '/report/{0}/configuration?user={1}',
          CREATE_REPORT_CONFIGURATION: '/report/configuration?user={0}',
          UPDATE_REPORT_STATUS: '/report/{0}/configuration?status={1}&user={2}',
          DELETE_REPORT_CONFIGURATION: '/report/{0}/configuration?user={1}',

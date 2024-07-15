@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ConfigService } from './configure.service';
+import { ReportConfiguration } from '../model/report.model';
 
 @Injectable({
    providedIn: 'root'
@@ -31,6 +32,19 @@ export class ReportsService {
                   .replace('{1}', this.config.userName);
 
       return this.http.get<any>(url, this.getNoCacheRequestOptions()).toPromise();
+   }
+
+   updateReport(reportID: string, data: string): Observable<any> {
+      const url = `${this.config.API.UPDATE_REPORT_CONFIGURATION}`
+                  .replace('{0}', reportID)
+                  .replace('{1}', this.config.userName);
+      return this.http.put(url, data, this.getNoCacheRequestOptions());
+   }
+
+   createReport(data: string): Observable<any> {
+      const url = `${this.config.API.CREATE_REPORT_CONFIGURATION}`
+                  .replace('{0}', this.config.userName);
+      return this.http.post(url, data, this.getNoCacheRequestOptions());
    }
 
    checkSystemAdmin(): Observable<any> {
@@ -94,6 +108,7 @@ export class ReportsService {
       const options: HttpOptions = new HttpOptions();
       let headers = new HttpHeaders();
       // Add cache control headers to avoid data caching in IE browser
+      headers = headers.append(HttpHeader.CONTENT_TYPE, HttpHeader.APPLICATION_JSON);
       headers = headers.append(HttpHeader.CACHE_CONTROL, HttpHeader.NO_CACHE);
       headers = headers.append(HttpHeader.PRAGMA, HttpHeader.NO_CACHE);
       headers = headers.append(HttpHeader.EXPIRES, "Sat, 01 Jan 2000 00:00:00 GMT");
