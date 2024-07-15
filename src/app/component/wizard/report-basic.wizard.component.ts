@@ -84,7 +84,6 @@ export class ReportBasicWizardComponent {
    }
 
    configForm = new FormGroup({
-      title: new FormControl('', Validators.required),
       webhooks: new FormControl('', [Validators.required, this.webhookValidator()]),
       bugzillaLink: new FormControl('', [Validators.required, this.bugzillaLinkValidator()]),
       bugzillaAssignees: new FormControl('', [Validators.required, this.accountValidator(this.service)]),

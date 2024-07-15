@@ -68,5 +68,6 @@ export class RepeatConfig {
    dayOfMonth: number = 1;//[1-31]
    dayOfWeek: number[] = [];//[0, 1, 2, 3, 4, 5, 6]
    minsOfHour: number = 0;//[0-59]
-   nextInvocation: string = '';
+   displayTime: string = '';
+   nextSendTime: string = '';
 }

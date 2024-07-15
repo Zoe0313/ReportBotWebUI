@@ -5,6 +5,7 @@ import { ReportConfiguration } from '../../model/report.model';
 import { ReportBasicWizardComponent } from './report-basic.wizard.component';
 import { ReportRecurrenceWizardComponent } from './report-recurrence.wizard.component';
 import { ReportOverviewWizardComponent } from './report-overview.wizard.component';
+import { DisplayTimeSetting, NextInvocation } from '../../service/utils'
 
 @Component({
    selector: 'app-report-wizard',
@@ -37,6 +38,7 @@ export class ReportWizardComponent {
    webhooks = '';
    mentionUsers = '';
    bugzillaAssignees = '';
+   weekChecked = [];
 
    constructor(
       private cdRef: ChangeDetectorRef,
@@ -77,14 +79,27 @@ export class ReportWizardComponent {
       }
 
       // recurrence page
+      this.weekChecked = [];
+      for (let i=0; i<=6; i++) {
+         this.weekChecked[i] = this.reportSpec.repeatConfig.dayOfWeek.includes(i);
+      }
+      console.log('weekChecked:', this.weekChecked);
 
       this.cdRef.detectChanges();
+   }
+
+   updateTimeSetting() {
+      let repeatConfig = this.reportSpec.repeatConfig;
+      const localTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      this.reportSpec.repeatConfig.displayTime = DisplayTimeSetting(repeatConfig, localTZ);
+      this.reportSpec.repeatConfig.nextSendTime = NextInvocation(repeatConfig);
    }
 
    resetData() {
       this.webhooks = '';
       this.mentionUsers = '';
       this.bugzillaAssignees = '';
+      this.weekChecked = [];
    }
 
    doCancel() {
@@ -96,6 +111,7 @@ export class ReportWizardComponent {
    }
 
    doNext() {
+      this.updateTimeSetting();
       this.reportWizard.forceNext();
    }
 

@@ -30,7 +30,8 @@
                        (clrWizardPageOnCancel)="doCancel()">
          <ng-template clrPageTitle>Recurrence Configuration</ng-template>
          <app-wizard-recurrence-page #recurrencePage
-                                     [reportSpec]="reportSpec">
+                                     [reportSpec]="reportSpec"
+                                     [weekChecked]="weekChecked">
          </app-wizard-recurrence-page>
       </clr-wizard-page>
 

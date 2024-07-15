@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { ReportsService } from '../service/reports.service';
-import { DisplayTimeSetting, FormatDateTime } from '../service/utils'
 
 @Component({
    selector: 'app-report-details',
@@ -31,8 +30,8 @@ export class ReportDetailsComponent implements OnInit {
          mentionUsers: 'vsan-messager-bot.pdl',
          startDate: repeatConfig.startDate,
          endDate: repeatConfig.endDate,
-         recurrence: DisplayTimeSetting(repeatConfig, tz),
-         sendTime: nextInvocation ? FormatDateTime(new Date(nextInvocation), tz) : 'No longer executed'
+         displayTime: repeatConfig.displayTime,
+         nextSendTime: repeatConfig.nextSendTime
       };
    }
 }

@@ -72,7 +72,7 @@
          <label>Notification title</label>
          <input clrInput type="text" style="width:550px;"
                 placeholder="E.g. vSAN product bugs report"
-                formControlName="title"
+                [ngModelOptions]="{standalone: true}"
                 [(ngModel)]="reportSpec.title"
                 required/>
          <clr-control-error>Please complete this required field.</clr-control-error>

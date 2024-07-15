@@ -6,7 +6,7 @@ import { ReportWizardComponent } from './wizard/report.wizard.component';
 import { ReportConfiguration, BugzillaSpec, BugzillaAssigneeSpec,
          PerforceCheckinSpec, NannyReminderSpec, TextSpec, JiraSpec,
          RepeatConfig } from '../model/report.model';
-import { DisplayTimeSetting, FormatDate, FormatDateTime } from '../service/utils'
+import { DisplayTimeSetting, FormatDate, NextInvocation } from '../service/utils'
 
 @Component({
     selector: 'app-reports',
@@ -81,6 +81,7 @@ export class ReportsComponent implements OnInit {
       const repeatType = repeatConfig['repeatType'];
       let recurrence: RepeatConfig = new RepeatConfig();
       recurrence.repeatType = repeatType;
+      recurrence.tz = repeatConfig['tz'];
       recurrence.startDate = FormatDate(repeatConfig['startDate']);
       recurrence.endDate = FormatDate(repeatConfig['endDate']);
       if (repeatType === 'not_repeat') {
@@ -99,6 +100,9 @@ export class ReportsComponent implements OnInit {
       } else if (repeatType === 'cron_expression') {
          recurrence.cronExpression = repeatConfig['cronExpression'];
       }
+      const localTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      recurrence.displayTime = DisplayTimeSetting(recurrence, localTZ);
+      recurrence.nextSendTime = NextInvocation(recurrence);
       let data = new ReportConfiguration();
       data = {
          id: report['_id'],

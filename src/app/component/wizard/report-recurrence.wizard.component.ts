@@ -13,15 +13,7 @@ import { FormatDate } from '../../service/utils'
 
 export class ReportRecurrenceWizardComponent {
    @Input() reportSpec: ReportConfiguration;
-
-   private _weekChecked: boolean[];
-   public get weekChecked(): boolean[] {
-      this._weekChecked = [];
-      for (let i=0; i<=6; i++) {
-         this._weekChecked.push(this.reportSpec.repeatConfig.dayOfWeek.includes(i));
-      }
-      return this._weekChecked;
-   }
+   @Input() weekChecked: boolean[];
 
    userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
    todayDate = FormatDate(new Date());
@@ -110,7 +102,6 @@ export class ReportRecurrenceWizardComponent {
       repeatTime: new FormControl('', [Validators.required, this.repeatTimeValidator()]),
       minutesOfHour: new FormControl('', [Validators.required, this.minuteOfHourValidator()]),
       dayOfMonth: new FormControl('', [Validators.required, this.dayOfMonthValidator()]),
-      dayOfWeek: new FormControl('', [Validators.required]),
       cronExpression: new FormControl('', [Validators.required, this.cronValidator()]),
       startDate: new FormControl('', [Validators.required]),
       endDate: new FormControl('', [this.endDateValidator()]),

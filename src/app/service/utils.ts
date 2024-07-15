@@ -44,7 +44,7 @@ function ConvertTimeWithTz(timeStr, oldTz, curTz) {
       return { time: null, dayOffset: 0 };
    }
    try {
-      const todayWithConfigTime = FormatDate(new Date()) + ' ' + timeStr;
+      const todayWithConfigTime = FormatDate(new Date(), 'YYYY-MM-DD') + ' ' + timeStr;
       const dateWithOldTZ = ParseDateWithTz(todayWithConfigTime, oldTz);
       const dateWithNewTZ = FormatDateTime(dateWithOldTZ, curTz);
       const timeWithNewTZ = dateWithNewTZ.split(' ')[1];
@@ -59,10 +59,12 @@ function ConvertTimeWithTz(timeStr, oldTz, curTz) {
 }
 
 export function DisplayTimeSetting(repeatConfig, tz) {
+   console.log('display time setting:', repeatConfig, tz);
    const { time, dayOffset } = ConvertTimeWithTz(repeatConfig.time, repeatConfig.tz, tz);
    switch (repeatConfig.repeatType) {
       case 'not_repeat': {
-         const date = ParseDateWithTz(`${repeatConfig.date} ${repeatConfig.time}`, repeatConfig.tz);
+         const dateStr = FormatDate(repeatConfig.date, 'YYYY-MM-DD');
+         const date = ParseDateWithTz(`${dateStr} ${repeatConfig.time}`, repeatConfig.tz);
          return `Not Repeat - ${FormatDateTime(date, tz)}`;
       }
       case 'hourly': {
