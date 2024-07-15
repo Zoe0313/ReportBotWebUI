@@ -29,8 +29,6 @@ export class ReportsComponent implements OnInit {
 
    alertMessage = '';
    numOfReports: number;
-   totalPage: number;
-   currentPage: number = -1;
 
    constructor(
       public router: Router,
@@ -43,7 +41,7 @@ export class ReportsComponent implements OnInit {
       this.config.sysAdmin$.subscribe(
          () => {
             console.info('config service admin:', this.config.isSystemAdmin)
-            this.getReports(0);
+            this.getReports();
          });
    }
 
@@ -107,7 +105,8 @@ export class ReportsComponent implements OnInit {
       data = {
          id: report['_id'],
          title: report['title'],
-         creator: report['vmwareId'] || 'Unknown',
+         creator: report['creator'],
+         vmwareId: report['vmwareId'],
          status: report['status'],
          reportType: reportType,
          webhooks: report['webhooks'],
@@ -125,19 +124,17 @@ export class ReportsComponent implements OnInit {
       return data;
   }
 
-   getReports(page: number) {
+   getReports() {
       if (!!!this.config.userName) {
          return;
       }
       this.loading = true;
-      this.service.getReports(page).then(
+      this.service.getReports().then(
          result => {
             this.ReportList = result['reports'].map(report => {
                return this.initReportConfiguration(report);
             })
             this.numOfReports = result['total'];
-            this.currentPage = result['page'];
-            this.totalPage = Math.ceil(result['total'] / 10);
             this.loading = false;
          },
          error => {
@@ -238,7 +235,7 @@ export class ReportsComponent implements OnInit {
       this.loading = true;
       this.showRemoveConfirmDialog = false;
       this.service.deleteReport(this.selectedReport.id).subscribe(result => {
-         this.getReports(this.currentPage);
+         this.getReports();
          this.loading = false;
       }, error => {
          console.log(error);
@@ -257,7 +254,7 @@ export class ReportsComponent implements OnInit {
       this.loading = true;
       this.showEnableConfirmDialog = false;
       this.service.enableReport(this.selectedReport.id).subscribe(result => {
-         this.getReports(this.currentPage);
+         this.getReports();
          this.loading = false;
       }, error => {
          console.log(error);
@@ -276,26 +273,13 @@ export class ReportsComponent implements OnInit {
       this.loading = true;
       this.showDisableConfirmDialog = false;
       this.service.disableReport(this.selectedReport.id).subscribe(result => {
-         this.getReports(this.currentPage);
+         this.getReports();
          this.loading = false;
       }, error => {
          console.log(error);
          this.alertMessage = error.error.Message;
          this.loading = false;
       });
-   }
-
-   onKeyUp(event: any) {
-      let targetValue = Number(event.target.value);
-      if (event.code === 'Enter') {
-         if (targetValue !== this.currentPage) {
-            this.getReports(targetValue);
-         }
-      }
-   }
-
-   onFocusout(event: any) {
-      event.target.value = this.currentPage;
    }
 
 }

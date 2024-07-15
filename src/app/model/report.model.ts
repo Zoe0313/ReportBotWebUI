@@ -3,7 +3,8 @@ import moment from 'moment-timezone'
 export class ReportConfiguration {
    id: string = '';
    title: string = '';
-   creator: string = ''; //VMWareId
+   creator: string = '';  //Slack Id
+   vmwareId: string = ''; //VMWare Id
    status: string = 'CREATED';
    reportType: string = 'bugzilla';
    webhooks: string[] = [];
@@ -46,7 +47,7 @@ export class PerforceCheckinSpec {
 
 export class NannyReminderSpec {
    nannyCode: string = '';
-   nannyAssignee: string = '';
+   nannyAssignee: string[] = [];
    nannyRoster: string = '';
    text: string = '';
 }

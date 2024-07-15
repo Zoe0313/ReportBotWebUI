@@ -103,53 +103,10 @@
          <app-report-details *clrIfExpanded [report]="report" ngProjectAs="clr-dg-row-detail"></app-report-details>
 <!--         <app-profile-editor *clrIfExpanded [report]="report" ngProjectAs="clr-dg-row-detail"></app-profile-editor>-->
       </clr-dg-row>
-      <clr-dg-footer>
-         <div class="pagination" *ngIf="ReportList.length > 20">
-            <div class="pagination-list ng-star-inserted">
-               <button class="pagination-previous"
-                       type="button"
-                       aria-label="First Page"
-                       [disabled]="currentPage == 0"
-                       (click)="getReports(0)">
-                  <clr-icon shape="step-forward-2 down" role="none"></clr-icon>
-               </button>
-               <button class="pagination-previous"
-                       type="button"
-                       aria-label="Previous Page"
-                       [disabled]="currentPage == 0"
-                       (click)="getReports(currentPage - 1)">
-                  <clr-icon shape="angle left" role="none"></clr-icon>
-               </button>
-               <input type="text"
-                      class="pagination-current clr-input ng-star-inserted"
-                      size="1"
-                      aria-label="Current Page"
-                      value="{{currentPage}}"
-                      (keyup)="onKeyUp($event)"
-                      (focusout)="onFocusout($event)">
-               &nbsp;/&nbsp;
-               <span aria-label="Total Pages">{{totalPage-1}}</span>
-               <button class="pagination-next"
-                       type="button"
-                       aria-label="Next Page"
-                       [disabled]="currentPage == totalPage-1"
-                       (click)="getReports(currentPage + 1)">
-                  <clr-icon shape="angle right" role="none"></clr-icon>
-               </button>
-               <button class="pagination-last"
-                       type="button"
-                       aria-label="Last Page"
-                       [disabled]="currentPage == totalPage-1"
-                       (click)="getReports(totalPage-1)">
-                  <clr-icon shape="step-forward-2 up" role="none"></clr-icon>
-               </button>
-            </div>
-         </div>
-     </clr-dg-footer>
    </clr-datagrid>
 </div>
 
-<app-report-wizard (refreshEmitter)="getReports(currentPage)"></app-report-wizard>
+<app-report-wizard (refreshEmitter)="getReports()"></app-report-wizard>
 
 <clr-modal [(clrModalOpen)]="showRemoveConfirmDialog" [clrModalClosable]="false">
    <h3 class="modal-title">Delete Notification</h3>

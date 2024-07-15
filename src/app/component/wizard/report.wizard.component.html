@@ -20,7 +20,8 @@
                                 [reportSpec]="reportSpec"
                                 [webhooks]="webhooks"
                                 [mentionUsers]="mentionUsers"
-                                [bugzillaAssignees]="bugzillaAssignees">
+                                [bugzillaAssignees]="bugzillaAssignees"
+                                [action]="action">
          </app-wizard-basic-page>
       </clr-wizard-page>
 
@@ -45,6 +46,15 @@
             <span *ngIf="isValid">Ready to go!</span>
             <span *ngIf="!isValid">Not ready yet</span>
          </ng-template>
+         <div *ngIf="loading" class="spinner-line">
+            <span class="spinner spinner-inline">Loading...</span>
+            <span>Submitting report configuration...</span>
+         </div>
+         <clr-alert [clrAlertType]="'danger'" *ngFor="let msg of alertMessages">
+            <clr-alert-item>
+               <span class="alert-text">{{ msg }}</span>
+            </clr-alert-item>
+         </clr-alert>
          <app-wizard-overview-page #overviewPage
                                    [reportSpec]="reportSpec"
                                    [isValid]="isValid">

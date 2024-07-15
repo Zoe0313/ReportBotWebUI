@@ -5,8 +5,9 @@ import { ReportConfiguration } from '../../model/report.model';
 import { ReportBasicWizardComponent } from './report-basic.wizard.component';
 import { ReportRecurrenceWizardComponent } from './report-recurrence.wizard.component';
 import { ReportOverviewWizardComponent } from './report-overview.wizard.component';
-import { DisplayTimeSetting, NextInvocation } from '../../service/utils'
+import { FormatDate, DisplayTimeSetting, NextInvocation, DeepCopy } from '../../service/utils'
 import { ReportsService } from '../../service/reports.service';
+import { ConfigService } from '../../service/configure.service';
 
 @Component({
    selector: 'app-report-wizard',
@@ -17,6 +18,7 @@ import { ReportsService } from '../../service/reports.service';
 export class ReportWizardComponent {
    constructor(
       private service: ReportsService,
+      private config: ConfigService,
       private cdRef: ChangeDetectorRef,
    ) {
    }
@@ -52,11 +54,11 @@ export class ReportWizardComponent {
       this.reportWizard.reset();
       this.alertMessages = [];
       if (action === 'create') {
-         this.wizardTitle = 'Create Report';
+         this.wizardTitle = 'Create Notification';
          this.basicPage.configForm.reset();
          this.reportSpec = new ReportConfiguration();
       } else if (action === 'update') {
-         this.wizardTitle = 'Edit Report';
+         this.wizardTitle = 'Edit Notification';
          this.reportSpec = spec;
       }
       this.updateView();
@@ -103,6 +105,7 @@ export class ReportWizardComponent {
       this.mentionUsers = '';
       this.bugzillaAssignees = '';
       this.weekChecked = [];
+      this.alertMessages = [];
    }
 
    doCancel() {
@@ -119,34 +122,63 @@ export class ReportWizardComponent {
    }
 
    doFinish() {
-      console.log('do finish');
+      const reqData = DeepCopy(this.reportSpec) as ReportConfiguration;
+      let repeatConfig = reqData.repeatConfig;
+      repeatConfig.startDate = FormatDate(repeatConfig.startDate, 'YYYY-MM-DD');
+      if (repeatConfig.endDate === '') {
+         delete repeatConfig.endDate;
+      } else {
+         repeatConfig.endDate = FormatDate(repeatConfig.endDate, 'YYYY-MM-DD');
+      }
+      if (repeatConfig.repeatType !== 'not_repeat') {
+         delete repeatConfig.date;
+      } else {
+         repeatConfig.date = FormatDate(repeatConfig.date, 'YYYY-MM-DD');
+      }
+      if (repeatConfig.repeatType !== 'weekly') {
+         delete repeatConfig.dayOfWeek;
+      }
+      if (repeatConfig.repeatType !== 'monthly') {
+         delete repeatConfig.dayOfMonth;
+      }
+      if (repeatConfig.repeatType !== 'cron_expression') {
+         delete repeatConfig.cronExpression;
+      }
+      delete reqData.repeatConfig.displayTime;
+      delete reqData.repeatConfig.nextSendTime;
       if (this.action === 'create') {
          this.loading = true;
-         this.service.createReport(JSON.stringify(this.reportSpec)).subscribe(
+         reqData.vmwareId = this.config.userName;
+         reqData.status = 'ENABLED';
+         this.service.createReport(JSON.stringify(reqData)).subscribe(
             result => {
                console.log('create report, result:', result);
                this.loading = false;
+               this.reportWizard.forceFinish();
+               this.refreshEmitter.emit();
             },
             error => {
+               this.alertMessages.push(error['error']['message']);
                console.log(error);
                this.loading = false;
             }
          );
       } else if (this.action === 'update') {
          this.loading = true;
-         this.service.updateReport(this.reportSpec.id, JSON.stringify(this.reportSpec)).subscribe(
+         this.service.updateReport(this.reportSpec.id, JSON.stringify(reqData)).subscribe(
             result => {
                console.log('update report, result:', result);
                this.loading = false;
+               this.reportWizard.forceFinish();
+               this.refreshEmitter.emit();
             },
             error => {
+               this.alertMessages.push(error['error']['message']);
                console.log(error);
                this.loading = false;
             }
          );
       }
-
-      this.refreshEmitter.emit();
    }
 
    getReportTypeName() {

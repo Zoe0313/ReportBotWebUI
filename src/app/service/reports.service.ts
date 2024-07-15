@@ -17,11 +17,9 @@ export class ReportsService {
    ) {
    }
 
-   getReports(page: number): Promise<any> {
+   getReports(): Promise<any> {
       const url = `${this.config.API.REPORT_CONFIGURATION_LIST}`
-                  .replace('{0}', page.toString())
-                  .replace('{1}', '20')
-                  .replace('{2}', this.config.userName);
+                  .replace('{0}', this.config.userName);
 
       return this.http.get<any>(url, this.getNoCacheRequestOptions()).toPromise();
    }

@@ -16,6 +16,7 @@ export class ReportBasicWizardComponent {
    ) {
    }
 
+   @Input() action = '';
    @Input() webhooks = '';
    @Input() mentionUsers = '';
    @Input() bugzillaAssignees = '';

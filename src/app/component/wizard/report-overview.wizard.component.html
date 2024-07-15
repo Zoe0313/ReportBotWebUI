@@ -9,12 +9,12 @@
       <p>
          <label>Webhook(s):</label>
          <span *ngFor="let webhook of reportSpec.webhooks; let i = index">
-            <a href="'webhook'">webhook-{{ i + 1 }}</a>
+            <a href="{{ webhook }}">webhook-{{ i + 1 }}</a>
          </span>
       </p>
       <p *ngIf="reportSpec.reportType === 'bugzilla'">
          <label>Bugzilla link:</label>
-         <a href="'reportSpec.bugzilla.bugzillaLink'">url</a>
+         <a href="{{ reportSpec.bugzilla.bugzillaLink }}">url</a>
       </p>
       <p *ngIf="reportSpec.reportType === 'bugzilla_by_assignee'">
          <label>Bugzilla by assignee(s):</label>

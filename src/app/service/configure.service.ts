@@ -59,7 +59,7 @@ export class ConfigService {
 
    getConfig() {
       this.API = {
-         REPORT_CONFIGURATION_LIST: '/report/configuration?page={0}&limit={1}&user={2}',
+         REPORT_CONFIGURATION_LIST: '/report/configuration?user={0}',
          REPORT_CONFIGURATION_DETAILS: '/report/{0}/configuration?user={1}',
          UPDATE_REPORT_CONFIGURATION: '/report/{0}/configuration?user={1}',
          CREATE_REPORT_CONFIGURATION: '/report/configuration?user={0}',
