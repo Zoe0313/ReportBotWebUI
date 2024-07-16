@@ -15,7 +15,7 @@ export class AppComponent implements OnInit {
    showDialog: boolean;
    userName: string;
    userPassword: string;
-   isDevEnv = false;
+   isDevEnv = true;
    isSystemAdmin = false;
 
    constructor(
@@ -27,23 +27,23 @@ export class AppComponent implements OnInit {
       private http: HttpClient,
       private reportsService: ReportsService,
    ) {
-      this.isDevEnv = location.hostname === 'localhost';
+//       this.isDevEnv = location.hostname === 'localhost';
       localStorage.setItem('originalUrl', locale.path());
 
-      if (!this.isDevEnv) {
-         if (document.cookie === '') {
-            window.location.href = '/login';
-         } else {
-            console.log(document.cookie);
-            this.userName = this.getCookie('user');
-            if (this.userName !== '') {
-               this.config.userName = this.userName;
-               this.config.password = this.userPassword;
-            } else {
-               window.location.href = '/login';
-            }
-         }
-      }
+//       if (!this.isDevEnv) {
+//          if (document.cookie === '') {
+//             window.location.href = '/login';
+//          } else {
+//             console.log(document.cookie);
+//             this.userName = this.getCookie('user');
+//             if (this.userName !== '') {
+//                this.config.userName = this.userName;
+//                this.config.password = this.userPassword;
+//             } else {
+//                window.location.href = '/login';
+//             }
+//          }
+//       }
 
       if (localStorage.getItem('originalUrl')) {
          this.router.navigateByUrl(localStorage.getItem('originalUrl'));
