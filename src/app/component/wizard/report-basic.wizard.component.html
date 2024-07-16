@@ -123,29 +123,32 @@
          <label>Bugzilla assignee(s)</label>
          <input clrInput type="text" style="width:300px;"
                 placeholder="VMWare AD account"
-                formControlName="bugzillaAssignees"
+                [ngModelOptions]="{standalone: true}"
                 [(ngModel)]="bugzillaAssignees"
-                (change)="changeBugzillaAssignees($event)"
-                required invalid_account/>
-         <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
-         <clr-control-error *clrIfError="invalid_account">Invalid account.</clr-control-error>
+                (change)="changeBugzillaAssignees($event)"/>
          <clr-control-helper>Input VMWare AD accounts by format: user1, user2.</clr-control-helper>
       </clr-input-container>
+      <div class="clr-subtext-wrapper" *ngIf="bugzillaAssigneeError.length > 0">
+         <clr-icon style="color:#c21d00; margin-top:3px;" shape="exclamation-circle"></clr-icon>
+         <clr-control-error style="color:#c21d00" class="clr-subtext">{{ bugzillaAssigneeError }}</clr-control-error>
+      </div>
    </div>
 
    <div>
       <h4>Advanced options</h4>
       <clr-input-container>
-         <label>User(s) mentioned in notification</label>
+         <label>User(s) to be mentioned in notification</label>
          <input clrInput type="text" style="width:300px;"
-                placeholder="Users to be mentioned"
-                formControlName="mentionUsers"
+                placeholder="VMWare AD account"
+                [ngModelOptions]="{standalone: true}"
                 [(ngModel)]="mentionUsers"
-                (change)="changeMentionUsers($event)"
-                invalid_account/>
-         <clr-control-error *clrIfError="'invalid_account'">Invalid account.</clr-control-error>
+                (change)="changeMentionUsers($event)"/>
          <clr-control-helper>Input VMWare AD accounts by format: user1, user2.</clr-control-helper>
       </clr-input-container>
+      <div class="clr-subtext-wrapper" *ngIf="mentionUserError.length > 0">
+         <clr-icon style="color:#c21d00; margin-top:3px;" shape="exclamation-circle"></clr-icon>
+         <clr-control-error style="color:#c21d00" class="clr-subtext">{{ mentionUserError }}</clr-control-error>
+      </div>
 
       <clr-checkbox-container>
          <clr-checkbox-wrapper>

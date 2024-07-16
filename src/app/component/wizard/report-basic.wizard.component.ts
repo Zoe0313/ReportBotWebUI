@@ -22,6 +22,10 @@ export class ReportBasicWizardComponent {
    @Input() bugzillaAssignees = '';
    @Input() reportSpec: ReportConfiguration;
 
+   bugzillaAssigneeError = '';
+   mentionUserError = '';
+   ldapApi = 'https://ldap-data.vdp.oc.vmware.com/ldap/_doc/';
+
    webhookValidator(): ValidatorFn {
       return (control: AbstractControl): ValidationErrors | null => {
          if (!control || control.value === '' || control.value == null) {
@@ -58,37 +62,9 @@ export class ReportBasicWizardComponent {
       };
    }
 
-   accountValidator(service): ValidatorFn {
-      return (control: AbstractControl): ValidationErrors | null => {
-         if (!control || control.value === '' || control.value == null) {
-            return null;
-         }
-         try {
-            control.value.split(',').map(user => {
-               const account = user.trim();
-               service.validateADaccount(account).then(
-                  res => {
-                     console.log('valid user:', account);
-                  },
-                  err => {
-                     return { invalid_account: true };
-                  }
-               );
-            });
-         } catch (err) {
-            return { invalid_account: true };
-         }
-         setTimeout(() => {
-            return null;
-         }, 1000);
-      };
-   }
-
    configForm = new FormGroup({
       webhooks: new FormControl('', [Validators.required, this.webhookValidator()]),
       bugzillaLink: new FormControl('', [Validators.required, this.bugzillaLinkValidator()]),
-      bugzillaAssignees: new FormControl('', [Validators.required, this.accountValidator(this.service)]),
-      mentionUsers: new FormControl('', [this.accountValidator(this.service)]),
    });
 
    changeReportType(event: any) {
@@ -106,25 +82,74 @@ export class ReportBasicWizardComponent {
       console.log('change webhooks:', this.reportSpec.webhooks);
    }
 
-   changeBugzillaAssignees(event: any) {
-      this.reportSpec.bugzillaAssignee.bugzillaAssignees = [];
+   async changeMentionUsers(event: any) {
+      this.reportSpec.mentionUsers = [];
+      this.mentionUserError = '';
       if (event.target.value === '') {
          return;
       }
-      event.target.value.split(',').map(user => {
-         this.reportSpec.bugzillaAssignee.bugzillaAssignees.push(user.trim());
+      const users = event.target.value.split(',');
+      const results = await this.checkAccounts(users);
+      results.map((data) => {
+         if (!data['checked']) {
+            this.mentionUserError = data['user'] + ' is an invalid AD account.';
+         } else {
+            this.reportSpec.mentionUsers.push(data['user']);
+         }
+      });
+      console.log('change mention users:', this.reportSpec.mentionUsers);
+   }
+
+   async changeBugzillaAssignees(event: any) {
+      this.reportSpec.bugzillaAssignee.bugzillaAssignees = [];
+      this.bugzillaAssigneeError = '';
+      if (event.target.value === '') {
+         this.bugzillaAssigneeError = 'Please complete this required field.';
+         return;
+      }
+      const users = event.target.value.split(',');
+      const results = await this.checkAccounts(users);
+      results.map((data) => {
+         if (!data['checked']) {
+            this.bugzillaAssigneeError = data['user'] + ' is an invalid AD account.';
+         } else {
+            this.reportSpec.bugzillaAssignee.bugzillaAssignees.push(data['user']);
+         }
       });
       console.log('change bugzilla assignees:', this.reportSpec.bugzillaAssignee.bugzillaAssignees);
    }
 
-   changeMentionUsers(event: any) {
-      this.reportSpec.mentionUsers = [];
-      if (event.target.value === '') {
-         return;
-      }
-      event.target.value.split(',').map(user => {
-         this.reportSpec.mentionUsers.push(user.trim());
+   async fetchEmployee(user: string): Promise<any> {
+      return fetch(this.ldapApi + user)
+         .then(response => {
+            if (!response.ok) {
+               throw new Error(response.statusText);
+            }
+            return response.json() as Promise<{ data: any }>;
+         })
+         .then(data => {
+            return data;
+         });
+   }
+
+   async asyncForEach(array, callback): Promise<boolean[]> {
+       let results = [];
+       for (let index = 0; index < array.length; index++) {
+          results.push(await callback(array[index]));
+       }
+       return results;
+   }
+
+   async checkAccounts(users): Promise<any> {
+      return await this.asyncForEach(users, async user => {
+         user = user.trim();
+         try {
+            const data = await this.fetchEmployee(user);
+            const name = data._id || data._source.ldap_username;
+            return {checked: (name === user), user: user};
+         } catch (error) {
+            return {checked: false, user: user};
+         }
       });
-      console.log('change mention users:', this.reportSpec.mentionUsers);
    }
 }
