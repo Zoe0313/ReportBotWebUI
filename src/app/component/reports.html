@@ -21,7 +21,7 @@
       <clr-dg-column style="width: 550px;" [clrDgField]="'title'">
          Title
       </clr-dg-column>
-      <clr-dg-column style="width: 200px;" *ngIf="config.isSystemAdmin">
+      <clr-dg-column style="width: 200px;" [clrDgField]="'vmwareId'" *ngIf="config.isSystemAdmin">
          Creator
       </clr-dg-column>
       <clr-dg-column style="width: 260px;" [clrDgField]="'reportType'">
