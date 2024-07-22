@@ -26,8 +26,8 @@ export class ReportDetailsComponent implements OnInit {
       this.ReportDetail = {
          reportType: this.report.reportType,
          sharable: false,
-         conversations: 'test-slack-bot-to-google-chat-dev',
-         mentionUsers: 'vsan-messager-bot.pdl',
+         conversations: '--- (TBD)',
+         mentionUsers: '--- (TBD)',
          startDate: repeatConfig.startDate,
          endDate: repeatConfig.endDate,
          displayTime: repeatConfig.displayTime,

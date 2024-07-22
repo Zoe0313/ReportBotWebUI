@@ -12,24 +12,24 @@
             routerLink="reports"
             [class.active]="router.url.includes('reports')"
             >My Notifications</a>
-         <a href="javascript://"
-            class="nav-link nav-text"
-            routerLink="history"
-            [class.active]="router.url.includes('history')"
-            style="pointer-events:none;"
-            >Notification History</a>
-         <a href="javascript://"
-            *ngIf="isSystemAdmin"
-            class="nav-link nav-text"
-            routerLink="service"
-            [class.active]="router.url.includes('service')"
-            style="pointer-events:none;"
-            >Service Dashboard</a>
+<!--         <a href="javascript://"-->
+<!--            class="nav-link nav-text"-->
+<!--            routerLink="history"-->
+<!--            [class.active]="router.url.includes('history')"-->
+<!--            style="pointer-events:none;"-->
+<!--            >Notification History</a>-->
+<!--         <a href="javascript://"-->
+<!--            *ngIf="isSystemAdmin"-->
+<!--            class="nav-link nav-text"-->
+<!--            routerLink="service"-->
+<!--            [class.active]="router.url.includes('service')"-->
+<!--            style="pointer-events:none;"-->
+<!--            >Service Dashboard</a>-->
       </div>
       <div class="header-actions">
          <div class="username"><label>{{ userName }}</label></div>
          <div class="username">
-            <a href="https://vsanbot-staging.vdp.oc.vmware.com/api/v1/index.html#/"
+            <a href="https://vsanbot.vdp.oc.vmware.com/api/v1/index.html#/"
                target="_blank"
                role="tooltip"
                aria-haspopup="true"
