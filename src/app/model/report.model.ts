@@ -47,7 +47,7 @@ export class PerforceCheckinSpec {
 
 export class NannyReminderSpec {
    nannyCode: string = '';
-   nannyAssignee: string[] = [];
+   nannyAssignees: string[] = [];
    nannyRoster: string = '';
    text: string = '';
 }

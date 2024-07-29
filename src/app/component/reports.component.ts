@@ -65,7 +65,8 @@ export class ReportsComponent implements OnInit {
          perforceCheckin.membersFilters = reportSpecConfig['membersFilters'];
       } else if (reportType == 'nanny_reminder') {
          nannyReminder.nannyCode = reportSpecConfig['nannyCode'];
-         nannyReminder.nannyAssignee = reportSpecConfig['nannyCode'];
+         nannyReminder.nannyAssignees = reportSpecConfig['nannyAssignee'].split();
+         console.log(nannyReminder.nannyAssignees);
          nannyReminder.nannyRoster = reportSpecConfig['nannyRoster'];
          nannyReminder.text = reportSpecConfig['text'];
       } else if (reportType == 'text') {
