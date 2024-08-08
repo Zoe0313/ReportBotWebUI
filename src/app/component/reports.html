@@ -18,23 +18,23 @@
       </button>
    </div>
    <clr-datagrid [clrDgLoading]="loading">
-      <clr-dg-column style="width: 550px;" [clrDgField]="'title'">
+      <clr-dg-column  [clrDgField]="'title'">
          Title
       </clr-dg-column>
-      <clr-dg-column style="width: 200px;" [clrDgField]="'vmwareId'" *ngIf="config.isSystemAdmin">
+      <clr-dg-column  [clrDgField]="'vmwareId'" *ngIf="config.isSystemAdmin">
          Creator
       </clr-dg-column>
-      <clr-dg-column style="width: 260px;" [clrDgField]="'reportType'">
+      <clr-dg-column  [clrDgField]="'reportType'">
          Type
       </clr-dg-column>
-      <clr-dg-column style="width: 200px;" [clrDgField]="'status'">
+      <clr-dg-column  [clrDgField]="'status'">
          Status
       </clr-dg-column>
       <clr-dg-column>
          Actions
       </clr-dg-column>
       <clr-dg-row *clrDgItems="let report of ReportList" [clrDgItem]="report">
-         <clr-dg-cell class="report-datagrid-cell report-title-column">
+         <clr-dg-cell class="report-datagrid-cell">
             <div class="icon-name">
                <clr-icon shape="star" size="20"
                         class="favorite-icon"
@@ -44,15 +44,15 @@
             <span>{{ report.title }}</span>
          </clr-dg-cell>
 
-         <clr-dg-cell class="report-datagrid-cell report-status-column" *ngIf="config.isSystemAdmin">
+         <clr-dg-cell class="report-datagrid-cell" *ngIf="config.isSystemAdmin">
             <span>{{ report.vmwareId }}</span>
          </clr-dg-cell>
 
-         <clr-dg-cell class="report-datagrid-cell report-type-column">
+         <clr-dg-cell class="report-datagrid-cell">
             <span>{{ report.reportType }}</span>
          </clr-dg-cell>
 
-         <clr-dg-cell class="report-datagrid-cell report-status-column">
+         <clr-dg-cell class="report-datagrid-cell">
             <div class="icon-name">
                <clr-icon shape="info-circle" size="22"
                          class="is-solid status"
@@ -64,47 +64,44 @@
          <clr-dg-cell class="report-datagrid-cell">
             <button type="button"
                     class="btn btn-icon btn-info-outline"
-                    aria-label="edit"
-                    (click)="onEdit(report)">
-                  <clr-icon shape="pencil"></clr-icon>
-               Edit
-            </button>
-         </clr-dg-cell>
-
-         <clr-dg-cell class="report-datagrid-cell" *ngIf="report.status != 'ENABLED'">
-            <button type="button"
-                    class="btn btn-icon btn-success-outline"
-                    aria-label="enable"
-                    (click)="onEnable(report)">
-               <clr-icon shape="check"></clr-icon>
-               Enable
-            </button>
-         </clr-dg-cell>
-
-         <clr-dg-cell class="report-datagrid-cell" *ngIf="report.status == 'ENABLED'">
-            <button type="button"
-                    class="btn btn-icon btn-warning-outline"
-                    aria-label="disable"
-                    (click)="onDisable(report)">
-               <clr-icon shape="times"></clr-icon>
-               Disable
-            </button>
-         </clr-dg-cell>
-
-         <clr-dg-cell class="report-datagrid-cell">
-            <button type="button"
-                    class="btn btn-icon"
                     aria-label="play"
                     (click)="onSendNow(report)">
                <clr-icon shape="play"></clr-icon>
+               Invoke Now
             </button>
-         </clr-dg-cell>
 
-         <clr-dg-cell class="report-datagrid-cell" *ngIf="config.isSystemAdmin">
+            <button type="button"
+                    class="btn btn-icon btn-success-outline"
+                    aria-label="enable"
+                    (click)="onEnable(report)"
+                    *ngIf="report.status != 'ENABLED'">
+               <clr-icon shape="check"></clr-icon>
+               Enable
+            </button>
+
+            <button type="button"
+                    class="btn btn-icon btn-warning-outline"
+                    aria-label="disable"
+                    (click)="onDisable(report)"
+                    *ngIf="report.status == 'ENABLED'">
+               <clr-icon shape="times"></clr-icon>
+               Disable
+            </button>
+
+            <button type="button"
+                    class="btn btn-icon btn-info-outline"
+                    aria-label="edit"
+                    (click)="onEdit(report)"
+                    *ngIf="report.reportType == 'bugzilla' || report.reportType === 'bugzilla_by_assignee'">
+                  <clr-icon shape="pencil"></clr-icon>
+               Edit
+            </button>
+
             <button type="button"
                     class="btn btn-icon btn-danger"
                     aria-label="remove"
-                    (click)="onRemove(report)">
+                    (click)="onRemove(report)"
+                    *ngIf="config.isSystemAdmin">
                <clr-icon shape="trash"></clr-icon>
             </button>
          </clr-dg-cell>

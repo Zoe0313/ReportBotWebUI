@@ -38,39 +38,10 @@
    font-size: .6rem;
 }
 
-.report-title-column {
-   width: 540px;
-}
-.report-type-column {
-   width: 260px;
-   font-size: .65rem;
-}
-.report-status-column {
-   width: 200px;
-}
-
 .icon-name {
    display: flex;
    align-items: center;
    width: 20px;
-   min-width: 20px;
-
-   .signpost-content {
-      min-width: 20rem;
-      max-width: 30rem;
-      height: 210px;
-
-      ::ng-deep .signpost-wrap {
-         height: 100%;
-         ::ng-deep .signpost-content-body {
-            height: 100%;
-         }
-      }
-   }
-
-   .tooltip:focus>:first-child {
-      outline-style: none;
-   }
 }
 
 .favorite-icon {
@@ -81,10 +52,6 @@
    color: hsl(48, 95%, 48%);
    cursor: pointer;
 }
-
-// label>clr-icon {
-//    fill: chartreuse;
-// }
 
 .status {
    margin-right: 3px;
@@ -106,22 +73,6 @@
    color: hsl(198, 0%, 45%);
 }
 
-.clr-form-control {
-   margin: 0 10px;
-}
-
-.btn-icon {
-   min-width: 0;
-}
-
 ::ng-deep.modal-dialog.modal-lg {
    width: 33rem !important;
-}
-
-.pagination-list {
-   clr-icon {
-      height: 16px;
-      width: 16px;
-      cursor: pointer;
-   }
 }
