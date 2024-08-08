@@ -91,6 +91,15 @@
             </button>
          </clr-dg-cell>
 
+         <clr-dg-cell class="report-datagrid-cell">
+            <button type="button"
+                    class="btn btn-icon"
+                    aria-label="play"
+                    (click)="onSendNow(report)">
+               <clr-icon shape="play"></clr-icon>
+            </button>
+         </clr-dg-cell>
+
          <clr-dg-cell class="report-datagrid-cell" *ngIf="config.isSystemAdmin">
             <button type="button"
                     class="btn btn-icon btn-danger"
@@ -139,5 +148,16 @@
    <div class="modal-footer">
       <button type="button" class="btn btn-outline" (click)="showDisableConfirmDialog = false">Cancel</button>
       <button type="button" class="btn btn-success" (click)="onDisableHandler()">Confirm</button>
+   </div>
+</clr-modal>
+
+<clr-modal [(clrModalOpen)]="showSendnowConfirmDialog" [clrModalClosable]="false">
+   <h3 class="modal-title">Send Notification Now</h3>
+   <div class="modal-body">
+      <p>Are you sure send the notification "{{ selectedReport?.title }}" to inputed webhooks now?</p>
+   </div>
+   <div class="modal-footer">
+      <button type="button" class="btn btn-outline" (click)="showSendnowConfirmDialog = false">Cancel</button>
+      <button type="button" class="btn btn-success" (click)="onSendNowHandler()">Confirm</button>
    </div>
 </clr-modal>

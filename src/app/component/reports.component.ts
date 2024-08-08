@@ -25,6 +25,7 @@ export class ReportsComponent implements OnInit {
    showRemoveConfirmDialog = false;
    showEnableConfirmDialog = false;
    showDisableConfirmDialog = false;
+   showSendnowConfirmDialog = false;
    removeReportTitle = '';
 
    alertMessage = '';
@@ -283,4 +284,22 @@ export class ReportsComponent implements OnInit {
       });
    }
 
+   onSendNow(report: any) {
+      this.selectedReport = report;
+      this.showSendnowConfirmDialog = true;
+   }
+
+   onSendNowHandler() {
+      this.alertMessage = '';
+      this.loading = true;
+      this.showSendnowConfirmDialog = false;
+      this.service.sendReportNow(this.selectedReport.id).subscribe(result => {
+         console.log(result);
+         this.loading = false;
+      }, error => {
+         console.log(error);
+         this.alertMessage = error.error.Message;
+         this.loading = false;
+      });
+   }
 }
