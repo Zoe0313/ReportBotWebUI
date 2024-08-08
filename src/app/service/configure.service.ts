@@ -10,6 +10,7 @@ interface API {
    CREATE_REPORT_CONFIGURATION: string;
    UPDATE_REPORT_STATUS: string;
    DELETE_REPORT_CONFIGURATION: string;
+   SEND_NOTIFICATION_NOW: string;
    CHECK_SYSTEM_ADMIN: string;
    USERS_FAVORED: string;
  }
@@ -65,6 +66,7 @@ export class ConfigService {
          CREATE_REPORT_CONFIGURATION: '/report/configuration?user={0}',
          UPDATE_REPORT_STATUS: '/report/{0}/configuration?status={1}&user={2}',
          DELETE_REPORT_CONFIGURATION: '/report/{0}/configuration?user={1}',
+         SEND_NOTIFICATION_NOW: '/report/{0}/history?user={1}',
          CHECK_SYSTEM_ADMIN: '/service/admins?user={0}',
          USERS_FAVORED: '/user/favoredReports?reportID={0}&user={1}'
       };

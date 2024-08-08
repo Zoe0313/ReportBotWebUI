@@ -94,6 +94,13 @@ export class ReportsService {
       return this.http.patch(url, this.getNoCacheRequestOptions());
    }
 
+   sendReportNow(reportID: string): Observable<any> {
+      const url = `${this.config.API.SEND_NOTIFICATION_NOW}`
+                  .replace('{0}', reportID)
+                  .replace('{1}', this.config.userName);
+      return this.http.post(url, this.getNoCacheRequestOptions());
+   }
+
    /**
     * Returns HttpOptions preconfigured with headers that imply no caching.
     */
