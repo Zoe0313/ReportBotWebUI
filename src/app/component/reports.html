@@ -18,16 +18,16 @@
       </button>
    </div>
    <clr-datagrid [clrDgLoading]="loading">
-      <clr-dg-column  [clrDgField]="'title'">
+      <clr-dg-column  style="width: 550px;" [clrDgField]="'title'">
          Title
       </clr-dg-column>
-      <clr-dg-column  [clrDgField]="'vmwareId'" *ngIf="config.isSystemAdmin">
+      <clr-dg-column  style="width: 180px;" [clrDgField]="'vmwareId'" *ngIf="config.isSystemAdmin">
          Creator
       </clr-dg-column>
-      <clr-dg-column  [clrDgField]="'reportType'">
+      <clr-dg-column  style="width: 180px;" [clrDgField]="'reportType'">
          Type
       </clr-dg-column>
-      <clr-dg-column  [clrDgField]="'status'">
+      <clr-dg-column  style="width: 180px;" [clrDgField]="'status'">
          Status
       </clr-dg-column>
       <clr-dg-column>
