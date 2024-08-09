@@ -17,6 +17,15 @@ nvm install 16.20.2
 nvm use 16.20.2
 ```
 
+If you hit the issue below, please run command `npm install -g @angular/cli@16.2.10`
+```
+# ng --version
+Node.js version v16.20.2 detected.
+The Angular CLI requires a minimum Node.js version of v18.19.
+
+Please update your Node.js version or visit https://nodejs.org/ for additional instructions.
+```
+
 ## Development server
 
 Run `ng build` to build dev server.
