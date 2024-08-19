@@ -82,6 +82,21 @@ export class ReportBasicWizardComponent {
       console.log('change webhooks:', this.reportSpec.webhooks);
    }
 
+   checkBugzillaListLink() {
+      if (this.reportSpec.bugzilla.bugzillaLink != null) {
+         return this.reportSpec.bugzilla.bugzillaLink.includes('/buglist.cgi');
+      }
+      return false;
+   }
+
+   gotoBugzillaTableLink() {
+      const tableLink = this.reportSpec.bugzilla.bugzillaLink.replace(
+         '/buglist.cgi?',
+         '/report.cgi?format=table&x_axis_field=component&y_axis_field=&z_axis_field=&query_format=report-table&'
+      );
+      window.location.href = tableLink;
+   }
+
    async changeMentionUsers(event: any) {
       this.reportSpec.mentionUsers = [];
       this.mentionUserError = '';

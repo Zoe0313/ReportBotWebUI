@@ -57,6 +57,8 @@ export class ReportsComponent implements OnInit {
       let jira: JiraSpec = new JiraSpec();
       if (reportType == 'bugzilla') {
          bugzilla.bugzillaLink = reportSpecConfig['bugzillaLink'];
+         bugzilla.list2table = (reportSpecConfig['bugzillaList2Table'] == 'Yes');
+         bugzilla.foldPRList = (reportSpecConfig['foldBugzillaList'] == 'Yes');
       } else if (reportType == 'bugzilla_by_assignee') {
          bugzillaAssignee.bugzillaAssignees = reportSpecConfig['bugzillaAssignee'];
       } else if (reportType == 'perforce_checkin') {

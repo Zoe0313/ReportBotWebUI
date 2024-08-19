@@ -115,6 +115,36 @@
             <a href="https://bugzilla.eng.vmware.com/query.cgi?">bugzilla list</a>
          </clr-control-helper>
       </clr-input-container>
+
+      <clr-checkbox-container *ngIf="checkBugzillaListLink()">
+         <clr-checkbox-wrapper>
+            <input type="checkbox" clrCheckbox
+                   name="bugzillalist2table"
+                   [(ngModel)]="reportSpec.bugzilla.list2table"
+                   [ngModelOptions]="{standalone: true}"/>
+            <label>Bugzilla list convert to table report</label>
+         </clr-checkbox-wrapper>
+         <clr-control-helper *ngIf="reportSpec.bugzilla.list2table">If choose Yes, you will receive bugzilla table report indexed by component.</clr-control-helper>
+         <clr-control-helper *ngIf="!reportSpec.bugzilla.list2table">If choose No, you will still receive bugzilla list report.</clr-control-helper>
+      </clr-checkbox-container>
+      <button *ngIf="reportSpec.bugzilla.list2table"
+              type="button"
+              class="btn btn-info-outline"
+              (click)="gotoBugzillaTableLink()">
+         Go to the Bugzilla table
+      </button>
+
+      <clr-checkbox-container *ngIf="checkBugzillaListLink()">
+         <clr-checkbox-wrapper>
+            <input type="checkbox" clrCheckbox
+                   name="foldBugzillaList"
+                   [(ngModel)]="reportSpec.bugzilla.foldPRList"
+                   [ngModelOptions]="{standalone: true}"/>
+            <label>Fold PR list by displaying in thread (suitable for long list)</label>
+         </clr-checkbox-wrapper>
+         <clr-control-helper *ngIf="reportSpec.bugzilla.foldPRList">If choose Yes, the PR list will display in thread message.</clr-control-helper>
+         <clr-control-helper *ngIf="!reportSpec.bugzilla.foldPRList">If choose No, the PR list will still display outside.</clr-control-helper>
+      </clr-checkbox-container>
    </div>
 
    <div *ngIf="reportSpec.reportType === 'bugzilla_by_assignee'">

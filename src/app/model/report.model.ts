@@ -26,6 +26,8 @@ export class TextSpec {
 
 export class BugzillaSpec {
    bugzillaLink: string = '';
+   list2table: boolean = false;
+   foldPRList: boolean = false;
 }
 
 export class BugzillaAssigneeSpec {
