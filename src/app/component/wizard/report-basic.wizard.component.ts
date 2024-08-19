@@ -92,7 +92,7 @@ export class ReportBasicWizardComponent {
    gotoBugzillaTableLink() {
       const tableLink = this.reportSpec.bugzilla.bugzillaLink.replace(
          '/buglist.cgi?',
-         '/report.cgi?format=table&x_axis_field=component&y_axis_field=&z_axis_field=&query_format=report-table&'
+         '/report.cgi?format=table&action=wrap&x_axis_field=component&y_axis_field=&z_axis_field=&query_format=report-table&'
       );
       window.location.href = tableLink;
    }
