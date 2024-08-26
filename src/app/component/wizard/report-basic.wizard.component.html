@@ -19,10 +19,26 @@
                       (change)="changeReportType($event)"/>
                <label>Bugzilla by assignee</label>
             </clr-radio-wrapper>
+            <clr-radio-wrapper>
+               <input clrRadio type="radio"
+                      value="nanny_reminder"
+                      [(ngModel)]="reportSpec.reportType"
+                      [ngModelOptions]="{standalone: true}"
+                      (change)="changeReportType($event)"/>
+               <label>Nanny reminder</label>
+            </clr-radio-wrapper>
+            <clr-radio-wrapper>
+               <input clrRadio type="radio"
+                      value="text"
+                      [(ngModel)]="reportSpec.reportType"
+                      [ngModelOptions]="{standalone: true}"
+                      (change)="changeReportType($event)"/>
+               <label>Plain text</label>
+            </clr-radio-wrapper>
             <clr-control-error>Please complete this required field.</clr-control-error>
          </clr-radio-container>
          <clr-radio-container class="clr-form-control-disabled">
-            <clr-radio-wrapper >
+            <clr-radio-wrapper>
                <input clrRadio type="radio"
                       value="perforce_checkin"
                       [(ngModel)]="reportSpec.reportType"
@@ -30,14 +46,7 @@
                       disabled/>
                <label>Perforce branch checkin (TBD)</label>
             </clr-radio-wrapper>
-            <clr-radio-wrapper>
-               <input clrRadio type="radio"
-                      value="nanny_reminder"
-                      [(ngModel)]="reportSpec.reportType"
-                      [ngModelOptions]="{standalone: true}"
-                      disabled/>
-               <label>Nanny reminder (TBD)</label>
-            </clr-radio-wrapper>
+
             <clr-radio-wrapper>
                <input clrRadio type="radio"
                       value="jira_list"
@@ -45,14 +54,6 @@
                       [ngModelOptions]="{standalone: true}"
                       disabled/>
                <label>Jira list (TBD)</label>
-            </clr-radio-wrapper>
-            <clr-radio-wrapper>
-               <input clrRadio type="radio"
-                      value="text"
-                      [(ngModel)]="reportSpec.reportType"
-                      [ngModelOptions]="{standalone: true}"
-                      disabled/>
-               <label>Plain text (TBD)</label>
             </clr-radio-wrapper>
          </clr-radio-container>
       </clr-control-container>
@@ -164,6 +165,32 @@
       </div>
    </div>
 
+   <div *ngIf="reportSpec.reportType === 'perforce_checkin'">
+
+   </div>
+
+   <div *ngIf="reportSpec.reportType === 'text' || reportSpec.reportType === 'nanny_reminder'">
+      <h4>Input plain text message</h4>
+      <clr-textarea-container>
+         <label>Text message</label>
+         <textarea clrTextarea style="width:500px;height:150px;"
+                   [ngModelOptions]="{standalone: true}"
+                   [(ngModel)]="reportSpec.text"
+                   name="plain_text"
+                   required></textarea>
+         <clr-control-helper *ngIf="reportSpec.reportType === 'nanny_reminder'">
+            @this-nanny/@next-nanny means mention current/next nanny. <br>
+            this-nanny-full-name/next-nanny-full-name means current/next nanny full name without mention him(her). <br>
+            For multiple nannys in one week, please use @this-nanny1, @this-nanny2, this-nanny-full-name1...
+         </clr-control-helper>
+         <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
+      </clr-textarea-container>
+   </div>
+
+   <div *ngIf="reportSpec.reportType === 'jira_list'">
+
+   </div>
+
    <div>
       <h4>Advanced options</h4>
       <clr-input-container>
@@ -180,7 +207,7 @@
          <clr-control-error style="color:#c21d00" class="clr-subtext">{{ mentionUserError }}</clr-control-error>
       </div>
 
-      <clr-checkbox-container>
+      <clr-checkbox-container *ngIf="checkSkipEmptyReport()">
          <clr-checkbox-wrapper>
             <input type="checkbox" clrCheckbox
                    name="skipEmptyReport"

@@ -97,6 +97,13 @@ export class ReportBasicWizardComponent {
       window.location.href = tableLink;
    }
 
+   checkSkipEmptyReport() {
+      return this.reportSpec.reportType === 'bugzilla' ||
+             this.reportSpec.reportType === 'perforce_checkin' ||
+             this.reportSpec.reportType === 'bugzilla_by_assignee' ||
+             this.reportSpec.reportType === 'jira_list';
+   }
+
    async changeMentionUsers(event: any) {
       this.reportSpec.mentionUsers = [];
       this.mentionUserError = '';

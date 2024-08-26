@@ -1,5 +1,6 @@
-import moment from 'moment-timezone'
-import schedule from 'node-schedule'
+import * as cronParser from 'cron-parser';
+import moment from 'moment-timezone';
+import schedule from 'node-schedule';
 
 export function FormatDate(date, formatStr='MM/DD/YYYY') {
    if (date == null || date === '') {
@@ -26,6 +27,18 @@ export function FormatDateTime(date, tz) {
    }
 }
 
+export function FormatDateWithTz(date, tz) {
+   if (date == null || date === '') {
+      return ''
+   }
+   try {
+      return moment(date).tz(tz || 'Asia/Shanghai').format('YYYY-MM-DD')
+   } catch (e) {
+      console.error(e)
+      return ''
+   }
+}
+
 function ParseDateWithTz(dateStr, tz) {
    if (dateStr == null) {
       return null
@@ -37,6 +50,14 @@ function ParseDateWithTz(dateStr, tz) {
       console.error(e)
       return null
    }
+}
+
+function GetDayOfThisWeek(date, dayOfWeek) {
+   const oneDayTime = 24 * 60 * 60 * 1000
+   const nowTime = date.getTime()
+   const day = date.getDay()
+   const dayOfWeekTime = nowTime - (day - dayOfWeek) * oneDayTime
+   return new Date(dayOfWeekTime)
 }
 
 function ConvertTimeWithTz(timeStr, oldTz, curTz) {
@@ -180,3 +201,90 @@ export function DeepCopy(obj) {
     throw new Error("Unable to copy obj! Its type isn't supported.");
 }
 
+export function GetNannyRoster(repeatConfig, assignees) {
+   const tz = repeatConfig.tz;
+   const result = [];
+   if (repeatConfig.repeatType === 'not_repeat') {
+      if (repeatConfig.date == null || repeatConfig.time == null) {
+         return;
+      }
+      const date = ParseDateWithTz(`${repeatConfig.date} ${repeatConfig.time}`, tz);
+      result.push({ nanny: assignees[0], start: FormatDateTime(date, tz), end: '??' });
+   } else if (repeatConfig.repeatType === 'hourly') {
+      const startDate = new Date();
+      startDate.setMinutes(0);
+      const endDate = new Date();
+      endDate.setMinutes(59);
+      for (const assignee of assignees) {
+         result.push({
+            nanny: assignee,
+            start: FormatDateTime(startDate, tz),
+            end: FormatDateTime(endDate, tz)
+         });
+         startDate.setHours(startDate.getHours() + 1);
+         endDate.setHours(endDate.getHours() + 1);
+      }
+   } else if (repeatConfig.repeatType === 'daily') {
+      const startDate = new Date();
+      for (const assignee of assignees) {
+         result.push({
+            nanny: assignee,
+            start: FormatDateWithTz(startDate, tz),
+            end: ''
+         });
+         startDate.setDate(startDate.getDate() + 1);
+      }
+   } else if (repeatConfig.repeatType === 'weekly') {
+      const now = new Date()
+      const startDate = GetDayOfThisWeek(now, 1);
+      const endDate = GetDayOfThisWeek(now, 7);
+      for (const assignee of assignees) {
+         result.push({
+            nanny: assignee,
+            start: FormatDateWithTz(startDate, tz),
+            end: FormatDateWithTz(endDate, tz)
+         });
+         startDate.setDate(startDate.getDate() + 7);
+         endDate.setDate(endDate.getDate() + 7);
+      }
+   } else if (repeatConfig.repeatType === 'monthly') {
+      const now = new Date();
+      const startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+      let endDate = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+      for (const assignee of assignees) {
+         result.push({
+            nanny: assignee,
+            start: FormatDateWithTz(startDate, tz),
+            end: FormatDateWithTz(endDate, tz)
+         });
+         startDate.setMonth(startDate.getMonth() + 1);
+         endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0);
+      }
+   } else if (repeatConfig.repeatType === 'cron_expression') {
+      if (repeatConfig.cronExpression == null) {
+         return;
+      }
+      const interval = cronParser.parseExpression(repeatConfig.cronExpression);
+      let startDate = new Date(interval.prev().toString());
+      let endDate = interval.hasNext() ? new Date(interval.next().toString()) : '';
+      let i = 0;
+      while (interval.hasNext()) {
+         result.push({
+            nanny: assignees[i],
+            start: FormatDateTime(startDate, tz),
+            end: FormatDateTime(endDate, tz)
+         });
+         i += 1;
+         if (i >= assignees.length) {
+            break;
+         }
+         const next = interval.next();
+         startDate = new Date(endDate);
+         endDate = new Date(next.toString());
+      }
+      if (result.length === 0) {
+         result.push({ nanny: assignees[0], start: FormatDateTime(startDate, tz), end: '??' });
+      }
+   }
+   return result;
+}

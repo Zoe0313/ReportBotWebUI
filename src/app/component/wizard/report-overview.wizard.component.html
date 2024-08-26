@@ -1,46 +1,69 @@
 <div *ngIf="isValid">
-   <p>Congratulations! You are done with this notification configuration.</p>
-   <label>Notification information</label>
-   <section>
-      <p>
+   <h3>Congratulations! You are done with this notification configuration.</h3>
+
+   <section class="overview">
+      <div>
          <label>Title:</label>
          <span>{{ reportSpec.title }}</span>
-      </p>
-      <p>
+      </div>
+      <div>
          <label>Webhook(s):</label>
          <span *ngFor="let webhook of reportSpec.webhooks; let i = index">
             <a href="{{ webhook }}">webhook-{{ i + 1 }}</a>
          </span>
-      </p>
-      <p *ngIf="reportSpec.reportType === 'bugzilla'">
+      </div>
+      <div *ngIf="reportSpec.reportType === 'bugzilla'">
          <label>Bugzilla link:</label>
          <a href="{{ reportSpec.bugzilla.bugzillaLink }}">url</a>
-      </p>
-      <p *ngIf="reportSpec.reportType === 'bugzilla_by_assignee'">
+      </div>
+      <div *ngIf="reportSpec.reportType === 'bugzilla_by_assignee'">
          <label>Bugzilla by assignee(s):</label>
          <span *ngFor="let assignee of reportSpec.bugzillaAssignee.bugzillaAssignees">
             {{ assignee }}
          </span>
-      </p>
-      <p *ngIf="reportSpec.mentionUsers.length > 0">
+      </div>
+      <div *ngIf="reportSpec.reportType === 'text' || reportSpec.reportType === 'nanny_reminder'">
+         <label>Plain text:</label>
+         <div>{{ reportSpec.text }}</div>
+      </div>
+
+      <div *ngIf="reportSpec.reportType === 'nanny_reminder'">
+         <label>Nanny assignees:</label>
+         <span *ngFor="let assignee of reportSpec.nannyReminder.nannyAssignees">
+            {{ assignee }}
+         </span>
+      </div>
+      <div *ngIf="reportSpec.reportType === 'nanny_reminder'">
+         <label>Nanny roster:</label>
+         <table class="table" style="width:60%;" *ngIf="nannyRoster.length > 0">
+           <thead>
+              <tr><th class="left">Week Begins</th><th>Nanny Assignee(s)</th></tr>
+           </thead>
+           <tbody>
+              <tr *ngFor="let data of nannyRoster"><td class="left">{{ data.start }}</td><td>{{ data.nanny }}</td></tr>
+           </tbody>
+         </table>
+         <span *ngIf="nannyRoster.length === 0">Error: Not configure the nanny roster.</span>
+      </div>
+      <div *ngIf="reportSpec.mentionUsers.length > 0">
          <label>Mention user(s):</label>
          <span *ngFor="let user of reportSpec.mentionUsers">
             {{ user }}
          </span>
-      </p>
-      <p>
+      </div>
+      <div *ngIf="checkSkipEmptyReport()">
          <label>Skip report if no bug/change found:</label>
          <span *ngIf="reportSpec.skipEmptyReport">Yes</span>
          <span *ngIf="!reportSpec.skipEmptyReport">No</span>
-      </p>
-      <p>
+      </div>
+      <div>
          <label>Recurrence:</label>
          <span>{{ reportSpec.repeatConfig.displayTime }}</span>
-      </p>
-      <p>
+      </div>
+      <div>
          <label>Next sending time:</label>
          <span>{{ reportSpec.repeatConfig.nextSendTime }}</span>
-      </p>
+      </div>
     </section>
 </div>
 

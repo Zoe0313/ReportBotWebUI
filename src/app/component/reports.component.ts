@@ -4,7 +4,7 @@ import { ReportsService } from '../service/reports.service';
 import { ConfigService } from '../service/configure.service';
 import { ReportWizardComponent } from './wizard/report.wizard.component';
 import { ReportConfiguration, BugzillaSpec, BugzillaAssigneeSpec,
-         PerforceCheckinSpec, NannyReminderSpec, TextSpec, JiraSpec,
+         PerforceCheckinSpec, NannyReminderSpec, JiraSpec,
          RepeatConfig } from '../model/report.model';
 import { DisplayTimeSetting, FormatDate, NextInvocation } from '../service/utils'
 
@@ -53,7 +53,6 @@ export class ReportsComponent implements OnInit {
       let bugzillaAssignee: BugzillaAssigneeSpec = new BugzillaAssigneeSpec();
       let perforceCheckin: PerforceCheckinSpec = new PerforceCheckinSpec();
       let nannyReminder: NannyReminderSpec = new NannyReminderSpec();
-      let text: TextSpec = new TextSpec();
       let jira: JiraSpec = new JiraSpec();
       if (reportType == 'bugzilla') {
          bugzilla.bugzillaLink = reportSpecConfig['bugzillaLink'];
@@ -68,12 +67,8 @@ export class ReportsComponent implements OnInit {
          perforceCheckin.membersFilters = reportSpecConfig['membersFilters'];
       } else if (reportType == 'nanny_reminder') {
          nannyReminder.nannyCode = reportSpecConfig['nannyCode'];
-         nannyReminder.nannyAssignees = reportSpecConfig['nannyAssignee'].split();
-         console.log(nannyReminder.nannyAssignees);
+         nannyReminder.nannyAssignees = reportSpecConfig['nannyAssignee'].split('\n');
          nannyReminder.nannyRoster = reportSpecConfig['nannyRoster'];
-         nannyReminder.text = reportSpecConfig['text'];
-      } else if (reportType == 'text') {
-         text.text = reportSpecConfig['text'];
       } else if (reportType == 'jira_list') {
          jira.jql = reportSpecConfig['jira']['jql'];
          jira.fields = reportSpecConfig['jira']['fields'];
@@ -116,11 +111,11 @@ export class ReportsComponent implements OnInit {
          webhooks: report['webhooks'],
          mentionUsers: report['mentionUsers'],
          skipEmptyReport: report['skipEmptyReport'] == 'Yes',
+         text: reportSpecConfig['text'],
          bugzilla: bugzilla,
          bugzillaAssignee: bugzillaAssignee,
          perforceCheckin: perforceCheckin,
          nannyReminder: nannyReminder,
-         text: text,
          jira: jira,
          repeatConfig: recurrence,
          favored: false

@@ -27,7 +27,7 @@
     "@webcomponents/custom-elements": "^1.0.0",
     "angular-highcharts": "^8.0.3",
     "angular2-highcharts": "^0.5.5",
-    "cron-validate": "^1.4.5",
+    "cron-parser": "3.0.0",
     "highcharts": "^7.1.2",
     "moment": "^2.30.1",
     "moment-timezone": "^0.5.45",
@@ -37,7 +37,8 @@
     "parse-url": "^9.2.0",
     "rxjs": "~6.4.0",
     "tslib": "^1.10.0",
-    "zone.js": "~0.9.1"
+    "zone.js": "~0.9.1",
+    "@types/node": "^7.0.5"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.803.17",

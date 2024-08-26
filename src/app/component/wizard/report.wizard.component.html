@@ -36,6 +36,20 @@
          </app-wizard-recurrence-page>
       </clr-wizard-page>
 
+      <clr-wizard-page *ngIf="reportSpec.reportType === 'nanny_reminder'"
+                       [clrWizardPagePreventDefaultNext]="true"
+                       (clrWizardPageNext)="doNext()"
+                       [clrWizardPagePreventDefaultCancel]="true"
+                       (clrWizardPageOnCancel)="doCancel()"
+                       style="padding-top: 0px;">
+         <ng-template clrPageTitle>Nanny Duty Roster Configuration</ng-template>
+         <app-wizard-nanny-roster-page #nannyRosterPage
+                                     [reportSpec]="reportSpec"
+                                     [numberOfNannys]="numberOfNannys"
+                                     [nannyRoster]="nannyRoster">
+         </app-wizard-nanny-roster-page>
+      </clr-wizard-page>
+
       <clr-wizard-page [clrWizardPageNextDisabled]="!isValid"
                        [clrWizardPagePreventDefaultNext]="true"
                        (clrWizardPageOnCommit)="doFinish()"
@@ -57,6 +71,7 @@
          </clr-alert>
          <app-wizard-overview-page #overviewPage
                                    [reportSpec]="reportSpec"
+                                   [nannyRoster]="nannyRoster"
                                    [isValid]="isValid">
          </app-wizard-overview-page>
       </clr-wizard-page>

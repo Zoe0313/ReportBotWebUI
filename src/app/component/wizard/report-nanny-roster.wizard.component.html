@@ -1,0 +1,21 @@
+<div>
+   <label>The number of nanny roster expected to fill in:</label>
+   <input type="text" class="clr-input" style="width:50px;"
+          placeholder="Input a number"
+          [(ngModel)]="numberOfNannys"
+          (change)="changeNumberOfNannys($event)"/>
+   <clr-control-helper>The number should be greater than 1.</clr-control-helper>
+</div>
+
+<clr-stack-view>
+   <clr-stack-header>
+      The following table is the weekly nanny list
+   </clr-stack-header>
+
+   <clr-stack-block *ngFor="let roster of nannyRoster; let i = index" [clrStackViewLevel]="1">
+      <clr-stack-label>{{ roster.start }}</clr-stack-label>
+            <clr-stack-content>
+               <input type="text" [(ngModel)]="roster.nanny" class="clr-input" />
+            </clr-stack-content>
+   </clr-stack-block>
+</clr-stack-view>

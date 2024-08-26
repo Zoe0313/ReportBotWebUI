@@ -1,9 +1,9 @@
+import * as cronParser from 'cron-parser';
 import { Component, Input } from '@angular/core';
 import { FormGroup, FormControl, Validators,
          AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
-import cron from 'cron-validate'
 import { ReportConfiguration } from '../../model/report.model';
-import { FormatDate } from '../../service/utils'
+import { FormatDate } from '../../service/utils';
 
 @Component({
    selector: 'app-wizard-recurrence-page',
@@ -90,8 +90,8 @@ export class ReportRecurrenceWizardComponent {
             return null;
          }
          try {
-            const cron_result = cron(control.value);
-            return cron_result.isValid() ? null : { invalid_cron: true };
+            const interval = cronParser.parseExpression(control.value);
+            const date = interval.next().toDate();
          } catch (err) {
             return { invalid_cron: true };
          }

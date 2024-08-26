@@ -101,6 +101,13 @@ export class ReportsService {
       return this.http.post(url, this.getNoCacheRequestOptions());
    }
 
+   getGoogleInfo(vmwareId: string): Promise<any> {
+      const url = `${this.config.API.GOOGLE_USER_INFO}`
+                  .replace('{0}', vmwareId)
+                  .replace('{1}', this.config.userName);
+      return this.http.get<any>(url, this.getNoCacheRequestOptions()).toPromise();
+   }
+
    /**
     * Returns HttpOptions preconfigured with headers that imply no caching.
     */

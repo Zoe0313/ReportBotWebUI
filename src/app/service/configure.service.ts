@@ -13,6 +13,7 @@ interface API {
    SEND_NOTIFICATION_NOW: string;
    CHECK_SYSTEM_ADMIN: string;
    USERS_FAVORED: string;
+   GOOGLE_USER_INFO: string;
  }
 
 @Injectable({
@@ -68,7 +69,8 @@ export class ConfigService {
          DELETE_REPORT_CONFIGURATION: '/report/{0}/configuration?user={1}',
          SEND_NOTIFICATION_NOW: '/report/{0}/history?user={1}',
          CHECK_SYSTEM_ADMIN: '/service/admins?user={0}',
-         USERS_FAVORED: '/user/favoredReports?reportID={0}&user={1}'
+         USERS_FAVORED: '/user/favoredReports?reportID={0}&user={1}',
+         GOOGLE_USER_INFO: '/service/googleinfo?vmwareId={0}&user={1}'
       };
    }
 }

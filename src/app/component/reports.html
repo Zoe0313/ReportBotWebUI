@@ -92,7 +92,7 @@
                     class="btn btn-icon btn-info-outline"
                     aria-label="edit"
                     (click)="onEdit(report)"
-                    *ngIf="report.reportType == 'bugzilla' || report.reportType === 'bugzilla_by_assignee'">
+                    *ngIf="report.reportType != 'perforce_checkin' && report.reportType != 'jira_list'">
                   <clr-icon shape="pencil"></clr-icon>
                Edit
             </button>
