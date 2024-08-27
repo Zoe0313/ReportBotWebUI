@@ -6,7 +6,7 @@ import { ReportBasicWizardComponent } from './report-basic.wizard.component';
 import { ReportNannyRosterWizardComponent } from './report-nanny-roster.wizard.component';
 import { ReportRecurrenceWizardComponent } from './report-recurrence.wizard.component';
 import { ReportOverviewWizardComponent } from './report-overview.wizard.component';
-import { FormatDate, DisplayTimeSetting, NextInvocation, DeepCopy } from '../../service/utils'
+import { FormatDate, DisplayTimeSetting, NextInvocation, DeepCopy, GetNannyRoster } from '../../service/utils'
 import { ReportsService } from '../../service/reports.service';
 import { ConfigService } from '../../service/configure.service';
 
@@ -124,12 +124,21 @@ export class ReportWizardComponent {
       this.reportWizard.forceNext();
    }
 
+   doRecurrenceNext() {
+      if (this.reportSpec.reportType === 'nanny_reminder' && this.reportSpec.nannyReminder.nannyAssignees.length == 0) {
+         this.reportSpec.nannyReminder.nannyAssignees.push('');
+         this.reportSpec.nannyReminder.nannyRosters = GetNannyRoster(this.reportSpec.repeatConfig, this.reportSpec.nannyReminder.nannyAssignees);
+      }
+      this.doNext();
+   }
+
    doFinish() {
       const reqData = DeepCopy(this.reportSpec) as ReportConfiguration;
       if (this.reportSpec.reportType === 'nanny_reminder') {
          let nannyRoster = ''
          for (const data of this.reportSpec.nannyReminder.nannyRosters) {
-            const nannyStr = data.nanny.split(',').join(' & ')
+            const nannys = data.nanny.split(',').map(nanny => nanny.trim());
+            const nannyStr = nannys.join(' & ')
             if (data.end === '') {
                nannyRoster += `${nannyStr} serve day: ${data.start}\n`
             } else {
@@ -138,7 +147,6 @@ export class ReportWizardComponent {
          }
          reqData.nannyReminder.nannyRoster = nannyRoster;
          delete reqData.nannyReminder.nannyRosters;
-         console.log('nanny roster:', nannyRoster);
       }
       let repeatConfig = reqData.repeatConfig;
       repeatConfig.startDate = FormatDate(repeatConfig.startDate, 'YYYY-MM-DD');

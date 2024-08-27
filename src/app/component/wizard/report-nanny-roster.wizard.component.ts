@@ -34,11 +34,12 @@ export class ReportNannyRosterWizardComponent {
    }
 
    changeNanny(index) {
-      console.log('change:', index)
       let nannyAssignees = [];
       for (const data of this.reportSpec.nannyReminder.nannyRosters) {
-         nannyAssignees.push(data.nanny);
+         let nannys = data.nanny.split(',').map(nanny => nanny.trim());
+         nannyAssignees.push(nannys.join(','));
       }
+      console.log('change:', index, nannyAssignees);
       this.reportSpec.nannyReminder.nannyAssignees = nannyAssignees;
    }
 }

@@ -38,14 +38,14 @@
          <table class="table" style="width:60%;" *ngIf="reportSpec.nannyReminder.nannyRosters.length > 0">
            <thead>
               <tr>
-                 <th class="left">Time Range</th>
+                 <th>Time Range</th>
                  <th>Nanny Assignees</th>
               </tr>
            </thead>
            <tbody>
               <tr *ngFor="let data of reportSpec.nannyReminder.nannyRosters">
-                 <td class="left" *ngIf="data.end.length>0">{{ data.start }} -- {{ data.end }}</td>
-                 <td class="left" *ngIf="data.end.length==0">{{ data.start }}</td>
+                 <td  *ngIf="data.end.length>0">{{ data.start }} -- {{ data.end }}</td>
+                 <td  *ngIf="data.end.length==0">{{ data.start }}</td>
                  <td>{{ data.nanny }}</td>
               </tr>
            </tbody>
