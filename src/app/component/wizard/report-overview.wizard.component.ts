@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { ReportConfiguration } from '../../model/report.model';
-import { ReportsService } from '../../service/reports.service';
 
 @Component({
    selector: 'app-wizard-overview-page',
@@ -10,13 +9,7 @@ import { ReportsService } from '../../service/reports.service';
 
 export class ReportOverviewWizardComponent {
    @Input() reportSpec: ReportConfiguration;
-   @Input() nannyRoster: string[] = [];
    @Input() isValid: boolean;
-
-   constructor(
-      private service: ReportsService,
-   ) {
-   }
 
    checkSkipEmptyReport() {
       return this.reportSpec.reportType === 'bugzilla' ||

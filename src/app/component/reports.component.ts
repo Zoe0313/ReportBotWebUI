@@ -6,7 +6,7 @@ import { ReportWizardComponent } from './wizard/report.wizard.component';
 import { ReportConfiguration, BugzillaSpec, BugzillaAssigneeSpec,
          PerforceCheckinSpec, NannyReminderSpec, JiraSpec,
          RepeatConfig } from '../model/report.model';
-import { DisplayTimeSetting, FormatDate, NextInvocation } from '../service/utils'
+import { DisplayTimeSetting, FormatDate, NextInvocation, GetNannyRoster } from '../service/utils'
 
 @Component({
     selector: 'app-reports',
@@ -100,6 +100,9 @@ export class ReportsComponent implements OnInit {
       const localTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
       recurrence.displayTime = DisplayTimeSetting(recurrence, localTZ);
       recurrence.nextSendTime = NextInvocation(recurrence);
+      if (reportType == 'nanny_reminder') {
+         nannyReminder.nannyRosters = GetNannyRoster(recurrence, nannyReminder.nannyAssignees);
+      }
       let data = new ReportConfiguration();
       data = {
          id: report['_id'],

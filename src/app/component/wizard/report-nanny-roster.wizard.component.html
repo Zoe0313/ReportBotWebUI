@@ -1,21 +1,20 @@
 <div>
-   <label>The number of nanny roster expected to fill in:</label>
-   <input type="text" class="clr-input" style="width:50px;"
-          placeholder="Input a number"
-          [(ngModel)]="numberOfNannys"
-          (change)="changeNumberOfNannys($event)"/>
-   <clr-control-helper>The number should be greater than 1.</clr-control-helper>
+   <label>The number of nanny roster should be greater than 1.</label>
+   <label>If there are multiple assignees per week, separate them with commas.</label>
 </div>
 
 <clr-stack-view>
    <clr-stack-header>
-      The following table is the weekly nanny list
+      Please edit the nanny duty roster:
    </clr-stack-header>
 
-   <clr-stack-block *ngFor="let roster of nannyRoster; let i = index" [clrStackViewLevel]="1">
+   <clr-stack-block *ngFor="let roster of reportSpec.nannyReminder.nannyRosters; let i = index" [clrStackViewLevel]="1">
       <clr-stack-label>{{ roster.start }}</clr-stack-label>
-            <clr-stack-content>
-               <input type="text" [(ngModel)]="roster.nanny" class="clr-input" />
-            </clr-stack-content>
+      <clr-stack-label *ngIf="roster.end.length>0"> -- {{ roster.end }}</clr-stack-label>
+      <clr-stack-content>
+         <input type="text" [(ngModel)]="roster.nanny" class="clr-input" (change)="changeNanny(i)"/>
+         <clr-icon shape="plus" size="20" (click)="addNanny(i)"></clr-icon>
+         <clr-icon shape="times" size="20" (click)="removeNanny(i)" [disabled]="reportSpec.nannyReminder.nannyRosters.length == 1"></clr-icon>
+      </clr-stack-content>
    </clr-stack-block>
 </clr-stack-view>

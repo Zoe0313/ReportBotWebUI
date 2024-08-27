@@ -6,7 +6,7 @@ import { ReportBasicWizardComponent } from './report-basic.wizard.component';
 import { ReportNannyRosterWizardComponent } from './report-nanny-roster.wizard.component';
 import { ReportRecurrenceWizardComponent } from './report-recurrence.wizard.component';
 import { ReportOverviewWizardComponent } from './report-overview.wizard.component';
-import { FormatDate, DisplayTimeSetting, NextInvocation, DeepCopy, GetNannyRoster } from '../../service/utils'
+import { FormatDate, DisplayTimeSetting, NextInvocation, DeepCopy } from '../../service/utils'
 import { ReportsService } from '../../service/reports.service';
 import { ConfigService } from '../../service/configure.service';
 
@@ -51,8 +51,6 @@ export class ReportWizardComponent {
    mentionUsers = '';
    bugzillaAssignees = '';
    weekChecked = [];
-   nannyRoster = [];
-   numberOfNannys = 0;
 
    init(action: string, spec?: ReportConfiguration) {
       this.action = action;
@@ -95,17 +93,6 @@ export class ReportWizardComponent {
       }
       console.log('weekChecked:', this.weekChecked);
 
-      // nanny roster page
-      let nannyAssignees = [];
-      if (this.reportSpec.nannyReminder.nannyAssignees.length > 0) {
-         nannyAssignees = this.reportSpec.nannyReminder.nannyAssignees;
-         this.numberOfNannys = nannyAssignees.length;
-      } else {
-         nannyAssignees = ['']; // at least 1 nanny assignees
-         this.numberOfNannys = 1;
-      }
-      this.nannyRoster = GetNannyRoster(this.reportSpec.repeatConfig, nannyAssignees);
-
       this.cdRef.detectChanges();
    }
 
@@ -116,31 +103,11 @@ export class ReportWizardComponent {
       this.reportSpec.repeatConfig.nextSendTime = NextInvocation(repeatConfig);
    }
 
-   updateNannyInfo() {
-      if (this.reportSpec.reportType === 'nanny_reminder') {
-         let nannyAssignees = []
-         let nannyRoster = ''
-         for (const data of this.nannyRoster) {
-            nannyAssignees.push(data.nanny);
-            const nannyStr = data.nanny.split(',').join(' & ')
-            if (data.end === '') {
-               nannyRoster += `${nannyStr} serve day: ${data.start}\n`
-            } else {
-               nannyRoster += `${nannyStr} serve from ${data.start} to ${data.end}\n`
-            }
-         }
-         this.reportSpec.nannyReminder.nannyAssignees = nannyAssignees;
-         this.reportSpec.nannyReminder.nannyRoster = nannyRoster;
-         this.numberOfNannys = nannyAssignees.length;
-      }
-   }
-
    resetData() {
       this.webhooks = '';
       this.mentionUsers = '';
       this.bugzillaAssignees = '';
       this.weekChecked = [];
-      this.nannyRoster = [];
       this.alertMessages = [];
    }
 
@@ -154,12 +121,25 @@ export class ReportWizardComponent {
 
    doNext() {
       this.updateTimeSetting();
-      this.updateNannyInfo();
       this.reportWizard.forceNext();
    }
 
    doFinish() {
       const reqData = DeepCopy(this.reportSpec) as ReportConfiguration;
+      if (this.reportSpec.reportType === 'nanny_reminder') {
+         let nannyRoster = ''
+         for (const data of this.reportSpec.nannyReminder.nannyRosters) {
+            const nannyStr = data.nanny.split(',').join(' & ')
+            if (data.end === '') {
+               nannyRoster += `${nannyStr} serve day: ${data.start}\n`
+            } else {
+               nannyRoster += `${nannyStr} serve from ${data.start} to ${data.end}\n`
+            }
+         }
+         reqData.nannyReminder.nannyRoster = nannyRoster;
+         delete reqData.nannyReminder.nannyRosters;
+         console.log('nanny roster:', nannyRoster);
+      }
       let repeatConfig = reqData.repeatConfig;
       repeatConfig.startDate = FormatDate(repeatConfig.startDate, 'YYYY-MM-DD');
       if (repeatConfig.endDate === '') {

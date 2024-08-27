@@ -46,7 +46,14 @@ export class PerforceCheckinSpec {
 export class NannyReminderSpec {
    nannyCode: string = '';
    nannyAssignees: string[] = [];
+   nannyRosters: NannyInfo[] = [];
    nannyRoster: string = '';
+}
+
+export class NannyInfo {
+   nanny: string = '';
+   start: string = '';
+   end: string = '';
 }
 
 export class JiraSpec {
@@ -58,7 +65,7 @@ export class JiraSpec {
 export class RepeatConfig {
    repeatType: string = 'daily';// not_repeat, hourly, daily, weekly, monthly, cron_expression
    tz: string = 'Asia/Shanghai';
-   startDate: string = moment(new Date()).format('MM/DD/YYYY');
+   startDate: string = '';
    endDate: string = '';//not required
    cronExpression: string = '';
    date: string = '';//YYYY-MM-DD

@@ -1,6 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { FormGroup, FormControl, Validators,
-         AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { ReportConfiguration } from '../../model/report.model';
 import { GetNannyRoster } from '../../service/utils';
 
@@ -11,24 +9,36 @@ import { GetNannyRoster } from '../../service/utils';
 })
 
 export class ReportNannyRosterWizardComponent {
-   @Input() nannyRoster = [];
    @Input() reportSpec: ReportConfiguration;
-   @Input() numberOfNannys = 0;
 
-   changeNumberOfNannys(event) {
-      if (event.target.value === '') {
+   addNanny(index) {
+      const numberOfAssignee = this.reportSpec.nannyReminder.nannyAssignees.length;
+      if (index < 0 || index >= numberOfAssignee) {
          return;
       }
-      this.numberOfNannys = parseInt(event.target.value);
-      if (this.numberOfNannys < this.nannyRoster.length) {
-         this.nannyRoster = this.nannyRoster.slice(0, this.numberOfNannys);
-      } else if (this.numberOfNannys > this.nannyRoster.length) {
-         const add = this.numberOfNannys - this.nannyRoster.length;
-         let nannyAssignees = this.reportSpec.nannyReminder.nannyAssignees;
-         for (let i=0; i<add; i++) {
-            nannyAssignees.push('');
-         }
-         this.nannyRoster = GetNannyRoster(this.reportSpec.repeatConfig, nannyAssignees);
+      const newNanny = '';
+      this.reportSpec.nannyReminder.nannyAssignees.splice(index+1, 0, newNanny);
+      this.reportSpec.nannyReminder.nannyRosters = GetNannyRoster(this.reportSpec.repeatConfig, this.reportSpec.nannyReminder.nannyAssignees);
+   }
+
+   removeNanny(index) {
+      const numberOfAssignee = this.reportSpec.nannyReminder.nannyAssignees.length;
+      if (index < 0 || index >= numberOfAssignee) {
+         return;
       }
+      if (numberOfAssignee <= 1) {
+         return;
+      }
+      this.reportSpec.nannyReminder.nannyAssignees.splice(index, 1);
+      this.reportSpec.nannyReminder.nannyRosters = GetNannyRoster(this.reportSpec.repeatConfig, this.reportSpec.nannyReminder.nannyAssignees);
+   }
+
+   changeNanny(index) {
+      console.log('change:', index)
+      let nannyAssignees = [];
+      for (const data of this.reportSpec.nannyReminder.nannyRosters) {
+         nannyAssignees.push(data.nanny);
+      }
+      this.reportSpec.nannyReminder.nannyAssignees = nannyAssignees;
    }
 }

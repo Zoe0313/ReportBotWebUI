@@ -15,9 +15,6 @@ export class ReportRecurrenceWizardComponent {
    @Input() reportSpec: ReportConfiguration;
    @Input() weekChecked: boolean[];
 
-   userTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
-   todayDate = FormatDate(new Date());
-
    repeatTimeValidator(): ValidatorFn {
       return (control: AbstractControl): ValidationErrors | null => {
          if (!control) {

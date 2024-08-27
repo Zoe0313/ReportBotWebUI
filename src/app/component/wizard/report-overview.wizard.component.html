@@ -35,15 +35,22 @@
       </div>
       <div *ngIf="reportSpec.reportType === 'nanny_reminder'">
          <label>Nanny roster:</label>
-         <table class="table" style="width:60%;" *ngIf="nannyRoster.length > 0">
+         <table class="table" style="width:60%;" *ngIf="reportSpec.nannyReminder.nannyRosters.length > 0">
            <thead>
-              <tr><th class="left">Week Begins</th><th>Nanny Assignee(s)</th></tr>
+              <tr>
+                 <th class="left">Time Range</th>
+                 <th>Nanny Assignees</th>
+              </tr>
            </thead>
            <tbody>
-              <tr *ngFor="let data of nannyRoster"><td class="left">{{ data.start }}</td><td>{{ data.nanny }}</td></tr>
+              <tr *ngFor="let data of reportSpec.nannyReminder.nannyRosters">
+                 <td class="left" *ngIf="data.end.length>0">{{ data.start }} -- {{ data.end }}</td>
+                 <td class="left" *ngIf="data.end.length==0">{{ data.start }}</td>
+                 <td>{{ data.nanny }}</td>
+              </tr>
            </tbody>
          </table>
-         <span *ngIf="nannyRoster.length === 0">Error: Not configure the nanny roster.</span>
+         <span *ngIf="reportSpec.nannyReminder.nannyRosters.length === 0">Error: Not configure the nanny roster.</span>
       </div>
       <div *ngIf="reportSpec.mentionUsers.length > 0">
          <label>Mention user(s):</label>

@@ -40,13 +40,10 @@
                        [clrWizardPagePreventDefaultNext]="true"
                        (clrWizardPageNext)="doNext()"
                        [clrWizardPagePreventDefaultCancel]="true"
-                       (clrWizardPageOnCancel)="doCancel()"
-                       style="padding-top: 0px;">
+                       (clrWizardPageOnCancel)="doCancel()">
          <ng-template clrPageTitle>Nanny Duty Roster Configuration</ng-template>
          <app-wizard-nanny-roster-page #nannyRosterPage
-                                     [reportSpec]="reportSpec"
-                                     [numberOfNannys]="numberOfNannys"
-                                     [nannyRoster]="nannyRoster">
+                                     [reportSpec]="reportSpec">
          </app-wizard-nanny-roster-page>
       </clr-wizard-page>
 
@@ -71,7 +68,6 @@
          </clr-alert>
          <app-wizard-overview-page #overviewPage
                                    [reportSpec]="reportSpec"
-                                   [nannyRoster]="nannyRoster"
                                    [isValid]="isValid">
          </app-wizard-overview-page>
       </clr-wizard-page>
