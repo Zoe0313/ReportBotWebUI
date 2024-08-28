@@ -21,6 +21,9 @@ export function FormatDateTime(date, tz) {
    if (date == null || date === '') {
       return '';
    }
+   if (typeof date === "string") {
+      date = new Date(date);
+   }
    try {
       // 2021-01-01 08:00 Asia/Shanghai => 2021-01-01 00:00 UTC => 2021-01-01 00:00
       return moment(date).tz(tz || 'Asia/Shanghai').format('YYYY-MM-DD HH:mm')
@@ -34,6 +37,9 @@ export function FormatDateWithTz(date, tz) {
    if (date == null || date === '') {
       return '';
    }
+   if (typeof date === "string") {
+      date = new Date(date);
+   }
    try {
       return moment(date).tz(tz || 'Asia/Shanghai').format('YYYY-MM-DD')
    } catch (e) {
@@ -45,6 +51,9 @@ export function FormatDateWithTz(date, tz) {
 function ParseDateWithTz(dateStr, tz) {
    if (dateStr == null) {
       return null;
+   }
+   if (typeof dateStr === "string") {
+      dateStr = new Date(dateStr);
    }
    try {
       // 2021-01-01 08:00 => 2021-01-01 08:00 Asia/Shanghai
