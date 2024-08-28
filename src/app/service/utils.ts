@@ -4,51 +4,54 @@ import schedule from 'node-schedule';
 
 export function FormatDate(date, formatStr='MM/DD/YYYY') {
    if (date == null || date === '') {
-      return ''
+      return '';
+   }
+   if (typeof date === "string") {
+      date = new Date(date);
    }
    try {
-      return moment(date).format(formatStr)
+      return moment(date).format(formatStr);
    } catch (e) {
-      console.error(e)
-      return ''
+      console.error(e);
+      return '';
    }
 }
 
 export function FormatDateTime(date, tz) {
    if (date == null || date === '') {
-      return ''
+      return '';
    }
    try {
       // 2021-01-01 08:00 Asia/Shanghai => 2021-01-01 00:00 UTC => 2021-01-01 00:00
       return moment(date).tz(tz || 'Asia/Shanghai').format('YYYY-MM-DD HH:mm')
    } catch (e) {
-      console.error(e)
-      return ''
+      console.error(e);
+      return '';
    }
 }
 
 export function FormatDateWithTz(date, tz) {
    if (date == null || date === '') {
-      return ''
+      return '';
    }
    try {
       return moment(date).tz(tz || 'Asia/Shanghai').format('YYYY-MM-DD')
    } catch (e) {
-      console.error(e)
-      return ''
+      console.error(e);
+      return '';
    }
 }
 
 function ParseDateWithTz(dateStr, tz) {
    if (dateStr == null) {
-      return null
+      return null;
    }
    try {
       // 2021-01-01 08:00 => 2021-01-01 08:00 Asia/Shanghai
       return moment.tz(dateStr, tz || 'Asia/Shanghai').toDate()
    } catch (e) {
-      console.error(e)
-      return null
+      console.error(e);
+      return null;
    }
 }
 

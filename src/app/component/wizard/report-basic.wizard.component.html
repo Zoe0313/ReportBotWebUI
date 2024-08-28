@@ -123,9 +123,9 @@
                    name="sendBugzillaIfDiff"
                    [(ngModel)]="reportSpec.bugzilla.sendIfDiff"
                    [ngModelOptions]="{standalone: true}"/>
-            <label>Send report if current PR list is different from the last.</label>
+            <label>Skip report if current PR list is the same as the last.</label>
          </clr-checkbox-wrapper>
-         <clr-control-helper *ngIf="reportSpec.bugzilla.sendIfDiff">If choose Yes, you won't receive bugzilla report if current PR list is different from the last.</clr-control-helper>
+         <clr-control-helper *ngIf="reportSpec.bugzilla.sendIfDiff">If choose Yes, you won't receive bugzilla report if current PR list is the same as the last.</clr-control-helper>
          <clr-control-helper *ngIf="!reportSpec.bugzilla.sendIfDiff">If choose No, you will still receive bugzilla report.</clr-control-helper>
       </clr-checkbox-container>
 
