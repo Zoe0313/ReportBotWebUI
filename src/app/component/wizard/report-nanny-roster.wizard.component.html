@@ -13,8 +13,8 @@
       <clr-stack-label *ngIf="roster.end.length>0"> -- {{ roster.end }}</clr-stack-label>
       <clr-stack-content>
          <input type="text" [(ngModel)]="roster.nanny" class="clr-input" (change)="changeNanny(i)"/>
-         <clr-icon shape="plus" size="20" (click)="addNanny(i)"></clr-icon>
-         <clr-icon shape="times" size="20" (click)="removeNanny(i)" [disabled]="reportSpec.nannyReminder.nannyRosters.length == 1"></clr-icon>
+         <clr-icon shape="plus" size="24" (click)="addNanny(i)" style="color:#55b109;"></clr-icon>
+         <clr-icon shape="times" size="24" (click)="removeNanny(i)" style="color:#ff2121;" [disabled]="reportSpec.nannyReminder.nannyRosters.length == 1"></clr-icon>
       </clr-stack-content>
    </clr-stack-block>
 </clr-stack-view>

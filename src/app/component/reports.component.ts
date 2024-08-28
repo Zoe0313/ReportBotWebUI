@@ -58,6 +58,7 @@ export class ReportsComponent implements OnInit {
          bugzilla.bugzillaLink = reportSpecConfig['bugzillaLink'];
          bugzilla.list2table = (reportSpecConfig['bugzillaList2Table'] == 'Yes');
          bugzilla.foldPRList = (reportSpecConfig['foldBugzillaList'] == 'Yes');
+         bugzilla.sendIfDiff = (reportSpecConfig['sendIfPRDiff'] == 'Yes');
       } else if (reportType == 'bugzilla_by_assignee') {
          bugzillaAssignee.bugzillaAssignees = reportSpecConfig['bugzillaAssignee'];
       } else if (reportType == 'perforce_checkin') {

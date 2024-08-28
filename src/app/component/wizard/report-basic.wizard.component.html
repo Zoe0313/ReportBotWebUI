@@ -117,6 +117,18 @@
          </clr-control-helper>
       </clr-input-container>
 
+      <clr-checkbox-container>
+         <clr-checkbox-wrapper>
+            <input type="checkbox" clrCheckbox
+                   name="sendBugzillaIfDiff"
+                   [(ngModel)]="reportSpec.bugzilla.sendIfDiff"
+                   [ngModelOptions]="{standalone: true}"/>
+            <label>Send report if current PR list is different from the last.</label>
+         </clr-checkbox-wrapper>
+         <clr-control-helper *ngIf="reportSpec.bugzilla.sendIfDiff">If choose Yes, you won't receive bugzilla report if current PR list is different from the last.</clr-control-helper>
+         <clr-control-helper *ngIf="!reportSpec.bugzilla.sendIfDiff">If choose No, you will still receive bugzilla report.</clr-control-helper>
+      </clr-checkbox-container>
+
       <clr-checkbox-container *ngIf="checkBugzillaListLink()">
          <clr-checkbox-wrapper>
             <input type="checkbox" clrCheckbox
@@ -125,15 +137,12 @@
                    [ngModelOptions]="{standalone: true}"/>
             <label>Bugzilla list convert to table report</label>
          </clr-checkbox-wrapper>
-         <clr-control-helper *ngIf="reportSpec.bugzilla.list2table">If choose Yes, you will receive bugzilla table report indexed by component.</clr-control-helper>
+         <clr-control-helper *ngIf="reportSpec.bugzilla.list2table">
+            If choose Yes, you will receive bugzilla table report indexed by component.
+            <a href="{{ getBugzillaTableLink() }}">Open the Bugzilla table link.</a>
+         </clr-control-helper>
          <clr-control-helper *ngIf="!reportSpec.bugzilla.list2table">If choose No, you will still receive bugzilla list report.</clr-control-helper>
       </clr-checkbox-container>
-      <button *ngIf="reportSpec.bugzilla.list2table"
-              type="button"
-              class="btn btn-info-outline"
-              (click)="gotoBugzillaTableLink()">
-         Go to the Bugzilla table
-      </button>
 
       <clr-checkbox-container *ngIf="checkBugzillaListLink()">
          <clr-checkbox-wrapper>

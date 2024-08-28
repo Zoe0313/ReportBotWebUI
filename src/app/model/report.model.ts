@@ -24,6 +24,7 @@ export class BugzillaSpec {
    bugzillaLink: string = '';
    list2table: boolean = false;
    foldPRList: boolean = false;
+   sendIfDiff: boolean = false;
 }
 
 export class BugzillaAssigneeSpec {
