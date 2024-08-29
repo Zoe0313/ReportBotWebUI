@@ -31,7 +31,8 @@ export class ReportDetailsComponent implements OnInit {
          startDate: repeatConfig.startDate,
          endDate: repeatConfig.endDate,
          displayTime: repeatConfig.displayTime,
-         nextSendTime: repeatConfig.nextSendTime
+         nextSendTime: repeatConfig.nextSendTime,
+         timeZone: repeatConfig.tz
       };
    }
 }

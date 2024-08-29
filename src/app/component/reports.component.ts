@@ -98,8 +98,7 @@ export class ReportsComponent implements OnInit {
       } else if (repeatType === 'cron_expression') {
          recurrence.cronExpression = repeatConfig['cronExpression'];
       }
-      const localTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
-      recurrence.displayTime = DisplayTimeSetting(recurrence, localTZ);
+      recurrence.displayTime = DisplayTimeSetting(recurrence, recurrence.tz);
       recurrence.nextSendTime = NextInvocation(recurrence);
       if (reportType == 'nanny_reminder') {
          nannyReminder.nannyRosters = GetNannyRoster(recurrence, nannyReminder.nannyAssignees);

@@ -175,7 +175,7 @@ export function NextInvocation(repeatConfig) {
    if (job != null) {
       nextInvocationTime = job.nextInvocation();
    }
-   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+   const tz = repeatConfig.tz;
    return nextInvocationTime ? FormatDateTime(new Date(nextInvocationTime), tz) : 'No longer executed';
 }
 

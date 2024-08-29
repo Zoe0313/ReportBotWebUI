@@ -98,7 +98,7 @@ export class ReportWizardComponent {
 
    updateTimeSetting() {
       let repeatConfig = this.reportSpec.repeatConfig;
-      const localTZ = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const localTZ = repeatConfig.tz;
       this.reportSpec.repeatConfig.displayTime = DisplayTimeSetting(repeatConfig, localTZ);
       this.reportSpec.repeatConfig.nextSendTime = NextInvocation(repeatConfig);
    }
