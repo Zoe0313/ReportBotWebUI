@@ -1,11 +1,28 @@
-<div>
-   <label>The number of nanny roster should be greater than 1.<br>
-   If there are multiple assignees per week, separate them with commas.</label>
-</div>
+<form clrForm [formGroup]="nannyForm">
+   <clr-input-container>
+      <label>Input nanny code</label>
+      <input clrInput type="text"
+             placeholder="E.g. vsanfs for vSANFS nanny"
+             formControlName="nannyCode"
+             [(ngModel)]="reportSpec.nannyReminder.nannyCode"
+             required/>
+      <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
+      <clr-control-helper>
+         This code will be used in querying nanny list by API.
+         E.g. This <a href="https://vsanbot.vdp.oc.vmware.com/api/v1/nanny?code=vsanfs">API</a> for vSANFS nanny.
+      </clr-control-helper>
+   </clr-input-container>
+</form>
+
+
 
 <clr-stack-view>
    <clr-stack-header>
       Please edit the nanny duty roster:
+      <div class="helper-text">
+         The number of nanny roster should be greater than 1.
+         If there are multiple assignees per week, separate them with commas.
+      </div>
    </clr-stack-header>
 
    <clr-stack-block *ngFor="let roster of reportSpec.nannyReminder.nannyRosters; let i = index" [clrStackViewLevel]="1">

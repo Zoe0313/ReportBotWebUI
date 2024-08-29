@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ReportConfiguration } from '../../model/report.model';
 import { GetNannyRoster } from '../../service/utils';
 
@@ -10,6 +11,10 @@ import { GetNannyRoster } from '../../service/utils';
 
 export class ReportNannyRosterWizardComponent {
    @Input() reportSpec: ReportConfiguration;
+
+   nannyForm = new FormGroup({
+      nannyCode: new FormControl('', [Validators.required]),
+   });
 
    addNanny(index) {
       const numberOfAssignee = this.reportSpec.nannyReminder.nannyAssignees.length;

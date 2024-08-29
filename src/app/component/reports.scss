@@ -12,14 +12,17 @@
       padding-top: 0;
    }
 }
-
+.btn {
+   margin-top: 0px;
+   margin-bottom: 0px;
+}
 .report-header {
    display: flex;
    justify-content: space-between;
-   align-items: center;
-   padding: .5rem .75rem;
+   align-items: flex-end;
+   padding: 0rem .75rem;
    color: #000;
-   background-color: #a5cf8c;
+   background-color: #fafafa;
    label, a {
       font-size: .75rem;
       font-weight: 200;
@@ -30,6 +33,12 @@
       justify-content: flex-end;
       margin-right: 10px;
    }
+}
+
+.p-divider_block {
+   border-bottom: 1px solid rgba(var(--sk_foreground_low_solid, 221, 221, 221), 1);
+   width: 100%;
+   margin: 4px auto 8px;
 }
 
 .report-datagrid-cell {

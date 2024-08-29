@@ -12,13 +12,14 @@
       <label>There are {{ ReportList.length }} notifications in your account.</label>
       <button type="button"
               (click)="openCreateReportWizard()"
-              class="btn btn-primary btn-icon btn-create-report">
+              class="btn btn-icon btn-info-outline btn-create-report">
          <clr-icon shape="plus" ></clr-icon>
          Create notification
       </button>
    </div>
+   <div class="p-divider_block"></div>
    <clr-datagrid [clrDgLoading]="loading">
-      <clr-dg-column  style="width: 550px;" [clrDgField]="'title'">
+      <clr-dg-column  [clrDgField]="'title'">
          Title
       </clr-dg-column>
       <clr-dg-column  style="width: 180px;" [clrDgField]="'vmwareId'" *ngIf="config.isSystemAdmin">
@@ -30,7 +31,7 @@
       <clr-dg-column  style="width: 180px;" [clrDgField]="'status'">
          Status
       </clr-dg-column>
-      <clr-dg-column>
+      <clr-dg-column style="width: 450px;">
          Actions
       </clr-dg-column>
       <clr-dg-row *clrDgItems="let report of ReportList" [clrDgItem]="report">
