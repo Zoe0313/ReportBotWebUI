@@ -11,6 +11,7 @@ interface API {
    UPDATE_REPORT_STATUS: string;
    DELETE_REPORT_CONFIGURATION: string;
    SEND_NOTIFICATION_NOW: string;
+   TRANSFER_REPORT: string;
    CHECK_SYSTEM_ADMIN: string;
    USERS_FAVORED: string;
    GOOGLE_USER_INFO: string;
@@ -68,6 +69,7 @@ export class ConfigService {
          UPDATE_REPORT_STATUS: '/report/{0}/configuration?status={1}&user={2}',
          DELETE_REPORT_CONFIGURATION: '/report/{0}/configuration?user={1}',
          SEND_NOTIFICATION_NOW: '/report/{0}/history?user={1}',
+         TRANSFER_REPORT: '/report/{0}/transfer?owner={1}&user={2}',
          CHECK_SYSTEM_ADMIN: '/service/admins?user={0}',
          USERS_FAVORED: '/user/favoredReports?reportID={0}&user={1}',
          GOOGLE_USER_INFO: '/service/googleinfo?vmwareId={0}&user={1}'

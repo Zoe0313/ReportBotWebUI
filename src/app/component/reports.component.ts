@@ -26,7 +26,9 @@ export class ReportsComponent implements OnInit {
    showEnableConfirmDialog = false;
    showDisableConfirmDialog = false;
    showSendnowConfirmDialog = false;
+   showTransferConfirmDialog = false;
    removeReportTitle = '';
+   transferOwner = '';
 
    alertMessage = '';
    numOfReports: number;
@@ -241,7 +243,7 @@ export class ReportsComponent implements OnInit {
          this.loading = false;
       }, error => {
          console.log(error);
-         this.alertMessage = error.error.Message;
+         this.alertMessage = error.error.message;
          this.loading = false;
       });
    }
@@ -260,7 +262,7 @@ export class ReportsComponent implements OnInit {
          this.loading = false;
       }, error => {
          console.log(error);
-         this.alertMessage = error.error.Message;
+         this.alertMessage = error.error.message;
          this.loading = false;
       });
    }
@@ -279,7 +281,7 @@ export class ReportsComponent implements OnInit {
          this.loading = false;
       }, error => {
          console.log(error);
-         this.alertMessage = error.error.Message;
+         this.alertMessage = error.error.message;
          this.loading = false;
       });
    }
@@ -298,7 +300,26 @@ export class ReportsComponent implements OnInit {
          this.loading = false;
       }, error => {
          console.log(error);
-         this.alertMessage = error.error.Message;
+         this.alertMessage = error.error.message;
+         this.loading = false;
+      });
+   }
+
+   onTransfer(report: any) {
+      this.selectedReport = report;
+      this.showTransferConfirmDialog = true;
+   }
+
+   onTransferHandler() {
+      this.alertMessage = '';
+      this.loading = true;
+      this.showTransferConfirmDialog = false;
+      this.service.transferReport(this.selectedReport.id, this.transferOwner).subscribe(result => {
+         this.getReports();
+         this.loading = false;
+      }, error => {
+         console.log(error);
+         this.alertMessage = error.error.message;
          this.loading = false;
       });
    }
