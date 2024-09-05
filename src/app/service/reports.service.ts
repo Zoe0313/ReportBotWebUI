@@ -101,6 +101,14 @@ export class ReportsService {
       return this.http.post(url, this.getNoCacheRequestOptions());
    }
 
+   transferReport(reportID: string, vmwareId: string): Observable<any> {
+      const url = `${this.config.API.TRANSFER_REPORT}`
+                  .replace('{0}', reportID)
+                  .replace('{1}', vmwareId)
+                  .replace('{2}', this.config.userName);
+      return this.http.post(url, this.getNoCacheRequestOptions());
+   }
+
    getGoogleInfo(vmwareId: string): Promise<any> {
       const url = `${this.config.API.GOOGLE_USER_INFO}`
                   .replace('{0}', vmwareId)

@@ -23,7 +23,7 @@
          Title
       </clr-dg-column>
       <clr-dg-column  style="width: 180px;" [clrDgField]="'vmwareId'" *ngIf="config.isSystemAdmin">
-         Creator
+         Owner
       </clr-dg-column>
       <clr-dg-column  style="width: 180px;" [clrDgField]="'reportType'">
          Type
@@ -31,7 +31,7 @@
       <clr-dg-column  style="width: 180px;" [clrDgField]="'status'">
          Status
       </clr-dg-column>
-      <clr-dg-column style="width: 450px;">
+      <clr-dg-column style="width: 600px;">
          Actions
       </clr-dg-column>
       <clr-dg-row *clrDgItems="let report of ReportList" [clrDgItem]="report">
@@ -63,46 +63,50 @@
          </clr-dg-cell>
 
          <clr-dg-cell class="report-datagrid-cell">
+            <button *ngIf="report.reportType != 'perforce_checkin' && report.reportType != 'jira_list'"
+                    type="button"
+                    class="btn btn-icon btn-info-outline"
+                    aria-label="edit"
+                    (click)="onEdit(report)">
+               <clr-icon shape="pencil"></clr-icon>
+               Edit
+            </button>
             <button type="button"
+                    class="btn btn-icon btn-info-outline"
+                    aria-label="transfer"
+                    (click)="onTransfer(report)">
+               <clr-icon shape="recycle"></clr-icon>
+               Transfer
+            </button>
+            <button *ngIf="report.status != 'ENABLED'"
+                    type="button"
+                    class="btn btn-icon btn-success-outline"
+                    aria-label="enable"
+                    (click)="onEnable(report)">
+               <clr-icon shape="check"></clr-icon>
+               Enable
+            </button>
+            <button *ngIf="report.status == 'ENABLED'"
+                    type="button"
+                    class="btn btn-icon btn-warning-outline"
+                    aria-label="disable"
+                    (click)="onDisable(report)">
+               <clr-icon shape="times"></clr-icon>
+               Disable
+            </button>
+            <button *ngIf="report.status == 'ENABLED'"
+                    type="button"
                     class="btn btn-icon btn-info-outline"
                     aria-label="play"
                     (click)="onSendNow(report)">
                <clr-icon shape="play"></clr-icon>
                Invoke Now
             </button>
-
-            <button type="button"
-                    class="btn btn-icon btn-success-outline"
-                    aria-label="enable"
-                    (click)="onEnable(report)"
-                    *ngIf="report.status != 'ENABLED'">
-               <clr-icon shape="check"></clr-icon>
-               Enable
-            </button>
-
-            <button type="button"
-                    class="btn btn-icon btn-warning-outline"
-                    aria-label="disable"
-                    (click)="onDisable(report)"
-                    *ngIf="report.status == 'ENABLED'">
-               <clr-icon shape="times"></clr-icon>
-               Disable
-            </button>
-
-            <button type="button"
-                    class="btn btn-icon btn-info-outline"
-                    aria-label="edit"
-                    (click)="onEdit(report)"
-                    *ngIf="report.reportType != 'perforce_checkin' && report.reportType != 'jira_list'">
-                  <clr-icon shape="pencil"></clr-icon>
-               Edit
-            </button>
-
-            <button type="button"
-                    class="btn btn-icon btn-danger"
+            <button *ngIf="config.isSystemAdmin"
+                    type="button"
+                    class="btn btn-icon btn-danger-outline"
                     aria-label="remove"
-                    (click)="onRemove(report)"
-                    *ngIf="config.isSystemAdmin">
+                    (click)="onRemove(report)">
                <clr-icon shape="trash"></clr-icon>
             </button>
          </clr-dg-cell>
@@ -157,5 +161,17 @@
    <div class="modal-footer">
       <button type="button" class="btn btn-outline" (click)="showSendnowConfirmDialog = false">Cancel</button>
       <button type="button" class="btn btn-success" (click)="onSendNowHandler()">Confirm</button>
+   </div>
+</clr-modal>
+
+<clr-modal [(clrModalOpen)]="showTransferConfirmDialog" [clrModalClosable]="false">
+   <h3 class="modal-title">Transfer Notification Owner</h3>
+   <div class="modal-body">
+      <label>Please input the user vmware id which you want to transfer to: </label>
+      <input type="text" class="clr-input" placeholder="New owner" [(ngModel)]="transferOwner">
+   </div>
+   <div class="modal-footer">
+      <button type="button" class="btn btn-outline" (click)="showTransferConfirmDialog = false">Cancel</button>
+      <button type="button" class="btn btn-success" (click)="onTransferHandler()" [disabled]="transferOwner.length==0">Confirm</button>
    </div>
 </clr-modal>
