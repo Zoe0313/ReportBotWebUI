@@ -2,6 +2,9 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.17.
 
+WebUI Preview:
+![WebUI](https://github-vcf.devops.broadcom.net/vcf/vSAN-Bot-WebUI/blob/main/webUI.png)
+
 ## Node.js version demand
 
 Node.js version v16.20.2
