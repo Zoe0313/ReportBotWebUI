@@ -20,13 +20,10 @@ nvm install 16.20.2
 nvm use 16.20.2
 ```
 
-If you hit the issue below, please run command `npm install -g @angular/cli@16.2.10`
+Using npx (if issues persist): If you continue to face issues, you can run the ng command using npx, which will execute it directly from your local node_modules:
 ```
-# ng --version
-Node.js version v16.20.2 detected.
-The Angular CLI requires a minimum Node.js version of v18.19.
-
-Please update your Node.js version or visit https://nodejs.org/ for additional instructions.
+npx -p @angular/cli@8.3.17 ng build
+npx -p @angular/cli@8.3.17 ng build -c=sync --outputPath=/Users/lzoe/Project/slackbot_clean/server/src/static
 ```
 
 ## Development server
