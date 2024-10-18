@@ -43,7 +43,6 @@ export class ReportsComponent implements OnInit {
    ngOnInit() {
       this.config.sysAdmin$.subscribe(
          () => {
-            console.info('config service admin:', this.config.isSystemAdmin)
             this.getReports();
          });
    }

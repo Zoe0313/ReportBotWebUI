@@ -4,10 +4,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { ReportsComponent } from './component/reports.component';
 
 const routes: Routes = [
-
-   {path: "reports", pathMatch: "full", component: ReportsComponent},
-   {path: "history", pathMatch: "full", component: ReportsComponent},
-
+   { path: '', redirectTo: '/reports', pathMatch: 'full' },
+   { path: 'reports', component: ReportsComponent }
 ];
 
 @NgModule({

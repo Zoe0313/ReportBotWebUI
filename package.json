@@ -8,7 +8,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "build": "node --max_old_space_size=4096 node_modules/@angular/cli/bin/ng build",
-    "sync": "node --max_old_space_size=4096 node_modules/@angular/cli/bin/ng build -c=sync --outputPath=/Users/lzoe/Project/slackbot_clean/server/src/static"
+    "sync": "node --max_old_space_size=4096 node_modules/@angular/cli/bin/ng build -c=sync --outputPath=/Users/lzoe/Project/vsanbot-release/server/src/static"
   },
   "private": true,
   "dependencies": {

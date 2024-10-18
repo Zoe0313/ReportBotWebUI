@@ -39,14 +39,6 @@ export class ConfigService {
       return this._username;
    }
 
-   private _password: string;
-   public set password(value: string) {
-      this._password = value;
-   }
-   public get password(): string {
-      return this._password;
-   }
-
    private _isSystemAdmin;
    public get isSystemAdmin() {
       return this._isSystemAdmin;
