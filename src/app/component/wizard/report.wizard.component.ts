@@ -50,6 +50,7 @@ export class ReportWizardComponent {
    webhooks = '';
    mentionUsers = '';
    bugzillaAssignees = '';
+   perforceCheckinBranches = '';
    weekChecked = [];
 
    init(action: string, spec?: ReportConfiguration) {
@@ -85,6 +86,11 @@ export class ReportWizardComponent {
       } else {
          this.bugzillaAssignees = '';
       }
+      if (this.reportSpec.perforceCheckin.branches.length > 0) {
+         this.perforceCheckinBranches = this.reportSpec.perforceCheckin.branches.join(',');
+      } else {
+         this.perforceCheckinBranches = '';
+      }
 
       // recurrence page
       this.weekChecked = [];
@@ -107,6 +113,7 @@ export class ReportWizardComponent {
       this.webhooks = '';
       this.mentionUsers = '';
       this.bugzillaAssignees = '';
+      this.perforceCheckinBranches = '';
       this.weekChecked = [];
       this.alertMessages = [];
    }

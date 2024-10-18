@@ -20,6 +20,7 @@ export class ReportBasicWizardComponent {
    @Input() webhooks = '';
    @Input() mentionUsers = '';
    @Input() bugzillaAssignees = '';
+   @Input() perforceCheckinBranches = '';
    @Input() reportSpec: ReportConfiguration;
 
    bugzillaAssigneeError = '';

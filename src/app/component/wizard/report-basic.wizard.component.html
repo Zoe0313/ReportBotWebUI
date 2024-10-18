@@ -35,18 +35,17 @@
                       (change)="changeReportType($event)"/>
                <label>Plain text</label>
             </clr-radio-wrapper>
-            <clr-control-error>Please complete this required field.</clr-control-error>
-         </clr-radio-container>
-         <clr-radio-container class="clr-form-control-disabled">
             <clr-radio-wrapper>
                <input clrRadio type="radio"
                       value="perforce_checkin"
                       [(ngModel)]="reportSpec.reportType"
                       [ngModelOptions]="{standalone: true}"
-                      disabled/>
-               <label>Perforce branch checkin (TBD)</label>
+                      (change)="changeReportType($event)"/>
+               <label>Perforce branch checkin</label>
             </clr-radio-wrapper>
-
+            <clr-control-error>Please complete this required field.</clr-control-error>
+         </clr-radio-container>
+         <clr-radio-container class="clr-form-control-disabled">
             <clr-radio-wrapper>
                <input clrRadio type="radio"
                       value="jira_list"
@@ -175,7 +174,18 @@
    </div>
 
    <div *ngIf="reportSpec.reportType === 'perforce_checkin'">
-
+      <h4>Input checkin projects and branches</h4>
+      <clr-input-container>
+         <label>Branches</label>
+         <input clrInput type="text" style="width:300px;"
+                placeholder="E.g. bora/main"
+                [ngModelOptions]="{standalone: true}"
+                [(ngModel)]="perforceCheckinBranches"
+                required invalid_checkin_branch/>
+         <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
+         <clr-control-error *clrIfError="'invalid_checkin_branch'">Unsupported perforce checkin branches.</clr-control-error>
+         <clr-control-helper>Currently we only support bora, scons and vsan-mgmt-ui projects, if you need to add more projects, please contact us.</clr-control-helper>
+      </clr-input-container>
    </div>
 
    <div *ngIf="reportSpec.reportType === 'text' || reportSpec.reportType === 'nanny_reminder'">
