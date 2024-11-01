@@ -15,7 +15,7 @@ import { DisplayTimeSetting, FormatDate, NextInvocation, GetNannyRoster } from '
 })
 
 export class ReportsComponent implements OnInit {
-   @ViewChild(ReportWizardComponent, { static: true })
+   @ViewChild(ReportWizardComponent, { static: false })
    reportWizard: ReportWizardComponent;
 
    ReportList = [];
@@ -63,10 +63,12 @@ export class ReportsComponent implements OnInit {
       } else if (reportType == 'bugzilla_by_assignee') {
          bugzillaAssignee.bugzillaAssignees = reportSpecConfig['bugzillaAssignee'];
       } else if (reportType == 'perforce_checkin') {
-         perforceCheckin.branches = reportSpecConfig['branches'];
-         perforceCheckin.needCheckinApproved = (reportSpecConfig['needCheckinApproved'] == 'Yes');
-         perforceCheckin.flattenMembers = reportSpecConfig['flattenMembers'];
-         perforceCheckin.membersFilters = reportSpecConfig['membersFilters'];
+         const checkinData = reportSpecConfig['perforceCheckIn'];
+         perforceCheckin.branches = checkinData['branches'];
+         perforceCheckin.flattenMembers = checkinData['flattenMembers'];
+         perforceCheckin.teams = checkinData['teams'];
+         perforceCheckin.membersFilters = checkinData['membersFilters'];
+         perforceCheckin.needCheckinApproved = (checkinData['needCheckinApproved'] == 'Yes');
       } else if (reportType == 'nanny_reminder') {
          nannyReminder.nannyCode = reportSpecConfig['nannyCode'];
          nannyReminder.nannyAssignees = reportSpecConfig['nannyAssignee'].split('\n');

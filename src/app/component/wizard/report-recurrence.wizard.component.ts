@@ -136,4 +136,40 @@ export class ReportRecurrenceWizardComponent {
       console.log('monthly - change dayOfMonth:', value);
       this.reportSpec.repeatConfig.dayOfMonth = Number(value);
    }
+
+   changeRepeatTime(event: any) {
+      const value = event.target.value;
+      if (value === '') {
+         return;
+      }
+      console.log('change repeatTime:', value);
+      this.reportSpec.repeatConfig.time = value;
+   }
+
+   changeCronExpression(event: any) {
+      const value = event.target.value;
+      if (value === '') {
+         return;
+      }
+      console.log('change cronExpression:', value);
+      this.reportSpec.repeatConfig.cronExpression = value;
+   }
+
+   changeStartDate(event: any) {
+      const value = event.target.value;
+      if (value === '') {
+         return;
+      }
+      console.log('change start date:', value);
+      this.reportSpec.repeatConfig.startDate = value;
+   }
+
+   changeEndDate(event: any) {
+      const value = event.target.value;
+      if (value === '') {
+         return;
+      }
+      console.log('change end date:', value);
+      this.reportSpec.repeatConfig.endDate = value;
+   }
 }

@@ -7,40 +7,35 @@
                <input clrRadio type="radio"
                       value="bugzilla"
                       [(ngModel)]="reportSpec.reportType"
-                      [ngModelOptions]="{standalone: true}"
-                      (change)="changeReportType($event)"/>
+                      [ngModelOptions]="{standalone: true}"/>
                <label>Bugzilla</label>
             </clr-radio-wrapper>
             <clr-radio-wrapper>
                <input clrRadio type="radio"
                       value="bugzilla_by_assignee"
                       [(ngModel)]="reportSpec.reportType"
-                      [ngModelOptions]="{standalone: true}"
-                      (change)="changeReportType($event)"/>
+                      [ngModelOptions]="{standalone: true}"/>
                <label>Bugzilla by assignee</label>
             </clr-radio-wrapper>
             <clr-radio-wrapper>
                <input clrRadio type="radio"
                       value="nanny_reminder"
                       [(ngModel)]="reportSpec.reportType"
-                      [ngModelOptions]="{standalone: true}"
-                      (change)="changeReportType($event)"/>
+                      [ngModelOptions]="{standalone: true}"/>
                <label>Nanny reminder</label>
             </clr-radio-wrapper>
             <clr-radio-wrapper>
                <input clrRadio type="radio"
                       value="text"
                       [(ngModel)]="reportSpec.reportType"
-                      [ngModelOptions]="{standalone: true}"
-                      (change)="changeReportType($event)"/>
+                      [ngModelOptions]="{standalone: true}"/>
                <label>Plain text</label>
             </clr-radio-wrapper>
             <clr-radio-wrapper>
                <input clrRadio type="radio"
                       value="perforce_checkin"
                       [(ngModel)]="reportSpec.reportType"
-                      [ngModelOptions]="{standalone: true}"
-                      (change)="changeReportType($event)"/>
+                      [ngModelOptions]="{standalone: true}"/>
                <label>Perforce branch checkin</label>
             </clr-radio-wrapper>
             <clr-control-error>Please complete this required field.</clr-control-error>
@@ -72,11 +67,11 @@
          <label>Notification title</label>
          <input clrInput type="text" style="width:550px;"
                 placeholder="E.g. vSAN product bugs report"
-                [ngModelOptions]="{standalone: true}"
-                [(ngModel)]="reportSpec.title"
+                formControlName="title"
+                (change)="changeTitle($event)"
                 required/>
-         <clr-control-error>Please complete this required field.</clr-control-error>
          <clr-control-helper>As the notification title, please use meaningful words.</clr-control-helper>
+         <clr-control-error>Please complete this required field.</clr-control-error>
       </clr-input-container>
    </div>
 
@@ -87,15 +82,17 @@
          <input clrInput type="text" style="width:550px;"
                 placeholder="E.g. https://chat.googleapis.com/v1/spaces/.../messages?key=..."
                 formControlName="webhooks"
-                [(ngModel)]="webhooks"
                 (change)="changeWebhooks($event)"
-                required invalid_webhook/>
-         <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
-         <clr-control-error *clrIfError="'invalid_webhook'">Unsupported Google Chat webhook. Refer to the hint as below for creating a webhook.</clr-control-error>
+                required/>
          <clr-control-helper>
             Please use format: webhook1, webhook2.<br>
             Refer to <a href="https://confluence.eng.vmware.com/display/SABU/How+to+add+webhooks+in+vSANSlackbot+report">How to create webhook in Google Chat Space</a>.
          </clr-control-helper>
+         <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
+         <clr-control-error *clrIfError="'invalid_webhook'">Unsupported Google Chat webhook.<br>
+            Refer to <a href="https://confluence.eng.vmware.com/display/SABU/How+to+add+webhooks+in+vSANSlackbot+report">How to create webhook in Google Chat Space</a>
+            for creating a webhook.
+         </clr-control-error>
       </clr-input-container>
    </div>
 
@@ -106,14 +103,16 @@
          <input clrInput type="text" style="width:550px;"
                 placeholder="Bugzilla link of tabular report or list report"
                 formControlName="bugzillaLink"
-                [(ngModel)]="reportSpec.bugzilla.bugzillaLink"
-                required invalid_bugzilla_link/>
-         <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
-         <clr-control-error *clrIfError="'invalid_bugzilla_link'">Unsupported bugzilla url. Refer to the hint as below for creating a bugzilla report.</clr-control-error>
+                (change)="changeBugzillaLink($event)"
+                required/>
          <clr-control-helper>
             Refer to <a href="https://bugzilla.eng.vmware.com/query.cgi?format=report-table">creating bugzilla tabular report</a> or
             <a href="https://bugzilla.eng.vmware.com/query.cgi?">bugzilla list</a>
          </clr-control-helper>
+         <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
+         <clr-control-error *clrIfError="'invalid_bugzilla_link'">Unsupported bugzilla url.<br>
+            Refer to <a href="https://bugzilla.eng.vmware.com/query.cgi?format=report-table">creating bugzilla tabular report</a> or
+            <a href="https://bugzilla.eng.vmware.com/query.cgi?">bugzilla list</a> for creating a bugzilla report.</clr-control-error>
       </clr-input-container>
 
       <clr-checkbox-container>
@@ -128,32 +127,34 @@
          <clr-control-helper *ngIf="!reportSpec.bugzilla.sendIfDiff">If choose No, you will still receive bugzilla report.</clr-control-helper>
       </clr-checkbox-container>
 
-      <clr-checkbox-container *ngIf="checkBugzillaListLink()">
-         <clr-checkbox-wrapper>
-            <input type="checkbox" clrCheckbox
-                   name="bugzillalist2table"
-                   [(ngModel)]="reportSpec.bugzilla.list2table"
-                   [ngModelOptions]="{standalone: true}"/>
-            <label>Bugzilla list convert to table report</label>
-         </clr-checkbox-wrapper>
-         <clr-control-helper *ngIf="reportSpec.bugzilla.list2table">
-            If choose Yes, you will receive bugzilla table report indexed by component.
-            <a href="{{ getBugzillaTableLink() }}">Open the Bugzilla table link.</a>
-         </clr-control-helper>
-         <clr-control-helper *ngIf="!reportSpec.bugzilla.list2table">If choose No, you will still receive bugzilla list report.</clr-control-helper>
-      </clr-checkbox-container>
+      <div *ngIf="checkBugzillaListLink()">
+         <clr-checkbox-container>
+            <clr-checkbox-wrapper>
+               <input type="checkbox" clrCheckbox
+                      name="bugzillalist2table"
+                      [(ngModel)]="reportSpec.bugzilla.list2table"
+                      [ngModelOptions]="{standalone: true}"/>
+               <label>Bugzilla list convert to table report</label>
+            </clr-checkbox-wrapper>
+            <clr-control-helper *ngIf="reportSpec.bugzilla.list2table">
+               If choose Yes, you will receive bugzilla table report indexed by component.
+               <a href="{{ getBugzillaTableLink() }}">Open the Bugzilla table link.</a>
+            </clr-control-helper>
+            <clr-control-helper *ngIf="!reportSpec.bugzilla.list2table">If choose No, you will still receive bugzilla list report.</clr-control-helper>
+         </clr-checkbox-container>
 
-      <clr-checkbox-container *ngIf="checkBugzillaListLink()">
-         <clr-checkbox-wrapper>
-            <input type="checkbox" clrCheckbox
-                   name="foldBugzillaList"
-                   [(ngModel)]="reportSpec.bugzilla.foldPRList"
-                   [ngModelOptions]="{standalone: true}"/>
-            <label>Fold PR list by displaying in thread (suitable for long list)</label>
-         </clr-checkbox-wrapper>
-         <clr-control-helper *ngIf="reportSpec.bugzilla.foldPRList">If choose Yes, the PR list will display in thread message.</clr-control-helper>
-         <clr-control-helper *ngIf="!reportSpec.bugzilla.foldPRList">If choose No, the PR list will still display outside.</clr-control-helper>
-      </clr-checkbox-container>
+         <clr-checkbox-container>
+            <clr-checkbox-wrapper>
+               <input type="checkbox" clrCheckbox
+                      name="foldBugzillaList"
+                      [(ngModel)]="reportSpec.bugzilla.foldPRList"
+                      [ngModelOptions]="{standalone: true}"/>
+               <label>Fold PR list by displaying in thread (suitable for long list)</label>
+            </clr-checkbox-wrapper>
+            <clr-control-helper *ngIf="reportSpec.bugzilla.foldPRList">If choose Yes, the PR list will display in thread message.</clr-control-helper>
+            <clr-control-helper *ngIf="!reportSpec.bugzilla.foldPRList">If choose No, the PR list will still display outside.</clr-control-helper>
+         </clr-checkbox-container>
+      </div>
    </div>
 
    <div *ngIf="reportSpec.reportType === 'bugzilla_by_assignee'">
@@ -161,16 +162,16 @@
       <clr-input-container>
          <label>Bugzilla assignee(s)</label>
          <input clrInput type="text" style="width:300px;"
-                placeholder="VMWare AD account"
-                [ngModelOptions]="{standalone: true}"
-                [(ngModel)]="bugzillaAssignees"
-                (change)="changeBugzillaAssignees($event)"/>
-         <clr-control-helper>Input VMWare AD accounts by format: user1, user2.</clr-control-helper>
+                placeholder="Broadcom email account. E.g. zhou.huang"
+                formControlName="bugzillaAssignees"
+                (change)="changeBugzillaAssignees($event)"
+                required/>
+         <clr-control-helper>Input broadcom email accounts by format: user1, user2.</clr-control-helper>
+         <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
+         <clr-control-error *clrIfError="'invalid_assignee'">There is an invalid account.<br>
+            Fail to find user by <a href="https://vsanbot.vdp.lvn.broadcom.net/api/v1/user?name=">API</a>. Please contact us.
+         </clr-control-error>
       </clr-input-container>
-      <div class="clr-subtext-wrapper" *ngIf="bugzillaAssigneeError.length > 0">
-         <clr-icon style="color:#c21d00; margin-top:3px;" shape="exclamation-circle"></clr-icon>
-         <clr-control-error style="color:#c21d00" class="clr-subtext">{{ bugzillaAssigneeError }}</clr-control-error>
-      </div>
    </div>
 
    <div *ngIf="reportSpec.reportType === 'perforce_checkin'">
@@ -179,12 +180,14 @@
          <label>Branches</label>
          <input clrInput type="text" style="width:300px;"
                 placeholder="E.g. bora/main"
-                [ngModelOptions]="{standalone: true}"
-                [(ngModel)]="perforceCheckinBranches"
-                required invalid_checkin_branch/>
-         <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
-         <clr-control-error *clrIfError="'invalid_checkin_branch'">Unsupported perforce checkin branches.</clr-control-error>
+                formControlName="perforceCheckinBranches"
+                (change)="changePerforceCheckinBranches($event)"
+                required/>
          <clr-control-helper>Currently we only support bora, scons and vsan-mgmt-ui projects, if you need to add more projects, please contact us.</clr-control-helper>
+         <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
+         <clr-control-error *clrIfError="'invalid_branch'">There is an invalid branch.<br>
+            Currently we only support bora, scons and vsan-mgmt-ui projects, if you need to add more projects, please contact us.
+         </clr-control-error>
       </clr-input-container>
    </div>
 
@@ -193,16 +196,16 @@
       <clr-textarea-container>
          <label>Text message</label>
          <textarea clrTextarea style="width:500px;height:150px;"
-                   [ngModelOptions]="{standalone: true}"
-                   [(ngModel)]="reportSpec.text"
                    name="plain_text"
+                   formControlName="textMessage"
+                   (change)="changeTextMessage($event)"
                    required></textarea>
          <clr-control-helper *ngIf="reportSpec.reportType === 'nanny_reminder'">
             @this-nanny/@next-nanny means mention current/next nanny. <br>
             this-nanny-full-name/next-nanny-full-name means current/next nanny full name without mention him(her). <br>
             For multiple nannys in one week, please use @this-nanny1, @this-nanny2, this-nanny-full-name1...
          </clr-control-helper>
-         <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
+         <clr-control-error>Please complete this required field.</clr-control-error>
       </clr-textarea-container>
    </div>
 
@@ -215,16 +218,16 @@
       <clr-input-container>
          <label>User(s) to be mentioned in notification</label>
          <input clrInput type="text" style="width:300px;"
-                placeholder="VMWare AD account"
-                [ngModelOptions]="{standalone: true}"
-                [(ngModel)]="mentionUsers"
+                placeholder="Broadcom email account. E.g. zhou.huang"
+                formControlName="mentionUsers"
                 (change)="changeMentionUsers($event)"/>
-         <clr-control-helper>Input VMWare AD accounts by format: user1, user2.</clr-control-helper>
+         <clr-control-helper>Input broadcom email accounts by format: user1, user2.</clr-control-helper>
+         <clr-control-error *clrIfError="'invalid_assignee'">There is an invalid account.<br>
+            Fail to find user by <a href="https://vsanbot.vdp.lvn.broadcom.net/api/v1/user?name=">API</a>. Please contact us.
+         </clr-control-error>
       </clr-input-container>
-      <div class="clr-subtext-wrapper" *ngIf="mentionUserError.length > 0">
-         <clr-icon style="color:#c21d00; margin-top:3px;" shape="exclamation-circle"></clr-icon>
-         <clr-control-error style="color:#c21d00" class="clr-subtext">{{ mentionUserError }}</clr-control-error>
-      </div>
+
+<!--      <p>Control status: {{ configForm.get('mentionUsers').status }}</p>-->
 
       <clr-checkbox-container *ngIf="checkSkipEmptyReport()">
          <clr-checkbox-wrapper>

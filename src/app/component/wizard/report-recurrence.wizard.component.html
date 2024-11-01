@@ -77,7 +77,6 @@
          <input clrInput type="text"
                 placeholder="MM"
                 formControlName="minutesOfHour"
-                [(ngModel)]="reportSpec.repeatConfig.minsOfHour"
                 (change)="changeMinutesOfPerHour($event)"
                 required invalid_minute/>
          <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
@@ -147,7 +146,6 @@
          <input clrInput type="text"
                 placeholder="DD"
                 formControlName="dayOfMonth"
-                [(ngModel)]="reportSpec.repeatConfig.dayOfMonth"
                 (change)="changeDayOfPerMonth($event)"
                 required invalid_day/>
          <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
@@ -160,7 +158,7 @@
          <input clrInput type="text"
                 placeholder="HH:MM"
                 formControlName="repeatTime"
-                [(ngModel)]="reportSpec.repeatConfig.time"
+                (change)="changeRepeatTime($event)"
                 required invalid_time/>
          <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
          <clr-control-error *clrIfError="'invalid_time'">It must follow the time format "HH:MM".</clr-control-error>
@@ -172,7 +170,7 @@
          <input clrInput type="text"
                 placeholder="E.g. 30 14 * * 2"
                 formControlName="cronExpression"
-                [(ngModel)]="reportSpec.repeatConfig.cronExpression"
+                (change)="changeCronExpression($event)"
                 required invalid_cron/>
          <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
          <clr-control-error *clrIfError="'invalid_cron'">Invalid cron expression.</clr-control-error>
@@ -190,7 +188,7 @@
          <input clrDate type="date"
                 autocomplete="off"
                 formControlName="startDate"
-                [(ngModel)]="reportSpec.repeatConfig.startDate"
+                (change)="changeStartDate($event)"
                 required/>
          <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
       </clr-date-container>
@@ -200,7 +198,7 @@
          <input clrDate type="date"
                 autocomplete="off"
                 formControlName="endDate"
-                [(ngModel)]="reportSpec.repeatConfig.endDate"
+                (change)="changeEndDate($event)"
                 invalid_end_day/>
          <clr-control-error *clrIfError="'invalid_end_day'">It should be greater than or equal to start date.</clr-control-error>
          <clr-control-helper>Select a date greater than or equal to start date.</clr-control-helper>

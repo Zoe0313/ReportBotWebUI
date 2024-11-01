@@ -39,9 +39,10 @@ class PerforceCheckinMembersFilter {
 
 export class PerforceCheckinSpec {
    branches: string[] = [];
-   needCheckinApproved: boolean = true;
-   membersFilters: PerforceCheckinMembersFilter[] = [];
    flattenMembers: string[] = [];
+   teams: string[] = [];
+   membersFilters: PerforceCheckinMembersFilter[] = [];
+   needCheckinApproved: boolean = true;
 }
 
 export class NannyReminderSpec {

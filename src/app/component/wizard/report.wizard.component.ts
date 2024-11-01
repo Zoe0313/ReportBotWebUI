@@ -126,7 +126,25 @@ export class ReportWizardComponent {
       this.resetData();
    }
 
-   doNext() {
+   getCurrentWizardPageTitle(): string | null {
+      return this.reportWizard.currentPage.id || null;
+   }
+
+   async doNext() {
+      this.alertMessages = [];
+
+      const title = this.getCurrentWizardPageTitle();
+      console.log('page:', title);
+      if (title === 'clr-wizard-page-basic') {
+
+      } else if (title === 'clr-wizard-page-recurrence') {
+
+      } else if (title == 'clr-wizard-page-nanny-duty') {
+
+      }
+      this.isValid = true;
+
+
       this.updateTimeSetting();
       this.reportWizard.forceNext();
    }

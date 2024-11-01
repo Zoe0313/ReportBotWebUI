@@ -50,7 +50,7 @@
                 }
               ],
               "optimization": true,
-              "outputHashing": "all",
+              "outputHashing": "none",
               "sourceMap": false,
               "extractCss": true,
               "namedChunks": false,
@@ -79,7 +79,7 @@
             "sync": {
                "index": "src/index.html",
                "optimization": false,
-               "outputPath": "/Users/rogerw/improved-vsan-svs/improved-vsan-svs/phonehome_mongodb/static",
+               "outputPath": "/Users/lzoe/Project/vSAN-Bot/server/src/static",
                "watch": true
             }
           }
