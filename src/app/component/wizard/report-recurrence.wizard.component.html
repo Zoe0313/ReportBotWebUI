@@ -62,6 +62,7 @@
       <h4 *ngIf="reportSpec.repeatConfig.repeatType == 'weekly'">Weekly notification setting</h4>
       <h4 *ngIf="reportSpec.repeatConfig.repeatType == 'monthly'">Monthly notification setting</h4>
       <h4 *ngIf="reportSpec.repeatConfig.repeatType == 'cron_expression'">Cron expression setting</h4>
+
       <clr-date-container *ngIf="reportSpec.repeatConfig.repeatType == 'not_repeat'">
          <label>Input date</label>
          <input clrDate type="date"
@@ -69,7 +70,7 @@
                 [ngModelOptions]="{standalone: true}"
                 [(ngModel)]="reportSpec.repeatConfig.date"
                 required/>
-         <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
+         <clr-control-error>Please complete this required field.</clr-control-error>
       </clr-date-container>
 
       <clr-input-container *ngIf="reportSpec.repeatConfig.repeatType == 'hourly'">
@@ -136,6 +137,7 @@
             <label>Sunday</label>
          </clr-checkbox-wrapper>
       </clr-checkbox-container>
+
       <div class="clr-subtext-wrapper" *ngIf="reportSpec.repeatConfig.dayOfWeek.length==0 && reportSpec.repeatConfig.repeatType == 'weekly'">
          <clr-icon style="color:#c21d00; margin-top:3px;" shape="exclamation-circle"></clr-icon>
          <clr-control-error style="color:#c21d00" class="clr-subtext">Please complete this required field.</clr-control-error>
@@ -147,22 +149,22 @@
                 placeholder="DD"
                 formControlName="dayOfMonth"
                 (change)="changeDayOfPerMonth($event)"
-                required invalid_day/>
+                required/>
          <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
          <clr-control-error *clrIfError="'invalid_day'">Please input a number: 1 - 31.</clr-control-error>
          <clr-control-helper>Valid input: 1 - 31, e.g. 21.</clr-control-helper>
       </clr-input-container>
 
-      <clr-input-container *ngIf="['not_repeat', 'daily', 'weekly', 'monthly'].includes(reportSpec.repeatConfig.repeatType)">
+      <clr-input-container *ngIf="needInputTime()">
          <label>Input time</label>
          <input clrInput type="text"
                 placeholder="HH:MM"
                 formControlName="repeatTime"
                 (change)="changeRepeatTime($event)"
-                required invalid_time/>
+                required/>
+         <clr-control-helper>Input a specific time, e.g. 14:25.</clr-control-helper>
          <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
          <clr-control-error *clrIfError="'invalid_time'">It must follow the time format "HH:MM".</clr-control-error>
-         <clr-control-helper>Input a specific time, e.g. 14:25.</clr-control-helper>
       </clr-input-container>
 
       <clr-input-container *ngIf="reportSpec.repeatConfig.repeatType == 'cron_expression'">

@@ -31,7 +31,6 @@ export class ReportBasicWizardComponent implements OnChanges {
    });
 
    ngOnChanges(changes: SimpleChanges) {
-      console.info(changes);
       const currentValue = changes.reportSpec.currentValue;
       const previousValue = changes.reportSpec.previousValue;
       if (typeof previousValue === 'undefined') {
@@ -145,8 +144,6 @@ export class ReportBasicWizardComponent implements OnChanges {
          this.configForm.get('mentionUsers').clearValidators();
       }
       this.configForm.get('mentionUsers').updateValueAndValidity();
-
-      console.log('Form valid status:', this.configForm.valid);
    }
 
    checkSkipEmptyReport() {
@@ -212,7 +209,6 @@ export class ReportBasicWizardComponent implements OnChanges {
                try {
                   const data = await this.fetchUser(assignee);
                   const account = data.mail.split('@')[0];
-                  console.info(account, assignee);
                   return account === assignee;
                } catch {
                   return false;

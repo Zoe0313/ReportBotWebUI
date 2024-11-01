@@ -26,25 +26,20 @@
          <ng-template clrPageTitle>Basic Configuration</ng-template>
          <app-wizard-basic-page #basicPage
                                 [reportSpec]="reportSpec"
-                                [webhooks]="webhooks"
-                                [mentionUsers]="mentionUsers"
-                                [bugzillaAssignees]="bugzillaAssignees"
-                                [perforceCheckinBranches]="perforceCheckinBranches"
                                 [action]="action">
          </app-wizard-basic-page>
       </clr-wizard-page>
 
       <clr-wizard-page
             id="recurrence"
-            [clrWizardPageNextDisabled]="!isValid"
+            [clrWizardPageNextDisabled]="!recurrencePage.recurrenceForm.valid"
             [clrWizardPagePreventDefaultNext]="true"
-            (clrWizardPageNext)="doRecurrenceNext()"
+            (clrWizardPageNext)="doNext()"
             [clrWizardPagePreventDefaultCancel]="true"
             (clrWizardPageOnCancel)="doCancel()">
          <ng-template clrPageTitle>Recurrence Configuration</ng-template>
          <app-wizard-recurrence-page #recurrencePage
-                                     [reportSpec]="reportSpec"
-                                     [weekChecked]="weekChecked">
+                                     [reportSpec]="reportSpec">
          </app-wizard-recurrence-page>
       </clr-wizard-page>
 

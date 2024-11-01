@@ -47,12 +47,6 @@ export class ReportWizardComponent {
    isValid = true;
    reportSpec: ReportConfiguration = new ReportConfiguration;
 
-   webhooks = '';
-   mentionUsers = '';
-   bugzillaAssignees = '';
-   perforceCheckinBranches = '';
-   weekChecked = [];
-
    init(action: string, spec?: ReportConfiguration) {
       this.action = action;
       this.reportWizard.reset();
@@ -65,40 +59,6 @@ export class ReportWizardComponent {
          this.wizardTitle = 'Edit Notification';
          this.reportSpec = spec;
       }
-      this.updateView();
-   }
-
-   updateView() {
-      console.log(this.reportSpec);
-      // basic page
-      if (this.reportSpec.webhooks.length>0) {
-         this.webhooks = this.reportSpec.webhooks.join(',');
-      } else {
-         this.webhooks = '';
-      }
-      if (this.reportSpec.mentionUsers.length>0) {
-         this.mentionUsers = this.reportSpec.mentionUsers.join(',');
-      } else {
-         this.mentionUsers = '';
-      }
-      if (this.reportSpec.bugzillaAssignee.bugzillaAssignees.length > 0) {
-         this.bugzillaAssignees = this.reportSpec.bugzillaAssignee.bugzillaAssignees.join(',');
-      } else {
-         this.bugzillaAssignees = '';
-      }
-      if (this.reportSpec.perforceCheckin.branches.length > 0) {
-         this.perforceCheckinBranches = this.reportSpec.perforceCheckin.branches.join(',');
-      } else {
-         this.perforceCheckinBranches = '';
-      }
-
-      // recurrence page
-      this.weekChecked = [];
-      for (let i=0; i<=6; i++) {
-         this.weekChecked[i] = this.reportSpec.repeatConfig.dayOfWeek.includes(i);
-      }
-      console.log('weekChecked:', this.weekChecked);
-
       this.cdRef.detectChanges();
    }
 
@@ -109,21 +69,12 @@ export class ReportWizardComponent {
       this.reportSpec.repeatConfig.nextSendTime = NextInvocation(repeatConfig);
    }
 
-   resetData() {
-      this.webhooks = '';
-      this.mentionUsers = '';
-      this.bugzillaAssignees = '';
-      this.perforceCheckinBranches = '';
-      this.weekChecked = [];
-      this.alertMessages = [];
-   }
-
    doCancel() {
       this.basicPage.configForm.reset();
       this.reportWizard.reset();
       this.reportWizard.previous();
       this.reportWizard.close();
-      this.resetData();
+      this.alertMessages = [];
    }
 
    getCurrentWizardPageTitle(): string | null {
@@ -138,7 +89,11 @@ export class ReportWizardComponent {
       if (title === 'clr-wizard-page-basic') {
 
       } else if (title === 'clr-wizard-page-recurrence') {
-
+          if (this.reportSpec.reportType === 'nanny_reminder' &&
+             this.reportSpec.nannyReminder.nannyAssignees.length == 0) {
+             this.reportSpec.nannyReminder.nannyAssignees.push('');
+             this.reportSpec.nannyReminder.nannyRosters = GetNannyRoster(this.reportSpec.repeatConfig, this.reportSpec.nannyReminder.nannyAssignees);
+          }
       } else if (title == 'clr-wizard-page-nanny-duty') {
 
       }
@@ -147,14 +102,6 @@ export class ReportWizardComponent {
 
       this.updateTimeSetting();
       this.reportWizard.forceNext();
-   }
-
-   doRecurrenceNext() {
-      if (this.reportSpec.reportType === 'nanny_reminder' && this.reportSpec.nannyReminder.nannyAssignees.length == 0) {
-         this.reportSpec.nannyReminder.nannyAssignees.push('');
-         this.reportSpec.nannyReminder.nannyRosters = GetNannyRoster(this.reportSpec.repeatConfig, this.reportSpec.nannyReminder.nannyAssignees);
-      }
-      this.doNext();
    }
 
    doFinish() {
