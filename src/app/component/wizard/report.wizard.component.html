@@ -46,7 +46,7 @@
       <clr-wizard-page
             id="nanny-duty"
             *ngIf="reportSpec.reportType === 'nanny_reminder'"
-            [clrWizardPageNextDisabled]="!isValid"
+            [clrWizardPageNextDisabled]="!nannyRosterPage.nannyForm.valid"
             [clrWizardPagePreventDefaultNext]="true"
             (clrWizardPageNext)="doNext()"
             [clrWizardPagePreventDefaultCancel]="true"
@@ -59,23 +59,22 @@
 
       <clr-wizard-page
             id="overview"
-            [clrWizardPageNextDisabled]="!isValid"
+            [clrWizardPageNextDisabled]="false"
             [clrWizardPagePreventDefaultNext]="true"
             (clrWizardPageOnCommit)="doFinish()"
             [clrWizardPagePreventDefaultCancel]="true"
             (clrWizardPageOnCancel)="doCancel()">
          <ng-template clrPageTitle>Notification Configuration Overview</ng-template>
          <ng-template clrPageNavTitle>
-            <span *ngIf="isValid">Ready to go!</span>
-            <span *ngIf="!isValid">Not ready yet</span>
+            <span *ngIf="alertMessages.length==0">Ready to go!</span>
+            <span *ngIf="alertMessages.length>0">Not ready yet</span>
          </ng-template>
          <div *ngIf="loading" class="spinner-line">
             <span class="spinner spinner-inline">Loading...</span>
             <span>Submitting report configuration...</span>
          </div>
          <app-wizard-overview-page #overviewPage
-                                   [reportSpec]="reportSpec"
-                                   [isValid]="isValid">
+                                   [reportSpec]="reportSpec">
          </app-wizard-overview-page>
       </clr-wizard-page>
 

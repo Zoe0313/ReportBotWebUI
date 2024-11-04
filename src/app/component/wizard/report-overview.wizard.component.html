@@ -1,4 +1,4 @@
-<div *ngIf="isValid">
+<div>
    <h3>Congratulations! You are done with this notification configuration.</h3>
 
    <section class="overview">
@@ -62,7 +62,6 @@
               </tr>
            </tbody>
          </table>
-         <span *ngIf="reportSpec.nannyReminder.nannyRosters.length === 0">Error: Not configure the nanny roster.</span>
       </div>
       <div *ngIf="reportSpec.mentionUsers.length > 0">
          <label>Mention user(s):</label>

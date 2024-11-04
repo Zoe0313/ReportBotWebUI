@@ -1,37 +1,89 @@
 <form clrForm [formGroup]="nannyForm">
+   <h4>Give this duty roster an alias</h4>
    <clr-input-container>
-      <label>Input nanny code</label>
+      <label>Nanny alias</label>
       <input clrInput type="text"
              placeholder="E.g. vsanfs for vSANFS nanny"
              formControlName="nannyCode"
-             [(ngModel)]="reportSpec.nannyReminder.nannyCode"
+             (change)="changeNannyCode($event)"
              required/>
-      <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
+      <clr-control-error>Please complete this required field.</clr-control-error>
       <clr-control-helper>
-         This code will be used in querying nanny list by API.
-         E.g. This <a href="https://vsanbot.vdp.oc.vmware.com/api/v1/nanny?code=vsanfs">API</a> for vSANFS nanny.
+         This alias will be used in querying nanny list by API.<br>
+         E.g. This <a href="https://vsanbot.vdp.lvn.broadcom.net/api/v1/nanny?code=vsanfs">API</a> for vSANFS nanny.
       </clr-control-helper>
    </clr-input-container>
+
+   <h4>Please edit the personnel for this duty roster</h4>
+   <div class="helper-text">
+      The number of nanny roster should be greater than 1.
+      If there are multiple assignees per week, separate them with commas.
+   </div>
+   <clr-datagrid>
+      <clr-dg-column>Time Range</clr-dg-column>
+      <clr-dg-column>Nanny Assignee</clr-dg-column>
+      <clr-dg-column>Actions</clr-dg-column>
+
+      <clr-dg-row *ngFor="let roster of reportSpec.nannyReminder.nannyRosters; let i = index">
+         <clr-dg-cell class="nanny-datagrid-cell">
+            {{ roster.start }}
+            <span *ngIf="roster.end.length > 0">-- {{ roster.end }}</span>
+         </clr-dg-cell>
+
+         <clr-dg-cell class="nanny-datagrid-cell">
+            <input class="clr-input" type="text"
+               [(ngModel)]="roster.nanny"
+               [ngModelOptions]="{standalone: true}"
+               (change)="changeNanny(i)"
+               #nannyInput="ngModel"
+               required/>
+            <ng-container *ngIf="nannyInput.invalid">
+               <clr-icon shape="exclamation-circle" class="custom-validate-icon" role="none" style=""></clr-icon>
+            </ng-container>
+         </clr-dg-cell>
+
+         <clr-dg-cell class="nanny-datagrid-cell">
+            <button class="btn btn-success-outline btn-sm" (click)="addNanny(i)">Add</button>
+            <ng-container *ngIf="reportSpec.nannyReminder.nannyRosters.length > 1">
+               <button class="btn btn-danger-outline btn-sm" (click)="removeNanny(i)">Delete</button>
+            </ng-container>
+         </clr-dg-cell>
+      </clr-dg-row>
+
+      <clr-dg-footer>
+         {{ reportSpec.nannyReminder.nannyRosters.length }} nannys
+      </clr-dg-footer>
+   </clr-datagrid>
 </form>
 
+<!--<clr-stack-view>-->
+<!--   <clr-stack-header>-->
 
+<!--      <div class="helper-text">-->
+<!--         The number of nanny roster should be greater than 1.-->
+<!--         If there are multiple assignees per week, separate them with commas.-->
+<!--      </div>-->
+<!--   </clr-stack-header>-->
 
-<clr-stack-view>
-   <clr-stack-header>
-      Please edit the nanny duty roster:
-      <div class="helper-text">
-         The number of nanny roster should be greater than 1.
-         If there are multiple assignees per week, separate them with commas.
-      </div>
-   </clr-stack-header>
-
-   <clr-stack-block *ngFor="let roster of reportSpec.nannyReminder.nannyRosters; let i = index" [clrStackViewLevel]="1">
-      <clr-stack-label>{{ roster.start }}</clr-stack-label>
-      <clr-stack-label *ngIf="roster.end.length>0"> -- {{ roster.end }}</clr-stack-label>
-      <clr-stack-content>
-         <input type="text" [(ngModel)]="roster.nanny" class="clr-input" (change)="changeNanny(i)"/>
-         <clr-icon shape="plus" size="24" (click)="addNanny(i)" style="color:#55b109;"></clr-icon>
-         <clr-icon shape="times" size="24" (click)="removeNanny(i)" style="color:#ff2121;" [disabled]="reportSpec.nannyReminder.nannyRosters.length == 1"></clr-icon>
-      </clr-stack-content>
-   </clr-stack-block>
-</clr-stack-view>
+<!--   <clr-stack-block *ngFor="let roster of reportSpec.nannyReminder.nannyRosters; let i = index" [clrStackViewLevel]="1">-->
+<!--      <clr-stack-label>{{ roster.start }}</clr-stack-label>-->
+<!--      <clr-stack-label *ngIf="roster.end.length > 0"> &#45;&#45; {{ roster.end }}</clr-stack-label>-->
+<!--      <clr-stack-content>-->
+<!--         <input class="clr-input" type="text"-->
+<!--            [(ngModel)]="roster.nanny"-->
+<!--            (change)="changeNanny(i)"-->
+<!--            #nannyInput="ngModel"-->
+<!--            required/>-->
+<!--         <ng-container *ngIf="nannyInput.invalid && nannyInput.touched">-->
+<!--            <clr-icon shape="exclamation-circle" class="custom-validate-icon" role="none" style=""></clr-icon>-->
+<!--         </ng-container>-->
+<!--         <button class="btn btn-success-outline btn-sm" (click)="addNanny(i)">Add</button>-->
+<!--         <ng-container *ngIf="reportSpec.nannyReminder.nannyRosters.length > 1">-->
+<!--            <button class="btn btn-danger-outline btn-sm" (click)="removeNanny(i)">Delete</button>-->
+<!--         </ng-container>-->
+<!--         <div class="clr-control-error custom-error" *ngIf="nannyInput.invalid && nannyInput.touched">-->
+<!--            Please complete this required field.-->
+<!--         </div>-->
+<!--      </clr-stack-content>-->
+<!--   </clr-stack-block>-->
+<!--</clr-stack-view>-->

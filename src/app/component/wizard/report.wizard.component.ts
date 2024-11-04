@@ -44,7 +44,6 @@ export class ReportWizardComponent {
    alertMessages = [];
    loading = false;
    wizardTitle = '';
-   isValid = true;
    reportSpec: ReportConfiguration = new ReportConfiguration;
 
    init(action: string, spec?: ReportConfiguration) {
@@ -97,9 +96,6 @@ export class ReportWizardComponent {
       } else if (title == 'clr-wizard-page-nanny-duty') {
 
       }
-      this.isValid = true;
-
-
       this.updateTimeSetting();
       this.reportWizard.forceNext();
    }

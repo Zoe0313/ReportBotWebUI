@@ -27,7 +27,6 @@ export class ReportRecurrenceWizardComponent implements OnChanges {
    });
 
    ngOnChanges(changes: SimpleChanges) {
-      console.info(changes);
       const currentValue = changes.reportSpec.currentValue;
       const previousValue = changes.reportSpec.previousValue;
       if (typeof previousValue === 'undefined') {

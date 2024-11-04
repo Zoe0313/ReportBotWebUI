@@ -9,7 +9,6 @@ import { ReportConfiguration } from '../../model/report.model';
 
 export class ReportOverviewWizardComponent {
    @Input() reportSpec: ReportConfiguration;
-   @Input() isValid: boolean;
 
    checkSkipEmptyReport() {
       return this.reportSpec.reportType === 'bugzilla' ||
