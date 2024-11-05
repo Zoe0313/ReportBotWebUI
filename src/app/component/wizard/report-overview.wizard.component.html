@@ -45,7 +45,7 @@
             {{ assignee }}
          </span>
       </div>
-      <div>
+      <div *ngIf="reportSpec.reportType === 'nanny_reminder'">
          <label>Nanny roster:</label>
          <table class="table" style="width:60%;" *ngIf="reportSpec.nannyReminder.nannyRosters.length > 0">
            <thead>
@@ -69,16 +69,16 @@
             {{ branch }}
          </span>
       </div>
-      <div>
+      <div *ngIf="reportSpec.reportType === 'perforce_checkin'">
          <label>Perforce checkin member scope:</label>
          <div *ngIf="reportSpec.perforceCheckin.teams.length > 0">
-            <label>Team Group</label>
+            <label>&nbsp;&nbsp;Team Group</label>
             <span *ngFor="let team of reportSpec.perforceCheckin.teams">
                {{ team }}
             </span>
          </div>
          <div *ngFor="let filter of reportSpec.perforceCheckin.membersFilters; let i=index">
-            <label>Member Filter {{ i+1 }}:</label>
+            <span>&nbsp;&nbsp;Member filter {{ i+1 }}:</span>
             <span *ngIf="filter.condition == 'include'">Include</span>
             <span *ngIf="filter.condition == 'exclude'">Exclude</span>
             <span *ngIf="filter.type == 'selected'"> selected users: {{ filter.members.join(', ') }}</span>
