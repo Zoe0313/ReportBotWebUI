@@ -31,7 +31,7 @@ export class BugzillaAssigneeSpec {
    bugzillaAssignees: string[] = [];
 }
 
-class PerforceCheckinMembersFilter {
+export class PerforceCheckinMembersFilter {
    members: string[] = [];
    condition: string = 'include';// include, exclude
    type: string = 'selected';// selected, direct_reporters, all_reporters

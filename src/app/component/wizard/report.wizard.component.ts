@@ -3,8 +3,9 @@ import { ClrWizard, ClrWizardPage } from '@clr/angular';
 import { combineLatest } from 'rxjs';
 import { ReportConfiguration } from '../../model/report.model';
 import { ReportBasicWizardComponent } from './report-basic.wizard.component';
-import { ReportNannyRosterWizardComponent } from './report-nanny-roster.wizard.component';
 import { ReportRecurrenceWizardComponent } from './report-recurrence.wizard.component';
+import { ReportPerforceWizardComponent } from './report-perforce.wizard.component';
+import { ReportNannyRosterWizardComponent } from './report-nanny-roster.wizard.component';
 import { ReportOverviewWizardComponent } from './report-overview.wizard.component';
 import { FormatDate, DisplayTimeSetting, NextInvocation, DeepCopy, GetNannyRoster } from '../../service/utils'
 import { ReportsService } from '../../service/reports.service';
@@ -35,6 +36,8 @@ export class ReportWizardComponent {
    basicPage: ReportBasicWizardComponent;
    @ViewChild('recurrencePage', { static: true })
    recurrencePage: ReportRecurrenceWizardComponent;
+   @ViewChild('perforcePage', { static: true })
+   perforcePage: ReportPerforceWizardComponent;
    @ViewChild('nannyRosterPage', { static: true })
    nannyRosterPage: ReportNannyRosterWizardComponent;
    @ViewChild('overviewPage', { static: true })
@@ -76,14 +79,10 @@ export class ReportWizardComponent {
       this.alertMessages = [];
    }
 
-   getCurrentWizardPageTitle(): string | null {
-      return this.reportWizard.currentPage.id || null;
-   }
-
    async doNext() {
       this.alertMessages = [];
 
-      const title = this.getCurrentWizardPageTitle();
+      const title = this.reportWizard.currentPage.id || null;
       console.log('page:', title);
       if (title === 'clr-wizard-page-basic') {
 
@@ -94,6 +93,8 @@ export class ReportWizardComponent {
              this.reportSpec.nannyReminder.nannyRosters = GetNannyRoster(this.reportSpec.repeatConfig, this.reportSpec.nannyReminder.nannyAssignees);
           }
       } else if (title == 'clr-wizard-page-nanny-duty') {
+
+      } else if (title == 'clr-wizard-page-perforce-checkin') {
 
       }
       this.updateTimeSetting();
@@ -141,7 +142,6 @@ export class ReportWizardComponent {
       delete reqData.repeatConfig.nextSendTime;
       if (this.action === 'create') {
          this.loading = true;
-         reqData.vmwareId = this.config.userName;
          reqData.status = 'ENABLED';
          this.service.createReport(JSON.stringify(reqData)).subscribe(
             result => {

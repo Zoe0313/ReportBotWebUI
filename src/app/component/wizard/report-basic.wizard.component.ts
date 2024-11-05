@@ -26,8 +26,7 @@ export class ReportBasicWizardComponent implements OnChanges {
 
       bugzillaLink: new FormControl('', []),
       bugzillaAssignees: new FormControl('', [], []),
-      textMessage: new FormControl('', []),
-      p4CheckinBranches: new FormControl('', [], [])
+      textMessage: new FormControl('', [])
    });
 
    ngOnChanges(changes: SimpleChanges) {
@@ -63,15 +62,6 @@ export class ReportBasicWizardComponent implements OnChanges {
          this.configForm.get('bugzillaAssignees').clearValidators();
       }
       this.configForm.get('bugzillaAssignees').updateValueAndValidity();
-      // perforce_checkin
-      if (currentValue.reportType === 'perforce_checkin') {
-         this.configForm.get('p4CheckinBranches').setValue(currentValue.perforceCheckin.branches.join(','));
-         this.configForm.get('p4CheckinBranches').setValidators([Validators.required]);
-         this.configForm.get('p4CheckinBranches').setAsyncValidators([this.p4CheckinBranchesValidator()]);
-      } else {
-         this.configForm.get('p4CheckinBranches').clearValidators();
-      }
-      this.configForm.get('p4CheckinBranches').updateValueAndValidity();
       // others
       if (['text', 'nanny_reminder'].includes(currentValue.reportType)) {
          this.configForm.get('textMessage').setValue(currentValue.text);
@@ -119,12 +109,6 @@ export class ReportBasicWizardComponent implements OnChanges {
       const input = event.target as HTMLInputElement;
       this.reportSpec.bugzillaAssignee.bugzillaAssignees = input.value ? input.value.split(',').map(user => user.trim()) : [];
       console.log('change bugzilla assignees:', this.reportSpec.bugzillaAssignee.bugzillaAssignees);
-   }
-
-   changePerforceCheckinBranches(event: Event) { // required & validate in perforce_checkin
-      const input = event.target as HTMLInputElement;
-      this.reportSpec.perforceCheckin.branches = input.value ? input.value.split(',').map(branch => branch.trim()) : [];
-      console.log('change perforce checkin branches:', this.reportSpec.perforceCheckin.branches);
    }
 
    changeTextMessage(event: Event) { // required in nanny_reminder & text
@@ -220,31 +204,6 @@ export class ReportBasicWizardComponent implements OnChanges {
       };
    }
 
-   p4CheckinBranchesValidator(): AsyncValidatorFn {
-      return async (control: AbstractControl): Promise<ValidationErrors | null> => {
-         const value = control.value;
-         if (!value) {
-            return null;
-         }
-         const branches = value.split(',').map(branch => branch.trim());
-         if (branches.length === 0) {
-            return null;
-         }
-         const branchValidations = await Promise.all(
-            this.reportSpec.perforceCheckin.branches.map(async branch =>{
-               try {
-                  const data = await this.fetchP4Branch(branch);
-                  return data.includes(branch);
-               } catch {
-                  return false;
-               }
-            })
-         );
-         const isValid = branchValidations.every(validation => validation === true);
-         return isValid ? null : { invalid_branch: true };
-      };
-   }
-
    async fetchUser(user: string): Promise<any> {
       try {
          const response = await this.service.getUserInfo(user);
@@ -254,15 +213,4 @@ export class ReportBasicWizardComponent implements OnChanges {
          throw new Error('Fail to fetch user info');
       }
    }
-
-   async fetchP4Branch(branch: string): Promise<any> {
-      try {
-         const response = await this.service.getPerforceBranches(branch);
-         if (!response) throw new Error('No response data.');
-         return response;
-      } catch {
-         throw new Error('Fail to fetch perforce checkin branches');
-      }
-   }
-
 }

@@ -44,6 +44,20 @@
       </clr-wizard-page>
 
       <clr-wizard-page
+            id="perforce-checkin"
+            *ngIf="reportSpec.reportType === 'perforce_checkin'"
+            [clrWizardPageNextDisabled]="!perforcePage.perforceForm.valid"
+            [clrWizardPagePreventDefaultNext]="true"
+            (clrWizardPageNext)="doNext()"
+            [clrWizardPagePreventDefaultCancel]="true"
+            (clrWizardPageOnCancel)="doCancel()">
+         <ng-template clrPageTitle>Perforce Checkin Configuration</ng-template>
+         <app-wizard-perforce-page #perforcePage
+                                   [reportSpec]="reportSpec">
+         </app-wizard-perforce-page>
+      </clr-wizard-page>
+
+      <clr-wizard-page
             id="nanny-duty"
             *ngIf="reportSpec.reportType === 'nanny_reminder'"
             [clrWizardPageNextDisabled]="!nannyRosterPage.nannyForm.valid"

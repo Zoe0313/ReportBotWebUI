@@ -174,23 +174,6 @@
       </clr-input-container>
    </div>
 
-   <div *ngIf="reportSpec.reportType === 'perforce_checkin'">
-      <h4>Input checkin projects and branches</h4>
-      <clr-input-container>
-         <label>Branches</label>
-         <input clrInput type="text" style="width:300px;"
-                placeholder="E.g. bora/main"
-                formControlName="perforceCheckinBranches"
-                (change)="changePerforceCheckinBranches($event)"
-                required/>
-         <clr-control-helper>Currently we only support bora, scons and vsan-mgmt-ui projects, if you need to add more projects, please contact us.</clr-control-helper>
-         <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
-         <clr-control-error *clrIfError="'invalid_branch'">There is an invalid branch.<br>
-            Currently we only support bora, scons and vsan-mgmt-ui projects, if you need to add more projects, please contact us.
-         </clr-control-error>
-      </clr-input-container>
-   </div>
-
    <div *ngIf="reportSpec.reportType === 'text' || reportSpec.reportType === 'nanny_reminder'">
       <h4>Input plain text message</h4>
       <clr-textarea-container>
@@ -216,7 +199,7 @@
    <div>
       <h4>Advanced options</h4>
       <clr-input-container>
-         <label>User(s) to be mentioned in notification</label>
+         <label>User(s) to be mentioned in notification<span class="label label-info">optional</span></label>
          <input clrInput type="text" style="width:300px;"
                 placeholder="Broadcom email account. E.g. zhou.huang"
                 formControlName="mentionUsers"
@@ -235,7 +218,7 @@
                    name="skipEmptyReport"
                    [(ngModel)]="reportSpec.skipEmptyReport"
                    [ngModelOptions]="{standalone: true}"/>
-            <label>Skip report if no bug/change found</label>
+            <label>Skip report if no bug/change found<span class="label label-info">optional</span></label>
          </clr-checkbox-wrapper>
          <clr-control-helper *ngIf="reportSpec.skipEmptyReport">If choose Yes, you won't receive notification when no bug or changes.</clr-control-helper>
          <clr-control-helper *ngIf="!reportSpec.skipEmptyReport">If choose No, you will still receive notification when no bug or changes.</clr-control-helper>

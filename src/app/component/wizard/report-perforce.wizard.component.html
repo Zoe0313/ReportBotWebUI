@@ -1,0 +1,101 @@
+<form clrForm [formGroup]="perforceForm">
+   <clr-input-container>
+      <label>Input branches</label>
+      <input clrInput type="text" style="width:300px;"
+             placeholder="E.g. bora/main"
+             formControlName="p4CheckinBranches"
+             (change)="changePerforceCheckinBranches($event)"
+             required/>
+      <clr-control-helper>Currently we only support bora, scons and vsan-mgmt-ui projects, if you need to add more projects, please contact us.</clr-control-helper>
+      <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
+      <clr-control-error *clrIfError="'invalid_branch'">There is an invalid branch.<br>
+         Currently we only support bora, scons and vsan-mgmt-ui projects, if you need to add more projects, please contact us.
+      </clr-control-error>
+   </clr-input-container>
+
+   <clr-input-container>
+      <label>Team group <span class="label label-info">optional</span></label>
+      <input clrInput type="text"
+             placeholder="E.g. vsan-all"
+             formControlName="teams"
+             (change)="changeTeamGroup($event)"/>
+      <clr-control-helper>Currently we only support vsan-all,vsan-dev,figo-all,figo-dev team codes, if you need to add more teams, please contact us.</clr-control-helper>
+      <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
+      <clr-control-error *clrIfError="'invalid_team_code'">There is an invalid team code.<br>
+         Currently we only support vsan-all,vsan-dev,figo-all,figo-dev team codes, if you need to add more teams, please contact us.
+      </clr-control-error>
+   </clr-input-container>
+
+   <h4>Add member filters to restrict teammates to be reported</h4>
+   <div style="display: flex;justify-content: flex-end;">
+      <button type="button" (click)="addMemberFilter()" class="btn btn-icon btn-info-outline">
+         <clr-icon shape="plus"></clr-icon>Add member filter
+      </button>
+   </div>
+
+   <div class="clr-row">
+      <div class="clr-col-lg-6 clr-col-12" *ngFor="let filter of reportSpec.perforceCheckin.membersFilters; let i=index">
+         <div class="card">
+            <div class="card-header">Member Filter {{ i+1 }}</div>
+            <div class="card-block">
+               <clr-control-container>
+                  <clr-input-container>
+                     <label>Members</label>
+                     <input clrInput type="text" style="margin-right: 16px;"
+                            placeholder="Broadcom okta ID"
+                            [(ngModel)]="filterMembers[i]" [ngModelOptions]="{standalone: true}"
+                            (change)="changeMembers(i, $event)" required/>
+                     <clr-control-helper>Input broadcom okta ID by format: user1, user2.</clr-control-helper>
+                     <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
+                     <clr-control-error *clrIfError="'invalid_assignee'">There is an invalid account.<br>
+                        Fail to find user by <a href="https://vsanbot.vdp.lvn.broadcom.net/api/v1/user?name=">API</a>. Please contact us.
+                     </clr-control-error>
+                  </clr-input-container>
+               </clr-control-container>
+
+               <clr-select-container>
+                  <label>Condition</label>
+                  <select clrSelect style="margin-right: 16px;"
+                          [(ngModel)]="filter.condition" [ngModelOptions]="{standalone: true}"
+                          (change)="changeCondition(i, $event)" required>
+                     <option value="include">Include</option>
+                     <option value="exclude">Exclude</option>
+                  </select>
+                 <clr-control-helper>Include or exclude the members.</clr-control-helper>
+                 <clr-control-error>Please complete this required field.</clr-control-error>
+               </clr-select-container>
+
+               <clr-select-container>
+                  <label>Type</label>
+                  <select clrSelect style="margin-right: 16px;"
+                          [(ngModel)]="filter.type" [ngModelOptions]="{standalone: true}"
+                          (change)="changeType(i, $event)" required>
+                     <option value="selected">Only selected users</option>
+                     <option value="direct_reporters">Direct reporters of users</option>
+                     <option value="all_reporters">All reporters of users</option>
+                  </select>
+                 <clr-control-helper>The report type of the members.</clr-control-helper>
+                 <clr-control-error>Please complete this required field.</clr-control-error>
+               </clr-select-container>
+            </div>
+            <div class="card-footer">
+               <button class="btn btn-sm btn-link" (click)="removeMemberFilter(i)">Delete this member filter</button>
+            </div>
+         </div>
+      </div>
+   </div>
+
+
+   <clr-checkbox-container>
+      <clr-checkbox-wrapper>
+         <input type="checkbox" clrCheckbox
+                name="needCheckinApproved"
+                [(ngModel)]="reportSpec.perforceCheckin.needCheckinApproved"
+                [ngModelOptions]="{standalone: true}"/>
+         <label>Need checkin approved info or not</label>
+      </clr-checkbox-wrapper>
+      <clr-control-helper *ngIf="reportSpec.perforceCheckin.needCheckinApproved">If choose Yes, the report will be divided into two parts: "With Approval" and "Without Approval".</clr-control-helper>
+      <clr-control-helper *ngIf="!reportSpec.perforceCheckin.needCheckinApproved">If choose No, the report you receive will not be divided based on check-in approved status.</clr-control-helper>
+   </clr-checkbox-container>
+
+</form>
