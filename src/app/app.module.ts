@@ -17,9 +17,6 @@ import { ReportRecurrenceWizardComponent } from './component/wizard/report-recur
 import { ReportPerforceWizardComponent } from './component/wizard/report-perforce.wizard.component';
 import { ReportNannyRosterWizardComponent } from './component/wizard/report-nanny-roster.wizard.component';
 import { ReportOverviewWizardComponent } from './component/wizard/report-overview.wizard.component';
-
-import { ProfileEditorComponent } from './component/profile-editor.component';
-
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 
@@ -35,8 +32,7 @@ registerLocaleData(localeFr);
       ReportRecurrenceWizardComponent,
       ReportPerforceWizardComponent,
       ReportNannyRosterWizardComponent,
-      ReportOverviewWizardComponent,
-      ProfileEditorComponent
+      ReportOverviewWizardComponent
    ],
    imports: [
       BrowserModule,

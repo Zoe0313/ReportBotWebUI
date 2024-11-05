@@ -45,17 +45,21 @@ export class ReportBasicWizardComponent implements OnChanges {
          this.configForm.get('mentionUsers').clearValidators();
       }
       this.configForm.get('mentionUsers').updateValueAndValidity();
+      this.updateValidator(currentValue.reportType);
+   }
+
+   updateValidator(reportType) {
       // bugzilla
-      if (currentValue.reportType === 'bugzilla') {
-         this.configForm.get('bugzillaLink').setValue(currentValue.bugzilla.bugzillaLink);
+      if (reportType === 'bugzilla') {
+         this.configForm.get('bugzillaLink').setValue(this.reportSpec.bugzilla.bugzillaLink);
          this.configForm.get('bugzillaLink').setValidators([Validators.required, this.bugzillaLinkValidator()]);
       } else {
          this.configForm.get('bugzillaLink').clearValidators();
       }
       this.configForm.get('bugzillaLink').updateValueAndValidity();
       // bugzilla_by_assignee
-      if (currentValue.reportType === 'bugzilla_by_assignee') {
-         this.configForm.get('bugzillaAssignees').setValue(currentValue.bugzillaAssignee.bugzillaAssignees.join(','));
+      if (reportType === 'bugzilla_by_assignee') {
+         this.configForm.get('bugzillaAssignees').setValue(this.reportSpec.bugzillaAssignee.bugzillaAssignees.join(','));
          this.configForm.get('bugzillaAssignees').setValidators([Validators.required]);
          this.configForm.get('bugzillaAssignees').setAsyncValidators([this.assigneesValidator()]);
       } else {
@@ -63,13 +67,17 @@ export class ReportBasicWizardComponent implements OnChanges {
       }
       this.configForm.get('bugzillaAssignees').updateValueAndValidity();
       // others
-      if (['text', 'nanny_reminder'].includes(currentValue.reportType)) {
-         this.configForm.get('textMessage').setValue(currentValue.text);
+      if (['text', 'nanny_reminder'].includes(reportType)) {
+         this.configForm.get('textMessage').setValue(this.reportSpec.text);
          this.configForm.get('textMessage').setValidators([Validators.required]);
       } else {
          this.configForm.get('textMessage').clearValidators();
       }
       this.configForm.get('textMessage').updateValueAndValidity();
+   }
+
+   changeReportType(event: Event) {
+      this.updateValidator(this.reportSpec.reportType);
    }
 
    changeTitle(event: Event) { // required

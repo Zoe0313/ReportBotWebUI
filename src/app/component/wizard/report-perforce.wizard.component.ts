@@ -20,15 +20,16 @@ export class ReportPerforceWizardComponent implements OnChanges {
    filterMembers = [];
 
    perforceForm = new FormGroup({
-      p4CheckinBranches: new FormControl('', [Validators.required], [this.p4CheckinBranchesValidator()]),
+      branches: new FormControl('', [Validators.required], [this.branchesValidator()]),
       teams: new FormControl('', [], [this.teamGroupValidator()]),
    });
 
    ngOnChanges(changes: SimpleChanges) {
       console.log('perforce changes', changes);
-      const p4Checkin = this.reportSpec.perforceCheckin;
-      this.perforceForm.get('p4CheckinBranches').setValue(p4Checkin.branches.join(','));
-      this.filterMembers = this.reportSpec.perforceCheckin.membersFilters.map(filter => {
+      const checkinDatas = this.reportSpec.perforceCheckin;
+      this.perforceForm.get('branches').setValue(checkinDatas.branches.join(','));
+      this.perforceForm.get('teams').setValue(checkinDatas.teams.join(','));
+      this.filterMembers = checkinDatas.membersFilters.map(filter => {
          return filter.members.join(',');
       });
    }
@@ -94,10 +95,10 @@ export class ReportPerforceWizardComponent implements OnChanges {
             return null;
          }
          const teamValidations = await Promise.all(
-            this.reportSpec.perforceCheckin.teams.map(async team =>{
+            teams.map(async team =>{
                try {
-                  console.info('fetch team group:', team);
-                  await this.fetchTeamGroup(team);
+                  const teamMembers = await this.fetchTeamGroup(team);
+                  console.info('fetch team group:', team, teamMembers.length);
                   return true;
                } catch {
                   return false;
@@ -109,7 +110,7 @@ export class ReportPerforceWizardComponent implements OnChanges {
       };
    }
 
-   p4CheckinBranchesValidator(): AsyncValidatorFn {
+   branchesValidator(): AsyncValidatorFn {
       return async (control: AbstractControl): Promise<ValidationErrors | null> => {
          const value = control.value;
          if (!value) {
@@ -120,7 +121,7 @@ export class ReportPerforceWizardComponent implements OnChanges {
             return null;
          }
          const branchValidations = await Promise.all(
-            this.reportSpec.perforceCheckin.branches.map(async branch =>{
+            branches.map(async branch =>{
                try {
                   const data = await this.fetchP4Branch(branch);
                   return data.includes(branch);
@@ -146,7 +147,7 @@ export class ReportPerforceWizardComponent implements OnChanges {
 
    async fetchTeamGroup(teamCode: string): Promise<any> {
       try {
-         const response = await this.service.getTeamMembersByCode(teamCode);
+         const response = await this.service.getTeamGroupMembers(teamCode);
          if (!response) throw new Error('No response data.');
          return response;
       } catch {

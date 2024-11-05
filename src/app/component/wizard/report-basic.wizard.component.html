@@ -7,35 +7,40 @@
                <input clrRadio type="radio"
                       value="bugzilla"
                       [(ngModel)]="reportSpec.reportType"
-                      [ngModelOptions]="{standalone: true}"/>
+                      [ngModelOptions]="{standalone: true}"
+                      (change)="changeReportType($event)"/>
                <label>Bugzilla</label>
             </clr-radio-wrapper>
             <clr-radio-wrapper>
                <input clrRadio type="radio"
                       value="bugzilla_by_assignee"
                       [(ngModel)]="reportSpec.reportType"
-                      [ngModelOptions]="{standalone: true}"/>
+                      [ngModelOptions]="{standalone: true}"
+                      (change)="changeReportType($event)"/>
                <label>Bugzilla by assignee</label>
             </clr-radio-wrapper>
             <clr-radio-wrapper>
                <input clrRadio type="radio"
                       value="nanny_reminder"
                       [(ngModel)]="reportSpec.reportType"
-                      [ngModelOptions]="{standalone: true}"/>
+                      [ngModelOptions]="{standalone: true}"
+                      (change)="changeReportType($event)"/>
                <label>Nanny reminder</label>
             </clr-radio-wrapper>
             <clr-radio-wrapper>
                <input clrRadio type="radio"
                       value="text"
                       [(ngModel)]="reportSpec.reportType"
-                      [ngModelOptions]="{standalone: true}"/>
+                      [ngModelOptions]="{standalone: true}"
+                      (change)="changeReportType($event)"/>
                <label>Plain text</label>
             </clr-radio-wrapper>
             <clr-radio-wrapper>
                <input clrRadio type="radio"
                       value="perforce_checkin"
                       [(ngModel)]="reportSpec.reportType"
-                      [ngModelOptions]="{standalone: true}"/>
+                      [ngModelOptions]="{standalone: true}"
+                      (change)="changeReportType($event)"/>
                <label>Perforce branch checkin</label>
             </clr-radio-wrapper>
             <clr-control-error>Please complete this required field.</clr-control-error>

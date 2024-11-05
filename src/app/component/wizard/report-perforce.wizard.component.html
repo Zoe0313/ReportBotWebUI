@@ -3,7 +3,7 @@
       <label>Input branches</label>
       <input clrInput type="text" style="width:300px;"
              placeholder="E.g. bora/main"
-             formControlName="p4CheckinBranches"
+             formControlName="branches"
              (change)="changePerforceCheckinBranches($event)"
              required/>
       <clr-control-helper>Currently we only support bora, scons and vsan-mgmt-ui projects, if you need to add more projects, please contact us.</clr-control-helper>

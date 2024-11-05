@@ -45,7 +45,7 @@
             {{ assignee }}
          </span>
       </div>
-      <div *ngIf="reportSpec.reportType === 'nanny_reminder'">
+      <div>
          <label>Nanny roster:</label>
          <table class="table" style="width:60%;" *ngIf="reportSpec.nannyReminder.nannyRosters.length > 0">
            <thead>
@@ -63,6 +63,36 @@
            </tbody>
          </table>
       </div>
+      <div *ngIf="reportSpec.reportType === 'perforce_checkin'">
+         <label>Perforce checkin branches:</label>
+         <span *ngFor="let branch of reportSpec.perforceCheckin.branches">
+            {{ branch }}
+         </span>
+      </div>
+      <div>
+         <label>Perforce checkin member scope:</label>
+         <div *ngIf="reportSpec.perforceCheckin.teams.length > 0">
+            <label>Team Group</label>
+            <span *ngFor="let team of reportSpec.perforceCheckin.teams">
+               {{ team }}
+            </span>
+         </div>
+         <div *ngFor="let filter of reportSpec.perforceCheckin.membersFilters; let i=index">
+            <label>Member Filter {{ i+1 }}:</label>
+            <span *ngIf="filter.condition == 'include'">Include</span>
+            <span *ngIf="filter.condition == 'exclude'">Exclude</span>
+            <span *ngIf="filter.type == 'selected'"> selected users: {{ filter.members.join(', ') }}</span>
+            <span *ngIf="filter.type == 'direct_reporters'"> direct reporters of users: {{ filter.members.join(', ') }}</span>
+            <span *ngIf="filter.type == 'all_reporters'"> all reporters of users: {{ filter.members.join(', ') }}</span>
+         </div>
+      </div>
+
+      <div *ngIf="reportSpec.reportType === 'perforce_checkin'">
+         <label>Need checkin approved info:</label>
+         <span *ngIf="reportSpec.perforceCheckin.needCheckinApproved">Yes</span>
+         <span *ngIf="!reportSpec.perforceCheckin.needCheckinApproved">No</span>
+      </div>
+
       <div *ngIf="reportSpec.mentionUsers.length > 0">
          <label>Mention user(s):</label>
          <span *ngFor="let user of reportSpec.mentionUsers">

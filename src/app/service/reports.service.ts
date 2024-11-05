@@ -121,8 +121,8 @@ export class ReportsService {
       return this.http.get<any>(url, this.getNoCacheRequestOptions()).toPromise();
    }
 
-   getTeamMembersByCode(teamCode: string): Promise<any> {
-      const url = `${this.config.API.TEAM_CODE_MEMBER}`
+   getTeamGroupMembers(teamCode: string): Promise<any> {
+      const url = `${this.config.API.TEAM_GROUP_MEMBER}`
                   .replace('{0}', teamCode);
       return this.http.get<any>(url, this.getNoCacheRequestOptions()).toPromise();
    }

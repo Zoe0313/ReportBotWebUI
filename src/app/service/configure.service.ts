@@ -16,7 +16,7 @@ interface API {
    USERS_FAVORED: string;
    USER_INFO: string;
    PERFORCE_BRANCH: string;
-   TEAM_CODE_MEMBER: string;
+   TEAM_GROUP_MEMBER: string;
  }
 
 @Injectable({
@@ -68,7 +68,7 @@ export class ConfigService {
          USERS_FAVORED: '/user/favoredReports?reportID={0}&user={1}',
          USER_INFO: '/api/v1/user?name={0}',
          PERFORCE_BRANCH: '/api/v1/perforce/branches?branch={0}',
-         TEAM_CODE_MEMBER: '/api/v1/team/members?group={0}'
+         TEAM_GROUP_MEMBER: '/api/v1/team/members?filterType=group&filterName={0}'
       };
    }
 }
