@@ -23,7 +23,7 @@ export class ReportRecurrenceWizardComponent implements OnChanges {
       cronExpression: new FormControl('', []),
 
       startDate: new FormControl('', [Validators.required]),
-      endDate: new FormControl('', []),
+      endDate: new FormControl('', [this.endDateValidator()]),
    });
 
    ngOnChanges(changes: SimpleChanges) {
@@ -34,13 +34,7 @@ export class ReportRecurrenceWizardComponent implements OnChanges {
       }
       // basic input
       this.recurrenceForm.get('startDate').setValue(currentValue.repeatConfig.startDate);
-      if (currentValue.repeatConfig.endDate.length > 0) {
-         this.recurrenceForm.get('endDate').setValue(currentValue.repeatConfig.endDate);
-         this.recurrenceForm.get('endDate').setValidators([this.endDateValidator()]);
-      } else {
-         this.recurrenceForm.get('endDate').clearValidators();
-      }
-      this.recurrenceForm.get('endDate').updateValueAndValidity();
+      this.recurrenceForm.get('endDate').setValue(currentValue.repeatConfig.endDate);
       // others
       this.updateValidator(currentValue.repeatConfig);
       // weekly
@@ -121,25 +115,6 @@ export class ReportRecurrenceWizardComponent implements OnChanges {
       const input = event.target as HTMLInputElement;
       this.reportSpec.repeatConfig.cronExpression = input.value || '';
       console.log('change cronExpression:', this.reportSpec.repeatConfig.cronExpression);
-   }
-
-   changeStartDate(event: Event) { // required
-      const input = event.target as HTMLInputElement;
-      this.reportSpec.repeatConfig.startDate = input.value || '';
-      console.log('change start date:', this.reportSpec.repeatConfig.startDate);
-   }
-
-   changeEndDate(event: Event) { // validate
-      const input = event.target as HTMLInputElement;
-      this.reportSpec.repeatConfig.endDate = input.value || '';
-      console.log('change end date:', this.reportSpec.repeatConfig.endDate);
-
-      if (this.reportSpec.repeatConfig.endDate.length > 0) {
-         this.recurrenceForm.get('endDate').setValidators([this.endDateValidator()]);
-      } else {
-         this.recurrenceForm.get('endDate').clearValidators();
-      }
-      this.recurrenceForm.get('endDate').updateValueAndValidity();
    }
 
    changeDayOfWeek(index: number) {

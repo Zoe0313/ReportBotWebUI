@@ -190,9 +190,9 @@
          <input clrDate type="date"
                 autocomplete="off"
                 formControlName="startDate"
-                (change)="changeStartDate($event)"
+                [(ngModel)]="reportSpec.repeatConfig.startDate"
                 required/>
-         <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
+         <clr-control-error>Please complete this required field.</clr-control-error>
       </clr-date-container>
 
       <clr-date-container>
@@ -200,15 +200,11 @@
          <input clrDate type="date"
                 autocomplete="off"
                 formControlName="endDate"
-                (change)="changeEndDate($event)"
-                invalid_end_day/>
+                [(ngModel)]="reportSpec.repeatConfig.endDate"/>
          <clr-control-error *clrIfError="'invalid_end_day'">It should be greater than or equal to start date.</clr-control-error>
          <clr-control-helper>Select a date greater than or equal to start date.</clr-control-helper>
       </clr-date-container>
    </div>
 
 </form>
-
-
-
 
