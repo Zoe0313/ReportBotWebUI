@@ -25,8 +25,8 @@ export class AppComponent implements OnInit {
       private http: HttpClient,
       private reportsService: ReportsService,
    ) {
-      if (localStorage.getItem('userName')) {
-         this.userName = localStorage.getItem('userName');
+      if (localStorage.getItem('bcAccount')) {
+         this.userName = localStorage.getItem('bcAccount');
       }
    }
 
@@ -34,11 +34,11 @@ export class AppComponent implements OnInit {
       this.showDialog = !!!this.userName;
       this.config.obs$.subscribe(
          () => {
-            localStorage.setItem('userName', this.config.userName);
+            localStorage.setItem('bcAccount', this.config.userName);
             this.checkSystemAdmin();
          });
-      if (localStorage.getItem('userName')) {
-         this.config.userName = localStorage.getItem('userName');
+      if (localStorage.getItem('bcAccount')) {
+         this.config.userName = localStorage.getItem('bcAccount');
       }
    }
 
