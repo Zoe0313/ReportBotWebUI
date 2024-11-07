@@ -63,8 +63,7 @@
 <clr-modal [(clrModalOpen)]="showDialog" [clrModalClosable]="false" [clrModalSize]="'sm'">
    <h3 class="modal-title">Login</h3>
    <div class="modal-body">
-      <label>User:</label>
-      <input type="text" class="clr-input" placeholder="VMWare ID" [(ngModel)]="userName">
+         <input type="text" class="clr-input" style="width:230px;" placeholder="BC email account. E.g. zhou.huang" [(ngModel)]="userName">
    </div>
    <div class="modal-footer">
       <button type="button" class="btn btn-outline" (click)="closeModal()" [disabled]="!!!userName">OK</button>
