@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  appUrl: 'https://vsanbot-staging.vdp.oc.vmware.com'
+  appUrl: 'https://vsanbot.vdp.lvn.broadcom.net'
 };

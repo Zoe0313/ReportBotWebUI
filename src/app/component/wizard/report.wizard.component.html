@@ -11,64 +11,84 @@
       <clr-wizard-button [type]="'next'">Next</clr-wizard-button>
       <clr-wizard-button [type]="'finish'">Finish</clr-wizard-button>
 
-      <clr-wizard-page [clrWizardPagePreventDefaultNext]="true"
-                       (clrWizardPageNext)="doNext()"
-                       [clrWizardPagePreventDefaultCancel]="true"
-                       (clrWizardPageOnCancel)="doCancel()">
+      <clr-alert [clrAlertType]="'danger'" *ngFor="let msg of alertMessages">
+         <clr-alert-item>
+            <span class="alert-text">{{ msg }}</span>
+         </clr-alert-item>
+      </clr-alert>
+      <clr-wizard-page
+            id="basic"
+            [clrWizardPageNextDisabled]="!basicPage.configForm.valid"
+            [clrWizardPagePreventDefaultNext]="true"
+            (clrWizardPageNext)="doNext()"
+            [clrWizardPagePreventDefaultCancel]="true"
+            (clrWizardPageOnCancel)="doCancel()">
          <ng-template clrPageTitle>Basic Configuration</ng-template>
          <app-wizard-basic-page #basicPage
                                 [reportSpec]="reportSpec"
-                                [webhooks]="webhooks"
-                                [mentionUsers]="mentionUsers"
-                                [bugzillaAssignees]="bugzillaAssignees"
                                 [action]="action">
          </app-wizard-basic-page>
       </clr-wizard-page>
 
-      <clr-wizard-page [clrWizardPagePreventDefaultNext]="true"
-                       (clrWizardPageNext)="doRecurrenceNext()"
-                       [clrWizardPagePreventDefaultCancel]="true"
-                       (clrWizardPageOnCancel)="doCancel()">
+      <clr-wizard-page
+            id="recurrence"
+            [clrWizardPageNextDisabled]="!recurrencePage.recurrenceForm.valid"
+            [clrWizardPagePreventDefaultNext]="true"
+            (clrWizardPageNext)="doNext()"
+            [clrWizardPagePreventDefaultCancel]="true"
+            (clrWizardPageOnCancel)="doCancel()">
          <ng-template clrPageTitle>Recurrence Configuration</ng-template>
          <app-wizard-recurrence-page #recurrencePage
-                                     [reportSpec]="reportSpec"
-                                     [weekChecked]="weekChecked">
+                                     [reportSpec]="reportSpec">
          </app-wizard-recurrence-page>
       </clr-wizard-page>
 
-      <clr-wizard-page *ngIf="reportSpec.reportType === 'nanny_reminder'"
-                       [clrWizardPagePreventDefaultNext]="true"
-                       (clrWizardPageNext)="doNext()"
-                       [clrWizardPagePreventDefaultCancel]="true"
-                       (clrWizardPageOnCancel)="doCancel()">
+      <clr-wizard-page
+            id="perforce-checkin"
+            *ngIf="reportSpec.reportType === 'perforce_checkin'"
+            [clrWizardPageNextDisabled]="!perforcePage.perforceForm.valid"
+            [clrWizardPagePreventDefaultNext]="true"
+            (clrWizardPageNext)="doNext()"
+            [clrWizardPagePreventDefaultCancel]="true"
+            (clrWizardPageOnCancel)="doCancel()">
+         <ng-template clrPageTitle>Perforce Checkin Configuration</ng-template>
+         <app-wizard-perforce-page #perforcePage
+                                   [reportSpec]="reportSpec">
+         </app-wizard-perforce-page>
+      </clr-wizard-page>
+
+      <clr-wizard-page
+            id="nanny-duty"
+            *ngIf="reportSpec.reportType === 'nanny_reminder'"
+            [clrWizardPageNextDisabled]="!nannyRosterPage.nannyForm.valid"
+            [clrWizardPagePreventDefaultNext]="true"
+            (clrWizardPageNext)="doNext()"
+            [clrWizardPagePreventDefaultCancel]="true"
+            (clrWizardPageOnCancel)="doCancel()">
          <ng-template clrPageTitle>Nanny Duty Roster Configuration</ng-template>
          <app-wizard-nanny-roster-page #nannyRosterPage
                                      [reportSpec]="reportSpec">
          </app-wizard-nanny-roster-page>
       </clr-wizard-page>
 
-      <clr-wizard-page [clrWizardPageNextDisabled]="!isValid"
-                       [clrWizardPagePreventDefaultNext]="true"
-                       (clrWizardPageOnCommit)="doFinish()"
-                       [clrWizardPagePreventDefaultCancel]="true"
-                       (clrWizardPageOnCancel)="doCancel()">
+      <clr-wizard-page
+            id="overview"
+            [clrWizardPageNextDisabled]="false"
+            [clrWizardPagePreventDefaultNext]="true"
+            (clrWizardPageOnCommit)="doFinish()"
+            [clrWizardPagePreventDefaultCancel]="true"
+            (clrWizardPageOnCancel)="doCancel()">
          <ng-template clrPageTitle>Notification Configuration Overview</ng-template>
          <ng-template clrPageNavTitle>
-            <span *ngIf="isValid">Ready to go!</span>
-            <span *ngIf="!isValid">Not ready yet</span>
+            <span *ngIf="alertMessages.length==0">Ready to go!</span>
+            <span *ngIf="alertMessages.length>0">Not ready yet</span>
          </ng-template>
          <div *ngIf="loading" class="spinner-line">
             <span class="spinner spinner-inline">Loading...</span>
             <span>Submitting report configuration...</span>
          </div>
-         <clr-alert [clrAlertType]="'danger'" *ngFor="let msg of alertMessages">
-            <clr-alert-item>
-               <span class="alert-text">{{ msg }}</span>
-            </clr-alert-item>
-         </clr-alert>
          <app-wizard-overview-page #overviewPage
-                                   [reportSpec]="reportSpec"
-                                   [isValid]="isValid">
+                                   [reportSpec]="reportSpec">
          </app-wizard-overview-page>
       </clr-wizard-page>
 

@@ -31,7 +31,7 @@ export class BugzillaAssigneeSpec {
    bugzillaAssignees: string[] = [];
 }
 
-class PerforceCheckinMembersFilter {
+export class PerforceCheckinMembersFilter {
    members: string[] = [];
    condition: string = 'include';// include, exclude
    type: string = 'selected';// selected, direct_reporters, all_reporters
@@ -39,9 +39,10 @@ class PerforceCheckinMembersFilter {
 
 export class PerforceCheckinSpec {
    branches: string[] = [];
-   needCheckinApproved: boolean = true;
-   membersFilters: PerforceCheckinMembersFilter[] = [];
    flattenMembers: string[] = [];
+   teams: string[] = [];
+   membersFilters: PerforceCheckinMembersFilter[] = [];
+   needCheckinApproved: boolean = true;
 }
 
 export class NannyReminderSpec {

@@ -3,8 +3,9 @@ import { ClrWizard, ClrWizardPage } from '@clr/angular';
 import { combineLatest } from 'rxjs';
 import { ReportConfiguration } from '../../model/report.model';
 import { ReportBasicWizardComponent } from './report-basic.wizard.component';
-import { ReportNannyRosterWizardComponent } from './report-nanny-roster.wizard.component';
 import { ReportRecurrenceWizardComponent } from './report-recurrence.wizard.component';
+import { ReportPerforceWizardComponent } from './report-perforce.wizard.component';
+import { ReportNannyRosterWizardComponent } from './report-nanny-roster.wizard.component';
 import { ReportOverviewWizardComponent } from './report-overview.wizard.component';
 import { FormatDate, DisplayTimeSetting, NextInvocation, DeepCopy, GetNannyRoster } from '../../service/utils'
 import { ReportsService } from '../../service/reports.service';
@@ -35,6 +36,8 @@ export class ReportWizardComponent {
    basicPage: ReportBasicWizardComponent;
    @ViewChild('recurrencePage', { static: true })
    recurrencePage: ReportRecurrenceWizardComponent;
+   @ViewChild('perforcePage', { static: true })
+   perforcePage: ReportPerforceWizardComponent;
    @ViewChild('nannyRosterPage', { static: true })
    nannyRosterPage: ReportNannyRosterWizardComponent;
    @ViewChild('overviewPage', { static: true })
@@ -44,13 +47,7 @@ export class ReportWizardComponent {
    alertMessages = [];
    loading = false;
    wizardTitle = '';
-   isValid = true;
    reportSpec: ReportConfiguration = new ReportConfiguration;
-
-   webhooks = '';
-   mentionUsers = '';
-   bugzillaAssignees = '';
-   weekChecked = [];
 
    init(action: string, spec?: ReportConfiguration) {
       this.action = action;
@@ -64,35 +61,6 @@ export class ReportWizardComponent {
          this.wizardTitle = 'Edit Notification';
          this.reportSpec = spec;
       }
-      this.updateView();
-   }
-
-   updateView() {
-      console.log(this.reportSpec);
-      // basic page
-      if (this.reportSpec.webhooks.length>0) {
-         this.webhooks = this.reportSpec.webhooks.join(',');
-      } else {
-         this.webhooks = '';
-      }
-      if (this.reportSpec.mentionUsers.length>0) {
-         this.mentionUsers = this.reportSpec.mentionUsers.join(',');
-      } else {
-         this.mentionUsers = '';
-      }
-      if (this.reportSpec.bugzillaAssignee.bugzillaAssignees.length > 0) {
-         this.bugzillaAssignees = this.reportSpec.bugzillaAssignee.bugzillaAssignees.join(',');
-      } else {
-         this.bugzillaAssignees = '';
-      }
-
-      // recurrence page
-      this.weekChecked = [];
-      for (let i=0; i<=6; i++) {
-         this.weekChecked[i] = this.reportSpec.repeatConfig.dayOfWeek.includes(i);
-      }
-      console.log('weekChecked:', this.weekChecked);
-
       this.cdRef.detectChanges();
    }
 
@@ -103,33 +71,34 @@ export class ReportWizardComponent {
       this.reportSpec.repeatConfig.nextSendTime = NextInvocation(repeatConfig);
    }
 
-   resetData() {
-      this.webhooks = '';
-      this.mentionUsers = '';
-      this.bugzillaAssignees = '';
-      this.weekChecked = [];
-      this.alertMessages = [];
-   }
-
    doCancel() {
       this.basicPage.configForm.reset();
       this.reportWizard.reset();
       this.reportWizard.previous();
       this.reportWizard.close();
-      this.resetData();
+      this.alertMessages = [];
    }
 
-   doNext() {
+   async doNext() {
+      this.alertMessages = [];
+
+      const title = this.reportWizard.currentPage.id || null;
+      console.log('page:', title);
+      if (title === 'clr-wizard-page-basic') {
+
+      } else if (title === 'clr-wizard-page-recurrence') {
+          if (this.reportSpec.reportType === 'nanny_reminder' &&
+             this.reportSpec.nannyReminder.nannyAssignees.length == 0) {
+             this.reportSpec.nannyReminder.nannyAssignees.push('');
+             this.reportSpec.nannyReminder.nannyRosters = GetNannyRoster(this.reportSpec.repeatConfig, this.reportSpec.nannyReminder.nannyAssignees);
+          }
+      } else if (title == 'clr-wizard-page-nanny-duty') {
+
+      } else if (title == 'clr-wizard-page-perforce-checkin') {
+
+      }
       this.updateTimeSetting();
       this.reportWizard.forceNext();
-   }
-
-   doRecurrenceNext() {
-      if (this.reportSpec.reportType === 'nanny_reminder' && this.reportSpec.nannyReminder.nannyAssignees.length == 0) {
-         this.reportSpec.nannyReminder.nannyAssignees.push('');
-         this.reportSpec.nannyReminder.nannyRosters = GetNannyRoster(this.reportSpec.repeatConfig, this.reportSpec.nannyReminder.nannyAssignees);
-      }
-      this.doNext();
    }
 
    doFinish() {
@@ -173,7 +142,6 @@ export class ReportWizardComponent {
       delete reqData.repeatConfig.nextSendTime;
       if (this.action === 'create') {
          this.loading = true;
-         reqData.vmwareId = this.config.userName;
          reqData.status = 'ENABLED';
          this.service.createReport(JSON.stringify(reqData)).subscribe(
             result => {

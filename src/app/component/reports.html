@@ -46,7 +46,7 @@
          </clr-dg-cell>
 
          <clr-dg-cell class="report-datagrid-cell" *ngIf="config.isSystemAdmin">
-            <span>{{ report.vmwareId }}</span>
+            <span>{{ report.creator }}</span>
          </clr-dg-cell>
 
          <clr-dg-cell class="report-datagrid-cell">
@@ -63,7 +63,7 @@
          </clr-dg-cell>
 
          <clr-dg-cell class="report-datagrid-cell">
-            <button *ngIf="report.reportType != 'perforce_checkin' && report.reportType != 'jira_list'"
+            <button *ngIf="report.reportType != 'jira_list'"
                     type="button"
                     class="btn btn-icon btn-info-outline"
                     aria-label="edit"
@@ -112,7 +112,6 @@
          </clr-dg-cell>
 
          <app-report-details *clrIfExpanded [report]="report" ngProjectAs="clr-dg-row-detail"></app-report-details>
-<!--         <app-profile-editor *clrIfExpanded [report]="report" ngProjectAs="clr-dg-row-detail"></app-profile-editor>-->
       </clr-dg-row>
    </clr-datagrid>
 </div>

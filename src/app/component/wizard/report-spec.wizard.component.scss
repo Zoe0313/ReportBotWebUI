@@ -75,3 +75,18 @@ ul.list  {
     color: #737373;
     margin-top: .25rem;
 }
+
+.nanny-datagrid-cell {
+   display: flex;
+   align-items: center;
+}
+
+.custom-validate-icon {
+   margin-left: -4px;
+   display: inline-block;
+   width: 1rem;
+   height: 1rem;
+   min-width: 1rem;
+   min-height: 1rem;
+   color: #c72100;
+}

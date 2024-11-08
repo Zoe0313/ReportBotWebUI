@@ -23,7 +23,16 @@ nvm use 16.20.2
 Using npx (if issues persist): If you continue to face issues, you can run the ng command using npx, which will execute it directly from your local node_modules:
 ```
 npx -p @angular/cli@8.3.17 ng build
-npx -p @angular/cli@8.3.17 ng build -c=sync --outputPath=/Users/lzoe/Project/vsanbot-release/server/src/static
+```
+
+In development mode, sync files:
+```
+npx -p @angular/cli@8.3.17 ng build -c=sync --outputPath=/Users/lzoe/Project/vSAN-Bot/server/src/static --base-href / 
+```
+
+In production mode, sync files:
+```
+npx -p @angular/cli@8.3.17 ng build --prod --outputPath=/Users/lzoe/Project/vSAN-Bot/server/src/static --base-href /
 ```
 
 ## Development server

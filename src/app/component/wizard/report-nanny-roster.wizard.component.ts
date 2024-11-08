@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { ReportConfiguration } from '../../model/report.model';
 import { GetNannyRoster } from '../../service/utils';
@@ -9,12 +9,23 @@ import { GetNannyRoster } from '../../service/utils';
    templateUrl: 'report-nanny-roster.wizard.component.html'
 })
 
-export class ReportNannyRosterWizardComponent {
+export class ReportNannyRosterWizardComponent implements OnChanges {
    @Input() reportSpec: ReportConfiguration;
 
    nannyForm = new FormGroup({
       nannyCode: new FormControl('', [Validators.required]),
    });
+
+   ngOnChanges(changes: SimpleChanges) {
+      console.log('nanny changes', changes);
+      this.nannyForm.get('nannyCode').setValue(this.reportSpec.nannyReminder.nannyCode);
+   }
+
+   changeNannyCode(event: Event) { // required
+      const input = event.target as HTMLInputElement;
+      this.reportSpec.nannyReminder.nannyCode = input.value || '';
+      console.log('change nanny code:', this.reportSpec.nannyReminder.nannyCode);
+   }
 
    addNanny(index) {
       const numberOfAssignee = this.reportSpec.nannyReminder.nannyAssignees.length;

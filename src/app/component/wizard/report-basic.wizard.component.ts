@@ -1,6 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup, FormControl, Validators,
-         AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
+         AbstractControl, ValidationErrors, ValidatorFn, AsyncValidatorFn } from '@angular/forms';
 import { ReportConfiguration } from '../../model/report.model';
 import { ReportsService } from '../../service/reports.service';
 
@@ -10,76 +10,92 @@ import { ReportsService } from '../../service/reports.service';
    templateUrl: 'report-basic.wizard.component.html'
 })
 
-export class ReportBasicWizardComponent {
+export class ReportBasicWizardComponent implements OnChanges {
    constructor(
       private service: ReportsService,
    ) {
    }
 
    @Input() action = '';
-   @Input() webhooks = '';
-   @Input() mentionUsers = '';
-   @Input() bugzillaAssignees = '';
    @Input() reportSpec: ReportConfiguration;
 
-   bugzillaAssigneeError = '';
-   mentionUserError = '';
-   ldapApi = 'https://ldap-data.vdp.oc.vmware.com/ldap/_doc/';
-
-   webhookValidator(): ValidatorFn {
-      return (control: AbstractControl): ValidationErrors | null => {
-         if (!control || control.value === '' || control.value == null) {
-            return null;
-         }
-         try {
-            const link = new URL(control.value);
-            if (link.hostname === 'chat.googleapis.com' &&
-                link.search.includes('key=') && link.search.includes('token=')) {
-               return null;
-            }
-         } catch (err) {
-            return { invalid_webhook: true };
-         }
-      };
-   }
-
-   bugzillaLinkValidator(): ValidatorFn {
-      return (control: AbstractControl): ValidationErrors | null => {
-         if (!control || control.value === '' || control.value == null) {
-            return null;
-         }
-         try {
-            const link = new URL(control.value);
-            if (link.hostname === 'bugzilla.eng.vmware.com') {
-               if ((link.pathname === '/report.cgi' && link.search.includes('format=table')) ||
-                   (link.pathname === '/buglist.cgi')) {
-                  return null;
-               }
-            }
-         } catch (err) {
-            return { invalid_bugzilla_link: true };
-         }
-      };
-   }
-
    configForm = new FormGroup({
-      webhooks: new FormControl('', [Validators.required, this.webhookValidator()]),
-      bugzillaLink: new FormControl('', [Validators.required, this.bugzillaLinkValidator()]),
+      title: new FormControl('', [Validators.required]),
+      webhooks: new FormControl('', [Validators.required, this.webhooksValidator()]),
+      mentionUsers: new FormControl('', [], [this.assigneesValidator()]),
+
+      bugzillaLink: new FormControl('', []),
+      bugzillaAssignees: new FormControl('', [], []),
+      textMessage: new FormControl('', [])
    });
 
-   changeReportType(event: any) {
-      console.log('change report type:', this.reportSpec.reportType);
-   }
-
-   changeWebhooks(event: any) {
-      this.reportSpec.webhooks = [];
-      if (event.target.value === '') {
+   ngOnChanges(changes: SimpleChanges) {
+      const currentValue = changes.reportSpec.currentValue;
+      const previousValue = changes.reportSpec.previousValue;
+      if (typeof previousValue === 'undefined') {
          return;
       }
-      event.target.value.split(',').map(url => {
-         this.reportSpec.webhooks.push(url.trim());
-      });
+      // basic input
+      this.configForm.get('title').setValue(currentValue.title);
+      this.configForm.get('webhooks').setValue(currentValue.webhooks.join(','));
+      if (currentValue.mentionUsers.length > 0) {
+         this.configForm.get('mentionUsers').setValue(currentValue.mentionUsers.join(','));
+         this.configForm.get('mentionUsers').setAsyncValidators([this.assigneesValidator()]);
+      } else {
+         this.configForm.get('mentionUsers').clearValidators();
+      }
+      this.configForm.get('mentionUsers').updateValueAndValidity();
+      this.updateValidator(currentValue.reportType);
+   }
+
+   updateValidator(reportType) {
+      // bugzilla
+      if (reportType === 'bugzilla') {
+         this.configForm.get('bugzillaLink').setValue(this.reportSpec.bugzilla.bugzillaLink);
+         this.configForm.get('bugzillaLink').setValidators([Validators.required, this.bugzillaLinkValidator()]);
+      } else {
+         this.configForm.get('bugzillaLink').clearValidators();
+      }
+      this.configForm.get('bugzillaLink').updateValueAndValidity();
+      // bugzilla_by_assignee
+      if (reportType === 'bugzilla_by_assignee') {
+         this.configForm.get('bugzillaAssignees').setValue(this.reportSpec.bugzillaAssignee.bugzillaAssignees.join(','));
+         this.configForm.get('bugzillaAssignees').setValidators([Validators.required]);
+         this.configForm.get('bugzillaAssignees').setAsyncValidators([this.assigneesValidator()]);
+      } else {
+         this.configForm.get('bugzillaAssignees').clearValidators();
+      }
+      this.configForm.get('bugzillaAssignees').updateValueAndValidity();
+      // others
+      if (['text', 'nanny_reminder'].includes(reportType)) {
+         this.configForm.get('textMessage').setValue(this.reportSpec.text);
+         this.configForm.get('textMessage').setValidators([Validators.required]);
+      } else {
+         this.configForm.get('textMessage').clearValidators();
+      }
+      this.configForm.get('textMessage').updateValueAndValidity();
+   }
+
+   changeReportType(event: Event) {
+      this.updateValidator(this.reportSpec.reportType);
+   }
+
+   changeTitle(event: Event) { // required
+      const input = event.target as HTMLInputElement;
+      this.reportSpec.title = input.value || '';
+      console.log('change title:', this.reportSpec.title);
+   }
+
+   changeWebhooks(event: Event) { // required & validate
+      const input = event.target as HTMLInputElement;
+      this.reportSpec.webhooks = input.value ? input.value.split(',').map(url => url.trim()) : [];
       console.log('change webhooks:', this.reportSpec.webhooks);
+   }
+
+   changeBugzillaLink(event: Event) { // required & validate in bugzilla
+      const input = event.target as HTMLInputElement;
+      this.reportSpec.bugzilla.bugzillaLink = input.value || '';
+      console.log('change bugzilla link:', this.reportSpec.bugzilla.bugzillaLink);
    }
 
    checkBugzillaListLink() {
@@ -97,81 +113,112 @@ export class ReportBasicWizardComponent {
       return tableLink;
    }
 
-   checkSkipEmptyReport() {
-      return this.reportSpec.reportType === 'bugzilla' ||
-             this.reportSpec.reportType === 'perforce_checkin' ||
-             this.reportSpec.reportType === 'bugzilla_by_assignee' ||
-             this.reportSpec.reportType === 'jira_list';
-   }
-
-   async changeMentionUsers(event: any) {
-      this.reportSpec.mentionUsers = [];
-      this.mentionUserError = '';
-      if (event.target.value === '') {
-         return;
-      }
-      const users = event.target.value.split(',');
-      const results = await this.checkAccounts(users);
-      results.map((data) => {
-         if (!data['checked']) {
-            this.mentionUserError = data['user'] + ' is an invalid AD account.';
-         } else {
-            this.reportSpec.mentionUsers.push(data['user']);
-         }
-      });
-      console.log('change mention users:', this.reportSpec.mentionUsers);
-   }
-
-   async changeBugzillaAssignees(event: any) {
-      this.reportSpec.bugzillaAssignee.bugzillaAssignees = [];
-      this.bugzillaAssigneeError = '';
-      if (event.target.value === '') {
-         this.bugzillaAssigneeError = 'Please complete this required field.';
-         return;
-      }
-      const users = event.target.value.split(',');
-      const results = await this.checkAccounts(users);
-      results.map((data) => {
-         if (!data['checked']) {
-            this.bugzillaAssigneeError = data['user'] + ' is an invalid AD account.';
-         } else {
-            this.reportSpec.bugzillaAssignee.bugzillaAssignees.push(data['user']);
-         }
-      });
+   changeBugzillaAssignees(event: Event) { // required & validate in bugzilla_by_assignee
+      const input = event.target as HTMLInputElement;
+      this.reportSpec.bugzillaAssignee.bugzillaAssignees = input.value ? input.value.split(',').map(user => user.trim()) : [];
       console.log('change bugzilla assignees:', this.reportSpec.bugzillaAssignee.bugzillaAssignees);
    }
 
-   async fetchEmployee(user: string): Promise<any> {
-      return fetch(this.ldapApi + user)
-         .then(response => {
-            if (!response.ok) {
-               throw new Error(response.statusText);
-            }
-            return response.json() as Promise<{ data: any }>;
-         })
-         .then(data => {
-            return data;
-         });
+   changeTextMessage(event: Event) { // required in nanny_reminder & text
+      const input = event.target as HTMLInputElement;
+      this.reportSpec.text = input.value || '';
+      console.log('change text message:', this.reportSpec.text);
    }
 
-   async asyncForEach(array, callback): Promise<boolean[]> {
-       let results = [];
-       for (let index = 0; index < array.length; index++) {
-          results.push(await callback(array[index]));
-       }
-       return results;
+   changeMentionUsers(event: Event) { // validate
+      const input = event.target as HTMLInputElement;
+      this.reportSpec.mentionUsers = input.value ? input.value.split(',').map(user => user.trim()) : [];
+      console.log('change mention users:', this.reportSpec.mentionUsers);
+
+      if (this.reportSpec.mentionUsers.length > 0) {
+         this.configForm.get('mentionUsers').setAsyncValidators([this.assigneesValidator()]);
+      } else {
+         this.configForm.get('mentionUsers').clearValidators();
+      }
+      this.configForm.get('mentionUsers').updateValueAndValidity();
    }
 
-   async checkAccounts(users): Promise<any> {
-      return await this.asyncForEach(users, async user => {
-         user = user.trim();
-         try {
-            const data = await this.fetchEmployee(user);
-            const name = data._id || data._source.ldap_username;
-            return {checked: (name === user), user: user};
-         } catch (error) {
-            return {checked: false, user: user};
+   checkSkipEmptyReport() {
+      return ['bugzilla', 'perforce_checkin', 'bugzilla_by_assignee', 'jira_list'].includes(this.reportSpec.reportType);
+   }
+
+   webhooksValidator(): ValidatorFn {
+      return (control: AbstractControl): ValidationErrors | null => {
+         const value = control.value;
+         if (!value) {
+            return null;
          }
-      });
+         const webhooks = value.split(',').map(url => url.trim());
+         if (webhooks.length === 0) {
+            return null;
+         }
+         const isValid = webhooks.every(webhook => {
+            try {
+               const link = new URL(webhook);
+               return link.hostname === 'chat.googleapis.com' && link.search.includes('key=') &&
+                      link.search.includes('token=');
+            } catch {
+               return false;
+            }
+         });
+         return isValid ? null : { invalid_webhook: true };
+      };
+   }
+
+   bugzillaLinkValidator(): ValidatorFn {
+      return (control: AbstractControl): ValidationErrors | null => {
+         const value = control.value;
+         if (!value) {
+            return null;
+         }
+         try {
+            const link = new URL(value);
+            if (link.hostname === 'bugzilla-vcf.lvn.broadcom.net') {
+               if ((link.pathname === '/report.cgi' && link.search.includes('format=table')) ||
+                   (link.pathname === '/buglist.cgi')) {
+                  return null; // Valid bugzilla link
+               }
+            }
+         } catch {
+            return { invalid_bugzilla_link: true }; // Invalid bugzilla link
+         }
+         return { invalid_bugzilla_link: true }; // Invalid bugzilla link
+      };
+   }
+
+   assigneesValidator(): AsyncValidatorFn {
+      return async (control: AbstractControl): Promise<ValidationErrors | null> => {
+         const value = control.value;
+         if (!value) {
+            return null;
+         }
+         const assignees = value.split(',').map(assignee => assignee.trim());
+         if (assignees.length === 0) {
+            return null;
+         }
+         const assigneeValidations = await Promise.all(
+            assignees.map(async assignee => {
+               try {
+                  const data = await this.fetchUser(assignee);
+                  const account = data.mail.split('@')[0];
+                  return account === assignee;
+               } catch {
+                  return false;
+               }
+            })
+         );
+         const isValid = assigneeValidations.every(validation => validation === true);
+         return isValid ? null : { invalid_assignee: true };
+      };
+   }
+
+   async fetchUser(user: string): Promise<any> {
+      try {
+         const response = await this.service.getUserInfo(user);
+         if (!response) throw new Error('No response data.');
+         return response;
+      } catch {
+         throw new Error('Fail to fetch user info');
+      }
    }
 }
