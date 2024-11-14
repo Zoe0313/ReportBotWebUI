@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { FormGroup, FormControl, Validators,
          AbstractControl, ValidationErrors, ValidatorFn, AsyncValidatorFn } from '@angular/forms';
-import { ReportConfiguration } from '../../model/report.model';
+import { ReportConfiguration, cstBasicFields } from '../../model/report.model';
 import { ReportsService } from '../../service/reports.service';
 
 @Component({
@@ -19,6 +19,14 @@ export class ReportBasicWizardComponent implements OnChanges {
    @Input() action = '';
    @Input() reportSpec: ReportConfiguration;
 
+   isNeedGroupby: boolean = false;
+   cstBasicFields = cstBasicFields;
+   basicFieldChecked: boolean[] = [];
+   customField: string = '';
+
+   selectBasicFields: string[] = [];
+   selectCustomFields: string[] = [];
+
    configForm = new FormGroup({
       title: new FormControl('', [Validators.required]),
       webhooks: new FormControl('', [Validators.required, this.webhooksValidator()]),
@@ -26,7 +34,8 @@ export class ReportBasicWizardComponent implements OnChanges {
 
       bugzillaLink: new FormControl('', []),
       bugzillaAssignees: new FormControl('', [], []),
-      textMessage: new FormControl('', [])
+      textMessage: new FormControl('', []),
+      jql: new FormControl('', [], [])
    });
 
    ngOnChanges(changes: SimpleChanges) {
@@ -46,6 +55,25 @@ export class ReportBasicWizardComponent implements OnChanges {
       }
       this.configForm.get('mentionUsers').updateValueAndValidity();
       this.updateValidator(currentValue.reportType);
+      if (currentValue.reportType === 'jira_list') {
+         // basic fields
+         this.selectBasicFields = [];
+         this.selectCustomFields = [];
+         this.basicFieldChecked = new Array(this.cstBasicFields.length).fill(false);
+         for (let i=0; i<this.cstBasicFields.length; i++) {
+            const field = this.cstBasicFields[i].value;
+            const isBasic = this.reportSpec.jira.fields.includes(field);
+            this.basicFieldChecked[i] = isBasic;
+            if (isBasic==false) {
+               this.selectCustomFields.push(field);
+            } else {
+               this.selectBasicFields.push(field);
+            }
+         }
+         console.log('Jira basic fields checked:', this.basicFieldChecked);
+         // custom fields
+         this.customField = this.selectCustomFields.join(',');
+      }
    }
 
    updateValidator(reportType) {
@@ -136,6 +164,35 @@ export class ReportBasicWizardComponent implements OnChanges {
          this.configForm.get('mentionUsers').clearValidators();
       }
       this.configForm.get('mentionUsers').updateValueAndValidity();
+   }
+
+   changeJql(event: Event) { // required & validate in jira_list
+      const input = event.target as HTMLInputElement;
+      this.reportSpec.jira.jql = input.value || '';
+      console.log('change jira jql:', this.reportSpec.jira.jql);
+   }
+
+   changeBasicFields(index: number) { // required in jira list report
+      this.selectBasicFields = []
+      this.basicFieldChecked.forEach((checked, index) => {
+         if (checked) {
+            const field = this.cstBasicFields[index].value;
+            this.selectBasicFields.push(field);
+         }
+      });
+      console.log('change basic fields:', this.selectBasicFields);
+      this.reportSpec.jira.fields = [];
+      this.reportSpec.jira.fields.concat(this.selectBasicFields);
+      this.reportSpec.jira.fields.concat(this.selectCustomFields);
+   }
+
+   changeCustomFields(event: Event) {
+      const input = event.target as HTMLInputElement;
+      this.selectCustomFields = input.value ? input.value.split(',').map(field => field.trim()) : [];
+      console.log('change custom fields:', this.selectCustomFields);
+      this.reportSpec.jira.fields = [];
+      this.reportSpec.jira.fields.concat(this.selectBasicFields);
+      this.reportSpec.jira.fields.concat(this.selectCustomFields);
    }
 
    checkSkipEmptyReport() {

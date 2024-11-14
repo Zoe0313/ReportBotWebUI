@@ -38,7 +38,7 @@ export class ReportRecurrenceWizardComponent implements OnChanges {
       // others
       this.updateValidator(currentValue.repeatConfig);
       // weekly
-      this.weekChecked = [];
+      this.weekChecked = new Array(7).fill(false);
       for (let i=0; i<=6; i++) {
          this.weekChecked[i] = this.reportSpec.repeatConfig.dayOfWeek.includes(i);
       }

@@ -43,17 +43,15 @@
                       (change)="changeReportType($event)"/>
                <label>Perforce branch checkin</label>
             </clr-radio-wrapper>
-            <clr-control-error>Please complete this required field.</clr-control-error>
-         </clr-radio-container>
-         <clr-radio-container class="clr-form-control-disabled">
             <clr-radio-wrapper>
                <input clrRadio type="radio"
                       value="jira_list"
                       [(ngModel)]="reportSpec.reportType"
                       [ngModelOptions]="{standalone: true}"
-                      disabled/>
-               <label>Jira list (TBD)</label>
+                      (change)="changeReportType($event)"/>
+               <label>Jira list</label>
             </clr-radio-wrapper>
+            <clr-control-error>Please complete this required field.</clr-control-error>
          </clr-radio-container>
       </clr-control-container>
       <div class="description-item">
@@ -198,7 +196,69 @@
    </div>
 
    <div *ngIf="reportSpec.reportType === 'jira_list'">
+      <h4>Input your search criteria</h4>
+      <clr-input-container>
+         <label>JQL</label>
+         <input clrInput type="text" style="width:400px;"
+                placeholder="Jira query"
+                formControlName="jql"
+                (change)="changeJQL($event)"
+                required/>
+         <clr-control-helper>
+            Refer to <a href="https://vmw-jira.broadcom.net/issues/?jql=">input basic or advanced searching JQL</a>.<br>
+            e.g. `lastViewed`, `lastLogin` and other keywords with personal operation history are not supported.
+         </clr-control-helper>
+         <clr-control-error *clrIfError="'required'">Please complete this required field.</clr-control-error>
+         <clr-control-error *clrIfError="'invalid_jql'">Unsupported JQL.<br>
+            Refer to <a href="https://vmw-jira.broadcom.net/issues/?jql=">input basic or advanced searching JQL</a>.<br>
+            e.g. `lastViewed`, `lastLogin` and other keywords with personal operation history are not supported.
+         </clr-control-error>
+      </clr-input-container>
 
+      <clr-checkbox-container>
+         <clr-checkbox-wrapper>
+            <input type="checkbox" clrCheckbox
+                   [(ngModel)]="isNeedGroupby"
+                   [ngModelOptions]="{standalone: true}"/>
+            <label>Do you want to receive a table report grouped by one field?</label>
+         </clr-checkbox-wrapper>
+      </clr-checkbox-container>
+
+      <clr-select-container *ngIf="isNeedGroupby==true">
+         <label>Group by</label>
+         <select clrSelect style="margin-right: 16px;"
+                 [(ngModel)]="reportSpec.jira.groupby"
+                 [ngModelOptions]="{standalone: true}"
+                 required>
+            <option value="issuetype">Type</option>
+            <option value="status">Status</option>
+            <option value="assignee">Assignee</option>
+            <option value="priority">Priority</option>
+         </select>
+        <clr-control-error>Please complete this required field.</clr-control-error>
+      </clr-select-container>
+
+      <clr-checkbox-container *ngIf="isNeedGroupby==false">
+         <label>Select basic fields</label>
+         <clr-checkbox-wrapper *ngFor="let field of cstBasicFields; let i = index">
+            <input type="checkbox" clrCheckbox
+                   [ngModelOptions]="{standalone: true}"
+                   [(ngModel)]="basicFieldChecked[i]"
+                   (change)="changeBasicFields(i)"/>
+            <label> {{ field.name }}</label>
+         </clr-checkbox-wrapper>
+         <clr-control-helper>Select fields to report more details by list.</clr-control-helper>
+         <clr-control-error>Please complete this required field.</clr-control-error>
+      </clr-checkbox-container>
+
+      <clr-input-container *ngIf="isNeedGroupby==false">
+         <label>Custom fields</label>
+         <input clrInput type="text" style="width:300px;"
+                placeholder="E.g. duedate, updated, reporter"
+                [(ngModel)]="customField"
+                [ngModelOptions]="{standalone: true}"
+                (change)="changeCustomFields($event)"/>
+      </clr-input-container>
    </div>
 
    <div>
