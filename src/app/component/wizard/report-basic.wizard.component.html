@@ -240,7 +240,7 @@
 
       <clr-checkbox-container *ngIf="isNeedGroupby==false">
          <label>Select basic fields</label>
-         <clr-checkbox-wrapper *ngFor="let field of cstBasicFields; let i = index">
+         <clr-checkbox-wrapper *ngFor="let field of BASIC_FIELD; let i = index">
             <input type="checkbox" clrCheckbox
                    [ngModelOptions]="{standalone: true}"
                    [(ngModel)]="basicFieldChecked[i]"

@@ -72,18 +72,3 @@ export class RepeatConfig {
    displayTime: string = '';
    nextSendTime: string = '';
 }
-
-export interface JiraField {
-   name: string;
-   value: string;
-}
-
-export const cstBasicFields: JiraField[] = [
-   { name: 'Type', value: 'issuetype' },
-   { name: 'Status', value: 'status' },
-   { name: 'Assignee', value: 'assignee' },
-   { name: 'Summary', value: 'summary' },
-   { name: 'Priority', value: 'priority' },
-   { name: 'Labels', value: 'labels' },
-   { name: 'Project', value: 'project' },
-]
