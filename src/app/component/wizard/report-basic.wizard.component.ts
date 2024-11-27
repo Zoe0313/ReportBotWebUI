@@ -19,6 +19,23 @@ export class ReportBasicWizardComponent implements OnChanges {
    @Input() action = '';
    @Input() reportSpec: ReportConfiguration;
 
+   BASIC_FIELD = [
+       { name: 'Type', value: 'issuetype' },
+       { name: 'Status', value: 'status' },
+       { name: 'Assignee', value: 'assignee' },
+       { name: 'Summary', value: 'summary' },
+       { name: 'Priority', value: 'priority' },
+       { name: 'Labels', value: 'labels' },
+       { name: 'Project', value: 'project' },
+    ]
+
+   isNeedGroupby: boolean = false;
+   basicFieldChecked: boolean[] = [];
+   customField: string = '';
+
+   selectBasicFields: string[] = [];
+   selectCustomFields: string[] = [];
+
    configForm = new FormGroup({
       title: new FormControl('', [Validators.required]),
       webhooks: new FormControl('', [Validators.required, this.webhooksValidator()]),
@@ -26,7 +43,8 @@ export class ReportBasicWizardComponent implements OnChanges {
 
       bugzillaLink: new FormControl('', []),
       bugzillaAssignees: new FormControl('', [], []),
-      textMessage: new FormControl('', [])
+      textMessage: new FormControl('', []),
+      jql: new FormControl('', [], [])
    });
 
    ngOnChanges(changes: SimpleChanges) {
@@ -74,6 +92,38 @@ export class ReportBasicWizardComponent implements OnChanges {
          this.configForm.get('textMessage').clearValidators();
       }
       this.configForm.get('textMessage').updateValueAndValidity();
+      // jira_list
+      if (reportType === 'jira_list') {
+         this.configForm.get('jql').setValue(this.reportSpec.jira.jql);
+         this.configForm.get('jql').setValidators([Validators.required]);
+         this.configForm.get('jql').setAsyncValidators([this.jqlValidator()]);
+         // basic fields
+         this.selectBasicFields = [];
+         this.selectCustomFields = [];
+         this.basicFieldChecked = new Array(this.BASIC_FIELD.length).fill(false);
+         for (let i=0; i<this.BASIC_FIELD.length; i++) {
+            const field = this.BASIC_FIELD[i].value;
+            const isBasic = this.reportSpec.jira.fields.includes(field);
+            this.basicFieldChecked[i] = isBasic;
+            if (isBasic===true) {
+               this.selectBasicFields.push(field);
+            }
+         }
+         const basicFieldValues = this.BASIC_FIELD.forEach((value) => return value);
+         for (let i=0; i<this.reportSpec.jira.fields.length; i++) {
+            const field = this.reportSpec.jira.fields[i];
+            const isCustom = basicFieldValues.includes(field) === false;
+            if (isCustom===true) {
+               this.selectCustomFields.push(field);
+            }
+         }
+         console.log('Jira basic fields checked:', this.basicFieldChecked);
+         // custom fields
+         this.customField = this.selectCustomFields.join(',');
+      } else {
+         this.configForm.get('jql').clearValidators();
+      }
+      this.configForm.get('jql').updateValueAndValidity();
    }
 
    changeReportType(event: Event) {
@@ -136,6 +186,35 @@ export class ReportBasicWizardComponent implements OnChanges {
          this.configForm.get('mentionUsers').clearValidators();
       }
       this.configForm.get('mentionUsers').updateValueAndValidity();
+   }
+
+   changeJql(event: Event) { // required & validate in jira_list
+      const input = event.target as HTMLInputElement;
+      this.reportSpec.jira.jql = input.value || '';
+      console.log('change jira jql:', this.reportSpec.jira.jql);
+   }
+
+   changeBasicFields(index: number) { // required in jira list report
+      this.selectBasicFields = []
+      this.basicFieldChecked.forEach((checked, index) => {
+         if (checked) {
+            const field = this.BASIC_FIELD[index].value;
+            this.selectBasicFields.push(field);
+         }
+      });
+      console.log('change basic fields:', this.selectBasicFields);
+      this.reportSpec.jira.fields = [];
+      this.reportSpec.jira.fields.concat(this.selectBasicFields);
+      this.reportSpec.jira.fields.concat(this.selectCustomFields);
+   }
+
+   changeCustomFields(event: Event) {
+      const input = event.target as HTMLInputElement;
+      this.selectCustomFields = input.value ? input.value.split(',').map(field => field.trim()) : [];
+      console.log('change custom fields:', this.selectCustomFields);
+      this.reportSpec.jira.fields = [];
+      this.reportSpec.jira.fields.concat(this.selectBasicFields);
+      this.reportSpec.jira.fields.concat(this.selectCustomFields);
    }
 
    checkSkipEmptyReport() {
@@ -219,6 +298,32 @@ export class ReportBasicWizardComponent implements OnChanges {
          return response;
       } catch {
          throw new Error('Fail to fetch user info');
+      }
+   }
+
+   jqlValidator(): AsyncValidatorFn {
+      return async (control: AbstractControl): Promise<ValidationErrors | null> => {
+         const value = control.value;
+         if (!value) {
+            return null;
+         }
+         try {
+            await this.fetchJiraIssues(value);
+            return null;
+         } catch {
+            return { invalid_jql: true }; // Invalid jql
+         }
+         return { invalid_jql: true }; // Invalid jql
+      };
+   }
+
+   async fetchJiraIssues(jql: string): Promise<any> {
+      try {
+         const response = await this.service.getJiraIssues(jql);
+         if (!response) throw new Error('No response data.');
+         return response;
+      } catch {
+         throw new Error('Fail to fetch jira issues by jql');
       }
    }
 }

@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ConfigService } from './configure.service';
@@ -125,6 +125,21 @@ export class ReportsService {
       const url = `${this.config.API.TEAM_GROUP_MEMBER}`
                   .replace('{0}', teamCode);
       return this.http.get<any>(url, this.getNoCacheRequestOptions()).toPromise();
+   }
+
+   getJiraIssues(queryStr: string): Promise<any> {
+      const url = 'https://vmw-jira.broadcom.net/rest/api/2/search';
+      const headers = new HttpHeaders({
+         'Content-Type': 'application/json',
+         'Authorization': 'Bearer MDYzMTc0MzQ2Nzk2OmefkMSq92VjO7wU+qpZjZmbGirt'
+      });
+      const params = new HttpParams()
+         .set('jql', queryStr)
+         .set('startAt', '0')
+         .set('maxResults', '1')
+         .set('fields', 'id,key');
+      const options = { headers, params };
+      return this.http.get<any>(url, options).toPromise();
    }
 
    /**
